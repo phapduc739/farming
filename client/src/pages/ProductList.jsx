@@ -28,7 +28,7 @@ function ProductList() {
   return (
     <div>
       <Link to="/create/product">Create Product</Link>
-      <h1>Danh sách sản phẩm</h1>
+      <h1 className="text-4xl font-bold underline">Danh sách sản phẩm</h1>
       <ul>
         {products.map((product) => (
           <li key={`${product.name}-${product.description}-${product.price}`}>

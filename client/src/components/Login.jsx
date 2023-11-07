@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { login } from "../actions/userActions";
-import jwt_decode from "jwt-decode";
 
 const schema = yup
   .object({
@@ -27,10 +26,6 @@ export default function Login() {
 
   const [token, setToken] = useState(null);
   const [expiresAt, setExpiresAt] = useState();
-
-  const decodeToken = (token) => {
-    return jwt_decode(token);
-  };
 
   useEffect(() => {
     const refreshToken = async () => {
