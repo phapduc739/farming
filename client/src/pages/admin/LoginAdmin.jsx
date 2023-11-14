@@ -5,8 +5,8 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { login } from "../actions/userActions";
-import useRefreshToken from "../hooks/useRefreshToken";
+import { login } from "../../actions/adminActions";
+import useRefreshToken from "../../hooks/useRefreshToken";
 
 const schema = yup
   .object({
@@ -18,8 +18,8 @@ const schema = yup
   })
   .required();
 
-export default function Login() {
-  const { accessToken } = useSelector((state) => state.user);
+export default function LoginAdmin() {
+  const { accessToken } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -36,23 +36,23 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:4000/login", {
+      const response = await axios.post("http://localhost:4000/login/admin", {
         email: data.email,
         password: data.password,
       });
 
       if (response.status === 200) {
-        const { user, userId, email, accessToken, refreshToken } =
+        const { admin, adminId, email, accessToken, refreshToken } =
           response.data;
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
-        dispatch(login(user, userId, email, accessToken, refreshToken));
+        dispatch(login(admin, adminId, email, accessToken, refreshToken));
 
         reset();
 
-        navigate("/user/info");
+        navigate("/admin/dashboard");
       }
     } catch (err) {
       if (err.response.status === 400) {
@@ -65,20 +65,23 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input className="border-2 border-indigo-500" {...register("email")} />
-      <br />
-      <input
-        className="border-2 border-indigo-500"
-        {...register("password")}
-        type="password"
-      />
-      <br />
-      <button className="border-2 border-indigo-500" disabled={loading}>
-        Login
-      </button>
+    <>
+      <h1>ADMIN LOGIN</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input className="border-2 border-indigo-500" {...register("email")} />
+        <br />
+        <input
+          className="border-2 border-indigo-500"
+          {...register("password")}
+          type="password"
+        />
+        <br />
+        <button className="border-2 border-indigo-500" disabled={loading}>
+          Login
+        </button>
 
-      {error && <p>{error}</p>}
-    </form>
+        {error && <p>{error}</p>}
+      </form>
+    </>
   );
 }

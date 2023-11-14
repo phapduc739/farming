@@ -1,19 +1,19 @@
 const initialState = {
-  user: {},
-  userId: null,
+  admin: {},
+  adminId: null,
   email: null,
   accessToken: null,
   refreshToken: null,
   isAuthenticated: false,
 };
 
-const userReducer = (state = initialState, action) => {
+const adminReducer = (state = initialState, action) => {
   switch (action.type) {
     case "LOGIN":
       return {
         ...state,
-        user: action.user,
-        userId: action.userId,
+        admin: action.admin,
+        adminId: action.adminId,
         email: action.email,
         accessToken: action.accessToken,
         refreshToken: action.refreshToken,
@@ -22,8 +22,8 @@ const userReducer = (state = initialState, action) => {
     case "LOGOUT": {
       return {
         ...state,
-        user: null,
-        userId: null,
+        admin: null,
+        adminId: null,
         email: null,
         accessToken: null,
         refreshToken: null,
@@ -35,4 +35,4 @@ const userReducer = (state = initialState, action) => {
   }
 };
 
-export default userReducer;
+export default adminReducer;

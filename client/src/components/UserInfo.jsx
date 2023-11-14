@@ -4,26 +4,36 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 function UserInfo() {
-  const user = useSelector((state) => state.user);
+  const { user, email, accessToken, userId } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    // Kiểm tra nếu không có accessToken hoặc userId, chuyển hướng đến trang đăng nhập
+    if (!accessToken || !userId) {
       navigate("/login/user");
     }
-  });
+  }, [accessToken, userId, email, navigate]);
 
   const handleLogout = () => {
+    // Xóa accessToken, userId và refreshToken khỏi localStorage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+    localStorage.removeItem("refreshToken");
+
+    // Dispatch action đăng xuất
     dispatch(logout());
-    localStorage.removeItem("token");
+
+    // Chuyển hướng đến trang đăng nhập
     navigate("/login/user");
   };
 
   return (
     <div>
-      <p>Welcome {user.user.email}</p>
+      <p>Welcome {email}</p>
 
       <button onClick={handleLogout}>Logout</button>
     </div>

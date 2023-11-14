@@ -1,13 +1,26 @@
 import { createStore, combineReducers } from "redux";
 import userReducer from "./reducers/userReducer";
+import adminReducer from "./reducers/adminReducer";
+import { persistStore, persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
+const persistConfig = {
+  key: "root",
+  storage,
+};
 
 const rootReducer = combineReducers({
   user: userReducer,
+  admin: adminReducer,
 });
 
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 const store = createStore(
-  rootReducer,
+  persistedReducer,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
-export default store;
+const persistor = persistStore(store);
+
+export { store, persistor };

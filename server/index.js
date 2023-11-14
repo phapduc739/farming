@@ -76,6 +76,20 @@ app.post("/register", async (req, res) => {
   });
 });
 
+// Hàm generate access token
+function generateAccessToken(user) {
+  return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: "15m",
+  });
+}
+
+// Hàm generate refresh token
+function generateRefreshToken(user) {
+  return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: "7d",
+  });
+}
+
 // Api đăng nhập
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -106,30 +120,90 @@ app.post("/login", async (req, res) => {
     expiresIn,
   });
 
+  const userId = user[0].id;
+
+  const accessToken = generateAccessToken(user);
+  const refreshToken = generateRefreshToken(user);
+
   res.json({
     message: "Đăng nhập thành công!",
-    token,
+    userId,
     email,
+    accessToken,
+    refreshToken,
   });
 });
 
-app.get("/refresh-token", (req, res) => {
-  const refreshToken = req.header("Authorization").replace("Bearer ", "");
+app.get("/token", (req, res) => {
+  // Lấy và xác thực refresh token
+  const refreshToken = req.header("x-refresh-token");
 
-  // Verify refresh token
+  // Verify và lấy userId
+  const userId = verifyRefreshToken(refreshToken);
 
-  const user = getUserFromRefreshToken(refreshToken); // Giả sử có hàm này rồi
+  // Tạo access token mới dựa trên userId
+  const accessToken = generateAccessToken(userId);
 
-  if (!user) {
-    return res.sendStatus(401);
+  // Trả về access token mới
+  res.json({ accessToken });
+});
+
+// Api đăng nhập
+app.post("/login/admin", async (req, res) => {
+  const { email, password } = req.body;
+
+  // Lấy thông tin user
+  const [admin] = await db.execute("SELECT * FROM admin WHERE email = ?", [
+    email,
+  ]);
+
+  if (admin.length === 0) {
+    return res.status(400).json({
+      error: "Email không tồn tại!",
+    });
   }
 
-  // Tạo access token mới
-  const accessToken = generateAccessToken(user); // Giả sử có hàm này rồi
+  // Kiểm tra password
+  const validPassword = await bcrypt.compare(password, admin[0].password);
+  if (!validPassword) {
+    return res.status(400).json({
+      error: "Sai mật khẩu!",
+    });
+  }
+
+  // Thời hạn token là 1 ngày
+  const expiresIn = 60 * 60 * 24;
+
+  const token = jwt.sign({ id: admin[0].id }, "secretkey", {
+    expiresIn,
+  });
+
+  const adminId = admin[0].id;
+
+  const accessToken = generateAccessToken(admin);
+  const refreshToken = generateRefreshToken(admin);
 
   res.json({
-    token: accessToken,
+    message: "Đăng nhập thành công!",
+    adminId,
+    email,
+    accessToken,
+    refreshToken,
   });
+});
+
+app.get("/token/admin", (req, res) => {
+  // Lấy và xác thực refresh token
+  const refreshToken = req.header("x-refresh-token");
+
+  // Verify và lấy userId
+  const userId = verifyRefreshToken(refreshToken);
+
+  // Tạo access token mới dựa trên userId
+  const accessToken = generateAccessToken(userId);
+
+  // Trả về access token mới
+  res.json({ accessToken });
 });
 
 // Api danh sách danh mục
