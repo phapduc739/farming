@@ -9,11 +9,12 @@ import Login from "./components/Login";
 import UserInfo from "./components/UserInfo";
 import Register from "./components/Register";
 import LoginAdmin from "./pages/admin/LoginAdmin";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboardLayout";
 import ManageUser from "./pages/admin/ManageCategory";
 import ManageCategory from "./pages/admin/ManageCategory";
 import ManageProduct from "./pages/admin/ManageProduct";
 import ManageOrder from "./pages/admin/ManageOrder";
+import AdminDashboardLayout from "./pages/admin/AdminDashboardLayout";
 
 function App() {
   return (

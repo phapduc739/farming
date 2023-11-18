@@ -327,6 +327,22 @@ app.put(
   }
 );
 
+app.delete("/delete/categories/:categoryId", (req, res) => {
+  const categoryId = parseInt(req.params.categoryId);
+
+  const deleteQuery = "DELETE FROM categories WHERE id = ?";
+
+  db.query(deleteQuery, [categoryId], (error, results) => {
+    if (error) {
+      console.error("Lỗi khi xóa danh mục từ MySQL:", error);
+      res.status(500).json({ success: false, message: "Lỗi nội bộ server" });
+    } else {
+      // Gửi thông báo tới tất cả client khi có thay đổi
+      res.status(200).json({ success: true, message: "Danh mục đã được xóa" });
+    }
+  });
+});
+
 // Api danh sách sản phẩm
 app.get("/list/products", async (req, res) => {
   try {
