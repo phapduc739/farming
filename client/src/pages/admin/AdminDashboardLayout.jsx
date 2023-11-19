@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../actions/adminActions";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Logo from "../../assets/images/Logo.png";
 import LogoAdmin from "../../assets/images/Logo-Admin.jpg";
@@ -9,7 +9,9 @@ import ManageCategory from "./ManageCategory";
 import ManageProduct from "./ManageProduct";
 import ManageOrder from "./ManageOrder";
 
-function AdminDashboardLayout() {
+function AdminDashboardLayout({ children }) {
+  const location = useLocation();
+
   const { admin, email, accessToken, adminId } = useSelector(
     (state) => state.admin
   );
@@ -80,67 +82,95 @@ function AdminDashboardLayout() {
       <div className="main-body fixed top-[60px] flex w-full h-[calc(100vh-60px)] bg-lightGray">
         <div className="sidebar w-[260px] h-full bg-white px-3 py-3 border-r">
           <ul className="menu flex flex-col gap-2">
-            <li className="item active w-full  bg-lightGreen rounded-r-[50px] text-[14px] text-primaryGreen font-bold">
-              <Link
-                className="flex justify-start items-center gap-3 px-3 py-3"
+            <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
+              <NavLink
+                className={({ isActive }) => {
+                  const activeClass = isActive
+                    ? "bg-lightGreen text-primaryGreen"
+                    : "";
+                  return `${activeClass} py-3 flex justify-start items-center gap-3 px-3`;
+                }}
                 to="/admin/dashboard"
               >
                 <i className="fa-solid fa-table-cells-large"></i>
                 Dashboard
-              </Link>
+              </NavLink>
             </li>
-            <li className="item w-full bg-white rounded-r-[50px] text-[14px] text-textGray font-medium">
-              <Link
-                className="py-3 flex justify-start items-center gap-3 px-3"
-                to="manage/users"
+            <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
+              <NavLink
+                className={({ isActive }) => {
+                  const activeClass = isActive
+                    ? "bg-lightGreen text-primaryGreen"
+                    : "";
+                  return `${activeClass} py-3 flex justify-start items-center gap-3 px-3`;
+                }}
+                to="/manage/users"
               >
                 <i className="fa-regular fa-user"></i>
                 Người dùng
-              </Link>
+              </NavLink>
             </li>
-            <li className="item w-full bg-white rounded-r-[50px] text-[14px] text-textGray font-medium">
-              <Link
-                className="py-3 flex justify-start items-center gap-3 px-3"
+            <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
+              <NavLink
+                className={({ isActive }) => {
+                  const activeClass = isActive
+                    ? "bg-lightGreen text-primaryGreen"
+                    : "";
+                  return `${activeClass} py-3 flex justify-start items-center gap-3 px-3`;
+                }}
                 to="/manage/categories"
               >
                 <i className="fa-solid fa-list"></i>
                 Danh mục
-              </Link>
+              </NavLink>
             </li>
-            <li className="item w-full bg-white rounded-r-[50px] text-[14px] text-textGray font-medium">
-              <Link
-                className="py-3 flex justify-start items-center gap-3 px-3"
+            <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
+              <NavLink
+                className={({ isActive }) => {
+                  const activeClass = isActive
+                    ? "bg-lightGreen text-primaryGreen"
+                    : "";
+                  return `${activeClass} py-3 flex justify-start items-center gap-3 px-3`;
+                }}
                 to="/manage/products"
               >
                 <i className="fa-solid fa-boxes-stacked"></i>Sản phẩm
-              </Link>
+              </NavLink>
             </li>
-            <li className="item w-full bg-white rounded-r-[50px] text-[14px] text-textGray font-medium">
-              <Link
-                className="py-3 flex justify-start items-center gap-3 px-3"
+            <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
+              <NavLink
+                className={({ isActive }) => {
+                  const activeClass = isActive
+                    ? "bg-lightGreen text-primaryGreen"
+                    : "";
+                  return `${activeClass} py-3 flex justify-start items-center gap-3 px-3`;
+                }}
                 to="/manage/orders"
               >
                 <i className="fa-solid fa-dolly"></i>
                 Đơn hàng
-              </Link>
+              </NavLink>
             </li>
-            <li className="item w-full bg-white rounded-r-[50px] text-[14px] text-textGray font-medium">
-              <Link
-                className="py-3 flex justify-start items-center gap-3 px-3"
+            <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
+              <NavLink
+                className={({ isActive }) => {
+                  const activeClass = isActive
+                    ? "bg-lightGreen text-primaryGreen"
+                    : "";
+                  return `${activeClass} py-3 flex justify-start items-center gap-3 px-3`;
+                }}
                 to="/statistics"
               >
                 <i className="fa-solid fa-chart-line"></i>
                 Thống kê
-              </Link>
+              </NavLink>
             </li>
             {/* <Link className="py-3 flex justify-start items-center gap-3 px-3"> */}
             <button onClick={handleLogout}>Đăng xuất</button>
             {/* </Link> */}
           </ul>
         </div>
-        <div className="content w-full">
-          <h1>Hello</h1>
-        </div>
+        <div className="content w-full">{children}</div>
       </div>
     </>
   );

@@ -9,6 +9,11 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
+const unlink = util.promisify(fs.unlink);
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.json());
 app.use(cors());
@@ -207,6 +212,18 @@ app.get("/token/admin", (req, res) => {
 });
 
 // Api danh sách danh mục
+app.get("/list/users", async (req, res) => {
+  try {
+    const [rows] = await db.execute(`SELECT * FROM users`);
+    res.json(rows);
+  } catch (error) {
+    res.status(500).json({
+      error: "Lấy danh sách danh mục thất bại!",
+    });
+  }
+});
+
+// Api danh sách danh mục
 app.get("/list/categories", async (req, res) => {
   try {
     const [rows] = await db.execute(`SELECT * FROM categories`);
@@ -327,20 +344,36 @@ app.put(
   }
 );
 
-app.delete("/delete/categories/:categoryId", (req, res) => {
-  const categoryId = parseInt(req.params.categoryId);
+app.delete("/delete/category/:categoryId", async (req, res) => {
+  const categoryId = req.params.categoryId;
 
-  const deleteQuery = "DELETE FROM categories WHERE id = ?";
+  try {
+    // Thực hiện xóa dữ liệu từ cơ sở dữ liệu
+    const result = await db.execute("DELETE FROM categories WHERE id = ?", [
+      categoryId,
+    ]);
 
-  db.query(deleteQuery, [categoryId], (error, results) => {
-    if (error) {
-      console.error("Lỗi khi xóa danh mục từ MySQL:", error);
-      res.status(500).json({ success: false, message: "Lỗi nội bộ server" });
+    if (result.affectedRows > 0) {
+      // Xóa thành công, trả về phản hồi 200 OK
+      res.status(200).json({
+        success: true,
+        message: "Danh mục đã được xóa",
+      });
     } else {
-      // Gửi thông báo tới tất cả client khi có thay đổi
-      res.status(200).json({ success: true, message: "Danh mục đã được xóa" });
+      // Không tìm thấy bản ghi để xóa
+      res.status(404).json({
+        success: false,
+        message: "Không tìm thấy danh mục để xóa",
+      });
     }
-  });
+  } catch (error) {
+    // Xảy ra lỗi trong quá trình xóa
+    console.error("Lỗi khi xóa danh mục từ MySQL:", error);
+    res.status(500).json({
+      success: false,
+      message: "Lỗi nội bộ server",
+    });
+  }
 });
 
 // Api danh sách sản phẩm
@@ -538,6 +571,41 @@ app.post(
     }
   }
 );
+
+app.post("/create/user", upload.single("image"), async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  try {
+    // Kiểm tra xem tệp hình ảnh đã được tải lên chưa
+    if (!req.file) {
+      return res.status(400).json({
+        error: "Vui lòng tải lên hình ảnh danh mục.",
+      });
+    }
+
+    const imagePath = req.file.path;
+
+    const result = await db.execute(
+      "INSERT INTO users (fullName, email, password, role, image) VALUES (?, ?, ?, ?, ?)",
+      [
+        name || null,
+        email || null,
+        password || null,
+        role || null,
+        imagePath || null,
+      ]
+    );
+
+    res.status(200).json({
+      message: "Thêm người dùng thành công!",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Thêm người dùng thất bại!",
+    });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
