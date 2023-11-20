@@ -1,25 +1,29 @@
 import React, { useState } from "react";
 
-function FilterUser() {
+function FilterUser({ onFilterChange }) {
+  const [filterValues, setFilterValues] = useState({
+    role: "",
+    status: "",
+  });
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
 
   const handleFilterToggle = () => {
     setShowFilter(!showFilter);
   };
 
-  const handleRoleChange = (event) => {
-    setSelectedRole(event.target.value);
-  };
-
-  const handleStatusChange = (event) => {
-    setSelectedStatus(event.target.value);
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    setFilterValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
   };
 
   const handleFilterApply = () => {
-    // Xử lý việc áp dụng bộ lọc
-    // Gọi API hoặc thực hiện các hành động khác tùy thuộc vào bộ lọc đã chọn
+    // Gọi hàm callback để thông báo về sự thay đổi
+    onFilterChange(filterValues);
+
+    // Đóng bộ lọc
     setShowFilter(false);
   };
 
@@ -27,7 +31,7 @@ function FilterUser() {
     <div>
       <button
         onClick={handleFilterToggle}
-        className=" flex justify-center items-center gap-2 rounded-[4px] py-[8px] px-[14px] bg-[#f1f1f4] hover:bg-[#d8d8d8] transition text-[#071437] text-[14px]"
+        className="flex justify-center items-center gap-2 rounded-[4px] py-[8px] px-[14px] bg-[#f1f1f4] hover:bg-[#d8d8d8] transition text-[#071437] text-[14px]"
       >
         <i className="fa-solid fa-filter"></i>
         Lọc
@@ -45,14 +49,15 @@ function FilterUser() {
               </label>
               <select
                 id="roleFilter"
-                value={selectedRole}
-                onChange={handleRoleChange}
+                name="role"
+                value={filterValues.role}
+                onChange={handleFilterChange}
                 className="w-full text-[14px] border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Tất cả</option>
-                <option value="admin">Admin</option>
-                <option value="seller">Seller</option>
-                <option value="user">User</option>
+                <option value="Admin">Admin</option>
+                <option value="Seller">Seller</option>
+                <option value="User">User</option>{" "}
               </select>
             </div>
             <div className="mb-4">
@@ -64,13 +69,14 @@ function FilterUser() {
               </label>
               <select
                 id="statusFilter"
-                value={selectedStatus}
-                onChange={handleStatusChange}
+                name="status"
+                value={filterValues.status}
+                onChange={handleFilterChange}
                 className="w-full text-[14px] border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">Tất cả</option>
-                <option value="active">Active</option>
-                <option value="block">Block</option>
+                <option value="Enable">Enable</option>
+                <option value="Disable">Disable</option>{" "}
               </select>
             </div>
             <div className="flex justify-end">

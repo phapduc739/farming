@@ -8,7 +8,8 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
+// const fs = require("fs");
+const fs = require("fs").promises;
 const util = require("util");
 const unlink = util.promisify(fs.unlink);
 const bodyParser = require("body-parser");
@@ -275,7 +276,7 @@ app.post("/create/category", upload.single("image"), async (req, res) => {
     const imagePath = req.file.path;
 
     const result = await db.execute(
-      "INSERT INTO categories (name, description, image) VALUES (?, ?, ?)",
+      "INSERT INTO categories (name, description, image, quantity, createAt) VALUES (?, ?, ?, 0, NOW())",
       [name, description, imagePath]
     );
 
@@ -323,55 +324,88 @@ app.put(
     const categoryId = req.params.categoryId;
     const { name, description } = req.body;
 
-    // Kiểm tra xem req.file tồn tại và lấy đường dẫn ảnh mới
-    const newImage = req.file ? `uploads/${req.file.filename}` : req.body.image;
-
     try {
-      // Cập nhật cơ sở dữ liệu với đường dẫn ảnh mới (newImage)
-      const result = await db.execute(
-        "UPDATE categories SET name=?, description=?, image=? WHERE id = ?",
-        [name, description, newImage, categoryId]
+      let imagePathOld = ""; // Đường dẫn của ảnh cũ
+
+      // Lấy đường dẫn của ảnh cũ từ cơ sở dữ liệu
+      const [category] = await db.execute(
+        "SELECT image FROM categories WHERE id = ?",
+        [categoryId]
+      );
+      if (category.length > 0) {
+        imagePathOld = category[0].image;
+      }
+
+      // Nếu có tệp tin mới được tải lên
+      if (req.file) {
+        // Kiểm tra xem tệp tin cũ có tồn tại không và xóa nó
+        if (imagePathOld) {
+          // Sử dụng fs.promises.unlink để sử dụng promise
+          await fs.promises.unlink(imagePathOld);
+        }
+
+        // Cập nhật đường dẫn mới trong cơ sở dữ liệu
+        const imagePathNew = req.file.path;
+        await db.execute("UPDATE categories SET image = ? WHERE id = ?", [
+          imagePathNew,
+          categoryId,
+        ]);
+      }
+      // Thực hiện truy vấn cập nhật thông tin người dùng
+      await db.execute(
+        "UPDATE categories SET name = ?, description = ? WHERE id = ?",
+        [name, description, categoryId]
       );
 
       res.status(200).json({
-        message: "Chỉnh sửa danh mục thành công!",
+        message: "Cập nhật danh mục thành công!",
       });
     } catch (error) {
+      console.error(error);
       res.status(500).json({
-        error: "Chỉnh sửa danh mục thất bại!",
+        error: "Cập nhật danh mục thất bại!",
       });
     }
   }
 );
 
+// Xóa người dùng dựa trên ID
 app.delete("/delete/category/:categoryId", async (req, res) => {
   const categoryId = req.params.categoryId;
 
   try {
-    // Thực hiện xóa dữ liệu từ cơ sở dữ liệu
-    const result = await db.execute("DELETE FROM categories WHERE id = ?", [
-      categoryId,
-    ]);
+    // Lấy đường dẫn của ảnh trước khi xóa người dùng
+    const [category] = await db.execute(
+      "SELECT image FROM categories WHERE id = ?",
+      [categoryId]
+    );
 
-    if (result.affectedRows > 0) {
-      // Xóa thành công, trả về phản hồi 200 OK
+    // Nếu người dùng tồn tại, xóa và trả về kết quả
+    if (category.length > 0) {
+      const imagePath = category[0].image;
+
+      // Xóa người dùng từ cơ sở dữ liệu
+      await db.execute("DELETE FROM categories WHERE id = ?", [categoryId]);
+
+      // Nếu có đường dẫn ảnh, hãy xóa ảnh
+      if (imagePath) {
+        // Đảm bảo sử dụng thư viện fs để xóa file
+        const fs = require("fs").promises;
+        await fs.unlink(imagePath);
+      }
+
       res.status(200).json({
-        success: true,
-        message: "Danh mục đã được xóa",
+        message: "Xóa người dùng thành công!",
       });
     } else {
-      // Không tìm thấy bản ghi để xóa
       res.status(404).json({
-        success: false,
-        message: "Không tìm thấy danh mục để xóa",
+        error: "Không tìm thấy người dùng!",
       });
     }
   } catch (error) {
-    // Xảy ra lỗi trong quá trình xóa
-    console.error("Lỗi khi xóa danh mục từ MySQL:", error);
+    console.error(error);
     res.status(500).json({
-      success: false,
-      message: "Lỗi nội bộ server",
+      error: "Lỗi khi xóa người dùng!",
     });
   }
 });
@@ -386,6 +420,9 @@ app.get("/list/products", async (req, res) => {
     p.name,
     p.description,
     p.price,
+    p.unit,
+    p.quantity,
+    p.status,
     p.categoryID,
     pi.image_url,
     c.name AS category_name
@@ -406,6 +443,9 @@ app.get("/list/products", async (req, res) => {
           name: row.name,
           description: row.description,
           price: row.price,
+          unit: row.unit,
+          status: row.status,
+          quantity: row.quantity,
           categoryID: row.categoryID,
           category_name: row.category_name,
           images: [],
@@ -425,38 +465,48 @@ app.get("/list/products", async (req, res) => {
   }
 });
 
-// Api thêm sản phẩm
 app.post("/create/product", upload.array("images", 12), async (req, res) => {
-  const { name, description, price, categoryID } = req.body;
+  try {
+    const { name, description, price, unit, quantity, categoryID } = req.body;
 
-  const [result] = await db.execute(
-    "INSERT INTO products (name, description, price, categoryID) VALUES (?, ?, ?, ?)",
-    [name, description, price, categoryID]
-  );
+    // Insert the product into the products table
+    const [result] = await db.execute(
+      "INSERT INTO products (name, description, price, unit, quantity, categoryID, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [name, description, price, unit, quantity, categoryID, "Còn hàng"]
+    );
 
-  const productId = result.insertId;
+    const productId = result.insertId;
 
-  const files = req.files;
+    // Insert product images into the product_images table
+    const files = req.files;
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const imagePath = file.path;
+        await db.execute(
+          "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)",
+          [productId, imagePath]
+        );
+      }
+    }
 
-  if (files && files.length > 0) {
-    files.forEach(async (file) => {
-      const imagePath = file.path;
-      await db.execute(
-        "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)",
-        [productId, imagePath]
-      );
-    });
+    // Update the quantity in the categories table
+    await db.execute(
+      "UPDATE categories SET quantity = quantity + 1 WHERE id = ?",
+      [categoryID]
+    );
+
+    res.status(201).json({ message: "Thêm sản phẩm thành công" });
+  } catch (error) {
+    console.error("Lỗi khi thêm sản phẩm:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-
-  res.send("Thêm sản phẩm thành công");
 });
 
-// Api thông tin chi tiết sản phẩm theo productId
 app.get("/product/:productId", async (req, res) => {
   const productId = req.params.productId;
   try {
     const [productInfo] = await db.execute(
-      "SELECT p.id, p.name, p.description, p.price, pi.id AS image_id, pi.product_id, pi.image_url " +
+      "SELECT p.id, p.name, p.description, p.price, p.quantity, p.status, p.unit, pi.id AS image_id, pi.product_id, pi.image_url " +
         "FROM products p " +
         "LEFT JOIN product_images pi ON p.id = pi.product_id " +
         "WHERE p.id = ?",
@@ -466,20 +516,21 @@ app.get("/product/:productId", async (req, res) => {
     if (productInfo.length === 0) {
       res.status(404).send("Sản phẩm không tồn tại");
     } else {
-      // Xử lý dữ liệu để nhóm các hình ảnh vào một mảng
-      const productImages = productInfo.map((row) => ({
-        id: row.image_id,
-        product_id: row.product_id,
-        image_url: row.image_url,
-      }));
-
       // Lấy dữ liệu sản phẩm (tên, mô tả, giá) từ dòng đầu tiên
       const productData = {
         id: productInfo[0].id,
         name: productInfo[0].name,
         description: productInfo[0].description,
         price: productInfo[0].price,
-        images: productImages,
+        quantity: productInfo[0].quantity,
+        status: productInfo[0].status,
+        unit: productInfo[0].unit,
+
+        images: productInfo.map((row) => ({
+          id: row.image_id,
+          product_id: row.product_id,
+          image_url: row.image_url,
+        })),
       };
 
       res.json(productData);
@@ -522,26 +573,47 @@ app.delete("/delete/image/:productId/:imageId", async (req, res) => {
   }
 });
 
-// API để cập nhật thông tin sản phẩm sau khi chỉnh sửa
-app.put("/edit/product/:productId", async (req, res) => {
-  const productId = req.params.productId;
-  const updatedProductData = req.body;
-  try {
-    await db.execute(
-      "UPDATE products SET name = ?, description = ?, price = ? WHERE id = ?",
-      [
-        updatedProductData.name,
-        updatedProductData.description,
-        updatedProductData.price,
+app.put(
+  "/edit/product/:productId",
+  upload.array("images", 4),
+  async (req, res) => {
+    const productId = req.params.productId;
+    const updatedProductData = req.body;
+    const images = req.files;
+
+    try {
+      await db.execute(
+        "UPDATE products SET name = ?, description = ?, price = ?, quantity = ?, status = ?, unit = ? WHERE id = ?",
+        [
+          updatedProductData.name,
+          updatedProductData.description,
+          updatedProductData.price,
+          updatedProductData.quantity,
+          updatedProductData.status,
+          updatedProductData.unit,
+          productId,
+        ]
+      );
+
+      await db.execute("DELETE FROM product_images WHERE product_id = ?", [
         productId,
-      ]
-    );
-    res.json({ message: "Thông tin sản phẩm đã được cập nhật thành công" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Lỗi khi cập nhật thông tin sản phẩm");
+      ]);
+
+      for (let i = 0; i < images.length; i++) {
+        const imageUrl = `uploads/${images[i].filename}`;
+        await db.execute(
+          "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)",
+          [productId, imageUrl]
+        );
+      }
+
+      res.json({ message: "Thông tin sản phẩm đã được cập nhật thành công" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Lỗi khi cập nhật thông tin sản phẩm");
+    }
   }
-});
+);
 
 // API để thêm ảnh mới cho sản phẩm
 app.post(
@@ -572,6 +644,115 @@ app.post(
   }
 );
 
+app.delete("/delete/product/:productId", async (req, res) => {
+  const productId = req.params.productId;
+
+  try {
+    // Fetch the product details including image paths
+    const [product] = await db.execute(
+      "SELECT id, name, description, price, unit, quantity, status, categoryID FROM products WHERE id = ?",
+      [productId]
+    );
+
+    // If the product exists, proceed with deletion
+    if (product.length > 0) {
+      const { name, description, price, unit, quantity, status, categoryID } =
+        product[0];
+
+      // Fetch the image paths associated with the product
+      const [images] = await db.execute(
+        "SELECT id, image_url FROM product_images WHERE product_id = ?",
+        [productId]
+      );
+
+      // Delete the corresponding image files from the uploads directory
+      const imagePaths = images.map((row) => row.image_url).filter(Boolean);
+      await Promise.all(
+        imagePaths.map(async (imagePath) => {
+          try {
+            await fs.unlink(imagePath);
+          } catch (err) {
+            console.error(`Error deleting file: ${imagePath}`, err);
+          }
+        })
+      );
+
+      // Delete images from the product_images table
+      await db.execute("DELETE FROM product_images WHERE product_id = ?", [
+        productId,
+      ]);
+
+      await db.execute(
+        "UPDATE categories SET quantity = GREATEST(quantity - 1, 0) WHERE id = ?",
+        [categoryID]
+      );
+      // Delete the product from the products table
+      await db.execute("DELETE FROM products WHERE id = ?", [productId]);
+
+      res.status(200).json({
+        message: "Product deleted successfully!",
+        deletedProduct: {
+          id: productId,
+          name,
+          description,
+          price,
+          unit,
+          quantity,
+          status,
+          categoryID,
+          images: imagePaths,
+        },
+      });
+    } else {
+      // If the product does not exist
+      res.status(404).json({
+        error: "Product not found!",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Error deleting product!",
+    });
+  }
+});
+
+app.get("/list/users", async (req, res) => {
+  try {
+    const [rows] = await db.execute("SELECT * FROM users");
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Lấy danh sách người dùng thất bại!" });
+  }
+});
+
+app.get("/user/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Thực hiện truy vấn SQL để lấy thông tin danh mục dựa trên categoryId
+    const [rows] = await db.execute("SELECT * FROM users WHERE id = ?", [
+      userId,
+    ]);
+
+    if (rows.length === 0) {
+      // Trả về lỗi 404 nếu không tìm thấy danh mục
+      res.status(404).json({
+        error: "Danh mục không tồn tại.",
+      });
+    } else {
+      // Trả về thông tin danh mục nếu tìm thấy
+      res.json(rows[0]);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Lỗi khi lấy thông tin danh mục.",
+    });
+  }
+});
+
 app.post("/create/user", upload.single("image"), async (req, res) => {
   const { name, email, password, role } = req.body;
 
@@ -585,14 +766,21 @@ app.post("/create/user", upload.single("image"), async (req, res) => {
 
     const imagePath = req.file.path;
 
+    const currentDate = new Date().toISOString().split("T")[0];
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const result = await db.execute(
-      "INSERT INTO users (fullName, email, password, role, image) VALUES (?, ?, ?, ?, ?)",
+      "INSERT INTO users (name, email, password, role, image, dateJoin, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         name || null,
         email || null,
-        password || null,
+        hashedPassword || null, // Save the hashed password
         role || null,
         imagePath || null,
+        currentDate || null,
+        "Enable",
       ]
     );
 
@@ -603,6 +791,93 @@ app.post("/create/user", upload.single("image"), async (req, res) => {
     console.error(error);
     res.status(500).json({
       error: "Thêm người dùng thất bại!",
+    });
+  }
+});
+
+app.put("/edit/user/:userId", upload.single("image"), async (req, res) => {
+  const userId = req.params.userId;
+  const { name, email, role, status } = req.body;
+
+  try {
+    let imagePathOld = ""; // Đường dẫn của ảnh cũ
+
+    // Lấy đường dẫn của ảnh cũ từ cơ sở dữ liệu
+    const [user] = await db.execute("SELECT image FROM users WHERE id = ?", [
+      userId,
+    ]);
+    if (user.length > 0) {
+      imagePathOld = user[0].image;
+    }
+
+    // Nếu có tệp tin mới được tải lên
+    if (req.file) {
+      // Kiểm tra xem tệp tin cũ có tồn tại không và xóa nó
+      if (imagePathOld) {
+        // Sử dụng fs.promises.unlink để sử dụng promise
+        await fs.promises.unlink(imagePathOld);
+      }
+
+      // Cập nhật đường dẫn mới trong cơ sở dữ liệu
+      const imagePathNew = req.file.path;
+      await db.execute("UPDATE users SET image = ? WHERE id = ?", [
+        imagePathNew,
+        userId,
+      ]);
+    }
+    // Thực hiện truy vấn cập nhật thông tin người dùng
+    await db.execute(
+      "UPDATE users SET name = ?, email = ?, role = ?, status = ? WHERE id = ?",
+      [name, email, role, status, userId]
+    );
+
+    res.status(200).json({
+      message: "Cập nhật người dùng thành công!",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Cập nhật người dùng thất bại!",
+    });
+  }
+});
+
+// Xóa người dùng dựa trên ID
+app.delete("/delete/user/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Lấy đường dẫn của ảnh trước khi xóa người dùng
+    const [user] = await db.execute("SELECT image FROM users WHERE id = ?", [
+      userId,
+    ]);
+
+    // Nếu người dùng tồn tại, xóa và trả về kết quả
+    if (user.length > 0) {
+      const imagePath = user[0].image;
+
+      // Xóa người dùng từ cơ sở dữ liệu
+      await db.execute("DELETE FROM users WHERE id = ?", [userId]);
+
+      // Nếu có đường dẫn ảnh, hãy xóa ảnh
+      if (imagePath) {
+        // Đảm bảo sử dụng thư viện fs để xóa file
+        const fs = require("fs").promises;
+        await fs.unlink(imagePath);
+      }
+
+      res.status(200).json({
+        message: "Xóa người dùng thành công!",
+      });
+    } else {
+      res.status(404).json({
+        error: "Không tìm thấy người dùng!",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Lỗi khi xóa người dùng!",
     });
   }
 });

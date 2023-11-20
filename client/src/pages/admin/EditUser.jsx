@@ -1,74 +1,88 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Upload } from "react-feather";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
 
-const AddUser = () => {
+const EditUser = () => {
   const [selectedImage, setSelectedImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState("");
+
   const [errors, setErrors] = useState({});
 
+  const { userId } = useParams();
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
     name: "",
     email: "",
-    password: "",
+    status: "",
     image: "",
     role: "",
   });
   const [image, setImage] = useState(null);
   const imageInputRef = useRef();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUser({
-      ...user,
-      [name]: value,
-    });
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        console.log("categoryId:", userId); // Đảm bảo giá trị của categoryId được log
+        const response = await axios.get(
+          `http://localhost:4000/user/${userId}`
+        );
+        const { name, email, image, role, status } = response.data;
+        console.log(response.data);
+        setUser({ name, email, image, role, status });
+        setSelectedImage(image);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin danh mục:", error);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
 
   const handleClose = async () => {
     window.history.back();
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImage(file);
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
 
-    // Xem trước hình ảnh
+    // Assuming you're using FileReader to read the selected file
     const reader = new FileReader();
-    reader.onload = () => {
-      setSelectedImage(reader.result);
+
+    reader.onloadend = () => {
+      const imageDataUrl = reader.result;
+      setPreviewImage(imageDataUrl);
+      setImage(file); // Set the image file
     };
-    reader.readAsDataURL(file);
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleStatusChange = (event) => {
+    const status = event.target.value;
+    setUser({ ...user, status });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Kiểm tra hợp lệ trước khi gửi yêu cầu
-    if (!user.name || !user.email || !user.password || !user.role || !image) {
-      const newErrors = {};
-      if (!user.name) newErrors.name = "Vui lòng nhập tên người dùng.";
-      if (!user.email) newErrors.email = "Vui lòng nhập email.";
-      if (!user.password) newErrors.password = "Vui lòng nhập mật khẩu.";
-      if (!user.role) newErrors.role = "Vui lòng nhập vai trò.";
-      if (!image) newErrors.image = "Vui lòng chọn ảnh người dùng.";
-      setErrors(newErrors);
-      return;
-    }
-
     const formData = new FormData();
     formData.append("name", user.name);
     formData.append("email", user.email);
-    formData.append("password", user.password);
+    formData.append("status", user.status);
     formData.append("role", user.role);
-    formData.append("image", image);
+    if (image) {
+      formData.append("image", image);
+    }
 
     try {
-      const response = await axios.post(
-        "http://localhost:4000/create/user",
+      const response = await axios.put(
+        `http://localhost:4000/edit/user/${userId}`,
         formData,
         {
           headers: {
@@ -76,14 +90,20 @@ const AddUser = () => {
           },
         }
       );
-      console.log(response.data.message);
-      navigate("/manage/users");
+
+      console.log(response); // Log phản hồi từ server
+
+      if (response.status === 200) {
+        // Xử lý khi thành công
+        navigate("/manage/users");
+      } else {
+        // Xử lý khi thất bại
+        console.error("Lỗi khi thêm danh mục:", response.data.error);
+      }
     } catch (error) {
       console.error("Lỗi khi thêm danh mục:", error);
     }
   };
-
-  const DefaultAvatar = "../../src/assets/images/blank-image.svg";
 
   return (
     <>
@@ -97,19 +117,13 @@ const AddUser = () => {
 
                 <label htmlFor="" className="flex flex-col items-center">
                   <div className="relative w-[125px] h-[125px] border mb-4 rounded-[4px]">
-                    {selectedImage ? (
-                      <img
-                        src={selectedImage}
-                        alt="Hình ảnh đã được thêm"
-                        className="w-full h-full object-cover rounded-[4px]"
-                      />
-                    ) : (
-                      <img
-                        src={DefaultAvatar}
-                        alt="Hình ảnh mặc định"
-                        className="w-full h-full object-cover rounded-[4px]"
-                      />
-                    )}
+                    <img
+                      src={
+                        previewImage || `http://localhost:4000/${selectedImage}`
+                      }
+                      alt="Hình ảnh đã được thêm"
+                      className="w-full h-full object-cover rounded-[4px]"
+                    />
 
                     <div className="rounded-[4px] absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity">
                       <label htmlFor="fileInput" className="cursor-pointer">
@@ -150,7 +164,7 @@ const AddUser = () => {
                     name="name"
                     placeholder="Nhập tên người dùng..."
                     value={user.name}
-                    onChange={handleInputChange}
+                    onChange={(e) => setUser({ ...user, name: e.target.value })}
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
                   />
                   {errors.name && (
@@ -170,7 +184,9 @@ const AddUser = () => {
                     name="email"
                     placeholder="Nhập địa chỉ email..."
                     value={user.email}
-                    onChange={handleInputChange}
+                    onChange={(e) =>
+                      setUser({ ...user, email: e.target.value })
+                    }
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
                   />
                   {errors.email && (
@@ -182,20 +198,22 @@ const AddUser = () => {
 
                 <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
                   <div className="flex gap-1">
-                    <h3 className="">Mật khẩu</h3>
+                    <h3 className="">Trạng thái</h3>
                     <span className="text-red-500">*</span>
                   </div>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Nhập mật khẩu..."
-                    value={user.password}
-                    onChange={handleInputChange}
+                  <select
+                    name="status"
+                    value={user.status}
+                    onChange={handleStatusChange}
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
-                  />
-                  {errors.password && (
+                  >
+                    <option value="">Chọn trạng thái</option>
+                    <option value="Enable">Enable</option>
+                    <option value="Disable">Disable</option>
+                  </select>
+                  {errors.status && (
                     <div className="text-red-500 text-[12px]">
-                      {errors.password}
+                      {errors.status}
                     </div>
                   )}
                 </label>
@@ -208,7 +226,7 @@ const AddUser = () => {
                   <select
                     name="role"
                     value={user.role}
-                    onChange={handleInputChange}
+                    onChange={(e) => setUser({ ...user, role: e.target.value })}
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
                   >
                     {" "}
@@ -227,10 +245,10 @@ const AddUser = () => {
 
               <div className="btn flex justify-start h-[44px] ">
                 <button
-                  className="bg-primaryGreen text-white rounded-lg py-2 px-5"
+                  className="bg-yellow text-white rounded-lg py-2 px-5"
                   type="submit"
                 >
-                  Thêm
+                  Lưu
                 </button>
                 <button
                   className="bg-gray-200 text-gray-500 rounded-lg py-2 px-5 ml-2"
@@ -248,4 +266,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default EditUser;

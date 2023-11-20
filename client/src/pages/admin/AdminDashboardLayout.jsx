@@ -165,9 +165,12 @@ function AdminDashboardLayout({ children }) {
                 Thống kê
               </NavLink>
             </li>
-            {/* <Link className="py-3 flex justify-start items-center gap-3 px-3"> */}
-            <button onClick={handleLogout}>Đăng xuất</button>
-            {/* </Link> */}
+            <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
+              <NavLink className="py-3 flex justify-start items-center gap-3 px-3">
+                <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                <button onClick={handleLogout}>Đăng xuất</button>
+              </NavLink>
+            </li>
           </ul>
         </div>
         <div className="content w-full">{children}</div>

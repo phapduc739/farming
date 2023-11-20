@@ -7,6 +7,8 @@ import { logout } from "../../actions/adminActions";
 import { useNavigate } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
 
+import { format } from "date-fns";
+
 function ManageUser() {
   const [selectAll, setSelectAll] = useState(false);
   const [checkboxStates, setCheckboxStates] = useState({});
@@ -28,18 +30,23 @@ function ManageUser() {
     }
   }, [accessToken, adminId, email, navigate]);
 
-  const handleLogout = () => {
-    // Xóa accessToken, userId và refreshToken khỏi localStorage
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("adminId");
-    localStorage.removeItem("email");
-    localStorage.removeItem("refreshToken");
+  // const handleLogout = () => {
+  //   // Xóa accessToken, userId và refreshToken khỏi localStorage
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("adminId");
+  //   localStorage.removeItem("email");
+  //   localStorage.removeItem("refreshToken");
 
-    // Dispatch action đăng xuất
-    dispatch(logout());
+  //   // Dispatch action đăng xuất
+  //   dispatch(logout());
 
-    // Chuyển hướng đến trang đăng nhập
-    navigate("/login/admin");
+  //   // Chuyển hướng đến trang đăng nhập
+  //   navigate("/login/admin");
+  // };
+
+  const handleFilterChange = (filters) => {
+    setUsers([]);
+    fetchData(filters);
   };
 
   const fetchData = () => {
@@ -55,11 +62,11 @@ function ManageUser() {
       });
   };
 
-  const handleCheckboxChange = (event, name) => {
+  const handleCheckboxChange = (event, userId) => {
     const { checked } = event.target;
     setCheckboxStates((prevState) => ({
       ...prevState,
-      [name]: checked,
+      [userId]: checked,
     }));
   };
 
@@ -68,7 +75,7 @@ function ManageUser() {
     setSelectAll(checked);
     const newCheckboxStates = {};
     for (const row of users) {
-      newCheckboxStates[row.name] = checked;
+      newCheckboxStates[row.id] = checked;
     }
     setCheckboxStates(newCheckboxStates);
   };
@@ -104,7 +111,7 @@ function ManageUser() {
               <i className="fa-solid fa-magnifying-glass"></i>
             </div>
             <div className="relative btn-add flex gap-2">
-              <FilterUser />
+              <FilterUser onFilterChange={handleFilterChange} />{" "}
               <button
                 className="bg-primaryGreen flex justify-center items-center gap-2 rounded-[4px] py-[8px] px-[14px] text-white text-[14px] hover:bg-[#08886e] transition"
                 onClick={navigateToAddUser}
@@ -127,8 +134,8 @@ function ManageUser() {
                   </th>
                   <th className="p-2 uppercase">Người dùng</th>
                   <th className="p-2 uppercase">Vai trò</th>
-                  <th className="p-2 uppercase">Ngày tham gia</th>
                   <th className="p-2 uppercase">Trạng thái</th>
+                  <th className="p-2 uppercase">Ngày tham gia</th>
                   <th className="p-2 uppercase">Hành động</th>
                 </tr>
               </thead>
@@ -138,27 +145,38 @@ function ManageUser() {
                     <td className="p-2">
                       <input
                         type="checkbox"
-                        checked={checkboxStates[row.fullName] || false}
+                        checked={checkboxStates[row.id] || false}
                         onChange={(event) =>
-                          handleCheckboxChange(event, row.fullName)
+                          handleCheckboxChange(event, row.id)
                         }
                       />
                     </td>
                     <td className="p-2 flex justify-start items-center gap-2">
-                      {/* <div className="w-[50px] h-[50px]">
+                      <div className="w-[50px] h-[50px]">
                         <img
                           className="object-cover rounded-[50%]"
                           src={`http://localhost:4000/${row.image}`}
                           alt=""
                         />
-                      </div> */}
+                      </div>
                       <div className="flex flex-col gap-[5px]">
-                        <h3 className="font-[600]">{row.fullName}</h3>
+                        <h3 className="font-[600]">{row.name}</h3>
                         <h3 className="font-[500]">{row.email}</h3>
                       </div>
                     </td>
                     <td className="p-2">{row.role}</td>
-                    <td className="p-2">{row.dateJoin}</td>
+                    <td
+                      className={`p-2 ${
+                        row.status === "Enable"
+                          ? "text-green-500 font-semibold"
+                          : "text-red-500 font-semibold"
+                      }`}
+                    >
+                      {row.status}
+                    </td>
+                    <td className="p-2">
+                      {format(new Date(row.dateJoin), "dd/MM/yyyy")}
+                    </td>
                     <td className="p-2">
                       <button
                         className="mr-2"

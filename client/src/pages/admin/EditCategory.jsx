@@ -62,15 +62,6 @@ const EditCategory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Kiểm tra hợp lệ trước khi gửi yêu cầu
-    if (!category.name || !category.description) {
-      const newErrors = {};
-      if (!category.name) newErrors.name = "Vui lòng nhập tên danh mục.";
-      if (!category.description) newErrors.description = "Vui lòng nhập mô tả.";
-      setErrors(newErrors);
-      return;
-    }
-
     const formData = new FormData();
     if (image) {
       formData.append("image", image);

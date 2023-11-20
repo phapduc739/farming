@@ -1,30 +1,22 @@
 import { useState, useEffect } from "react";
-import DeleteCategoryModal from "./DeleteUserModal";
-import AddCategoryModal from "./AddCategory";
 import FilterUser from "./FilterUser";
-import EditCategoryModal from "./EditCategory";
 import axios from "axios";
-
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../actions/adminActions";
-import { useNavigate, Link } from "react-router-dom";
-import Logo from "../../assets/images/Logo.png";
-import LogoAdmin from "../../assets/images/Logo-Admin.jpg";
+import { useSelector } from "react-redux";
+// import { logout } from "../../actions/adminActions";
+import { useNavigate } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
+import { format } from "date-fns";
 
 function ManageCategory() {
   const [selectAll, setSelectAll] = useState(false);
   const [checkboxStates, setCheckboxStates] = useState({});
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  const [addModalOpen, setAddModalOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [databaseChange, setDatabaseChange] = useState(false);
 
   const { admin, email, accessToken, adminId } = useSelector(
     (state) => state.admin
   );
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,23 +28,26 @@ function ManageCategory() {
     }
   }, [accessToken, adminId, email, navigate]);
 
-  const handleLogout = () => {
-    // Xóa accessToken, userId và refreshToken khỏi localStorage
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("adminId");
-    localStorage.removeItem("email");
-    localStorage.removeItem("refreshToken");
+  // const handleLogout = () => {
+  //   // Xóa accessToken, userId và refreshToken khỏi localStorage
+  //   localStorage.removeItem("accessToken");
+  //   localStorage.removeItem("adminId");
+  //   localStorage.removeItem("email");
+  //   localStorage.removeItem("refreshToken");
 
-    // Dispatch action đăng xuất
-    dispatch(logout());
+  //   // Dispatch action đăng xuất
+  //   dispatch(logout());
 
-    // Chuyển hướng đến trang đăng nhập
-    navigate("/login/admin");
-  };
+  //   // Chuyển hướng đến trang đăng nhập
+  //   navigate("/login/admin");
+  // };
 
-  const fetchData = () => {
+  const fetchData = (filters) => {
+    // Xử lý gọi API với các giá trị bộ lọc
     axios
-      .get("http://localhost:4000/list/categories")
+      .get("http://localhost:4000/list/categories", {
+        params: filters,
+      })
       .then((response) => {
         setCategories(response.data);
         setDatabaseChange(!databaseChange);
@@ -62,25 +57,6 @@ function ManageCategory() {
         console.error("Lỗi khi lấy danh sách danh mục:", error);
       });
   };
-
-  // const onUpdateCategories = () => {
-  //   fetchData(); // Gọi lại hàm fetchData để cập nhật danh sách danh mục
-  // };
-
-  // const handleEditCategory = (categoryId) => {
-  //   setSelectedCategoryId(categoryId);
-  //   setDatabaseChange(!databaseChange);
-  // };
-
-  // const handleDeleteCategory = (categoryId) => {
-  //   setSelectedCategoryId(categoryId);
-  //   setDeleteModalOpen(true);
-  // };
-
-  // const handleCloseModal = () => {
-  //   setSelectedCategoryId(null);
-  //   setDatabaseChange(!databaseChange);
-  // };
 
   const handleCheckboxChange = (event, name) => {
     const { checked } = event.target;
@@ -131,7 +107,7 @@ function ManageCategory() {
               <i className="fa-solid fa-magnifying-glass"></i>
             </div>
             <div className="relative btn-add flex gap-2">
-              <FilterUser />
+              {/* <FilterUser onFilterChange={handleFilterChange} />{" "} */}
               <button
                 className="bg-primaryGreen flex justify-center items-center gap-2 rounded-[4px] py-[8px] px-[14px] text-white text-[14px] hover:bg-[#08886e] transition"
                 onClick={navigateToAddCategory}
@@ -184,7 +160,9 @@ function ManageCategory() {
                       </div>
                     </td>
                     <td className="p-2">{row.quantity}</td>
-                    <td className="p-2">{row.createAt}</td>
+                    <td className="p-2">
+                      {format(new Date(row.createAt), "dd/MM/yyyy")}
+                    </td>{" "}
                     <td className="p-2">
                       <button
                         className="mr-2"
