@@ -6,7 +6,7 @@ import DeleteProduct from "./pages/admin/DeleteProduct";
 import CreateCategory from "./pages/CreateCategory";
 import Login from "./components/Login";
 import UserInfo from "./components/UserInfo";
-import Register from "./components/Register";
+import Register from "./pages/seller/Register";
 import LoginAdmin from "./pages/admin/LoginAdmin";
 import ManageUser from "./pages/admin/ManageUser";
 import ManageCategory from "./pages/admin/ManageCategory";

@@ -31,6 +31,20 @@ import { Clock } from "react-feather";
 import ImageProduct from "../../assets/images/cachua.png";
 
 import { Plus } from "react-feather";
+import BannerRauCuQua from "../../assets/images/14.jpg";
+
+import BannerRauQua from "../../assets/images/Frame 92.png";
+import BannerNam from "../../assets/images/10.jpg";
+
+import BgSendEmail from "../../assets/images/image 6.png";
+
+import { Mail } from "react-feather";
+
+import IconProduct from "../../assets/images/product.svg";
+
+import IconDelivery from "../../assets/images/delivery.svg";
+import IconDiscount from "../../assets/images/discount.svg";
+import IconMarket from "../../assets/images/market.svg";
 
 const CategoryData = [
   {
@@ -176,7 +190,7 @@ function Home() {
                 </div>
               </Link>
               |
-              <Link>
+              <Link to="/register/user">
                 <User name="user" size={24} color="black" />
               </Link>
             </div>
@@ -435,7 +449,7 @@ function Home() {
 
       {/* MAIN CONTENT */}
       <div className="main-content w-full h-auto border border-green">
-        <div className="main-content-container w-[1280px] h-[1000px] bg-slate-300 m-auto flex gap-6">
+        <div className="main-content-container w-[1280px] h-auto bg-slate-300 m-auto flex gap-6">
           <div className="main-content-left flex flex-col gap-6 w-[300px] h-full bg-red-300">
             {/* All Category */}
             <div className="categories w-full p-6 h-auto bg-backgroundLightGray rounded-[5px]">
@@ -901,6 +915,751 @@ function Home() {
                   </button>
                 </Link>
               </div>
+            </div>
+
+            {/* Banner rau củ quả */}
+            <div className="banner-rau-cu-qua relative">
+              <img className="rounded-[5px]" src={BannerRauCuQua} alt="" />
+              <div className="content absolute top-[50%] left-[50%] transform translate-x-[-50%] translate-y-[-50%] text-center">
+                <h6 className="text-[14px] text-primaryGreen font-normal">
+                  Mùa vụ đã đến
+                </h6>
+                <h2 className="text-[32px] text-text2222 font-[700]">
+                  RAU CỦ QUẢ
+                </h2>
+                <p className="text-[14px] text-textGray font-normal mb-[20px]">
+                  Tiết kiệm đến 5%
+                </p>
+                <Link
+                  to=""
+                  className="m-auto text-[17px] text-white font-bold px-[28px] py-[13px] w-[169px] bg-secondaryRed hover:bg-red-500 transition flex justify-center items-center gap-2 rounded-[5px]"
+                >
+                  Mua ngay
+                  <ArrowRight />
+                </Link>
+              </div>
+            </div>
+
+            {/* Tất cả dạnh mục */}
+            <div className="all-category">
+              <div className="good-price-title flex justify-between items-center">
+                <div className="py-[24px]">
+                  <h2 className="text-[24px] text-text2222 font-bold">
+                    Tất cả danh mục
+                  </h2>
+                  <div className="flex justify-start items-center gap-1">
+                    <div className="w-[60px] h-[3px] bg-primaryGreen"></div>
+                    <img src={Seedling} alt="" />
+                    <div className="w-[60px] h-[3px] bg-primaryGreen"></div>
+                  </div>
+                  <p className="text-[14px] text-textGray font-[400]">
+                    Danh mục hàng đầu trong tuần.
+                  </p>
+                </div>
+
+                <div className="hidden px-[12px] py-[10px] bg-secondaryRed justify-center items-center gap-2 rounded-[5px]">
+                  <Clock size={20} color="white" />
+                  <p className="text-[16px] text-white font-[500]">
+                    Hết hạn vào: 14 : 23 : 01 : 11
+                  </p>
+                </div>
+              </div>
+
+              <div className="good-price-all-product border h-[135px]">
+                <ul className="grid grid-cols-5 gap-x-6 h-full">
+                  {CategoryData.map((category, index) => (
+                    <li key={index}>
+                      <Link
+                        to=""
+                        className="rounded-[5px] w-full h-full flex flex-col justify-center items-center gap-3 bg-backgroundLightGray"
+                      >
+                        <img
+                          className="w-[36px] h-[36px]"
+                          src={category.image}
+                          alt={category.name}
+                        />
+                        <p className="text-[16px] text-text2222 font-[400]">
+                          {category.name}
+                        </p>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* 2 Banner Rau và Nấm */}
+            <div className="2-banner-rau-nam grid grid-cols-2 gap-x-6 py-[24px]">
+              <div className="banner-rau-cu-qua relative">
+                <img
+                  className="rounded-[5px] w-full h-full"
+                  src={BannerRauQua}
+                  alt=""
+                />
+                <div className="content absolute top-[16px] left-[24px] text-left">
+                  <h6 className="text-[24px] text-textBlack font-[500]">
+                    Ưu đãi 50%
+                  </h6>
+                  <h2 className="text-[24px] text-primaryGreen font-[900]">
+                    Rau quả hợp vệ sinh
+                  </h2>
+                  <Link
+                    to=""
+                    className="mt-[12px] text-[17px] text-white font-bold px-[28px] py-[13px] w-[169px] bg-secondaryRed hover:bg-red-500 transition flex justify-center items-center gap-2 rounded-[5px]"
+                  >
+                    Mua ngay
+                    <ArrowRight />
+                  </Link>
+                </div>
+              </div>
+              <div className="banner-rau-cu-qua relative">
+                <img
+                  className="rounded-[5px] w-full h-full"
+                  src={BannerNam}
+                  alt=""
+                />
+                <div className="content absolute top-[16px] left-[24px] text-left">
+                  <h6 className="text-[24px] text-textBlack font-[500]">
+                    Ưu đãi 50%
+                  </h6>
+                  <h2 className="text-[24px] text-primaryGreen font-[900]">
+                    Nấm chất lượng
+                  </h2>
+                  <Link
+                    to=""
+                    className="mt-[12px] text-[17px] text-white font-bold px-[28px] py-[13px] w-[169px] bg-secondaryRed hover:bg-red-500 transition flex justify-center items-center gap-2 rounded-[5px]"
+                  >
+                    Mua ngay
+                    <ArrowRight />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* Dành cho bạn */}
+            <div className="good-price">
+              <div className="good-price-title flex justify-between items-center">
+                <div className="">
+                  <h2 className="text-[24px] text-text2222 font-bold">
+                    Dành cho bạn
+                  </h2>
+                  <div className="flex justify-start items-center gap-1">
+                    <div className="w-[60px] h-[3px] bg-primaryGreen"></div>
+                    <img src={Seedling} alt="" />
+                    <div className="w-[60px] h-[3px] bg-primaryGreen"></div>
+                  </div>
+                  <p className="text-[14px] text-textGray font-[400]">
+                    Lựa chọn thực phẩm cần thiết cho gia đình của bạn.{" "}
+                  </p>
+                </div>
+
+                <div className="px-[12px] py-[10px] bg-secondaryRed hidden justify-center items-center gap-2 rounded-[5px]">
+                  <Clock size={20} color="white" />
+                  <p className="text-[16px] text-white font-[500]">
+                    Hết hạn vào: 14 : 23 : 01 : 11
+                  </p>
+                </div>
+              </div>
+
+              <div className="good-price-all-product py-[24px] border grid grid-cols-4">
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+
+                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+                  <div className="w-[170px] h-[140px]">
+                    <img
+                      className="w-full h-full object-cover border"
+                      src={ImageProduct}
+                      alt=""
+                    />
+                  </div>
+
+                  <h5 className="text-[16px] text-text2222 font-normal">
+                    Cà chua xuất khẩu
+                  </h5>
+                  <div className="flex justify-between items-center gap-2">
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      13.000đ
+                    </h6>
+                    <p className="text-[14px] text-textGray font-[400] line-through">
+                      20.000đ
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-center gap-2">
+                    <div className="star text-[11px] text-yellow flex gap-1">
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                      <i className="fa-solid fa-star"></i>
+                    </div>
+                    <h6 className="text-[15px] text-primaryGreen font-[600]">
+                      Còn hàng
+                    </h6>
+                  </div>
+                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                    Thêm
+                    <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
+                      <Plus size={18} color="#0DA487" />
+                    </div>
+                  </button>
+                </Link>
+              </div>
+
+              <div className="see-more">
+                <Link
+                  to=""
+                  className="m-auto rounded-[50px] text-[16px] text-primaryGreen font-medium hover:font-semibold flex justify-center items-center bg-lightGreen hover:bg-green-100 transition p-[10px] w-[126px]"
+                >
+                  Xem thêm
+                  <ChevronDown />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Đăng ký thông báo */}
+      <div className="send-email w-full h-auto">
+        <div className="send-email-container w-[1280px] h-auto m-auto">
+          <div className="send-email relative py-[24px]">
+            <img className="w-full" src={BgSendEmail} alt="" />
+            <div className="content absolute top-[50%] left-[210px] translate-y-[-50%]">
+              <h2 className="text-[24px] text-white font-bold">
+                Đăng ký để nhận được nhiều thông báo mới
+              </h2>
+              <h5 className="text-[16px] text-yellow font-[600]">
+                Đăng ký để nhận được nhiều thông báo mới
+              </h5>
+              <form action="">
+                <div className="relative">
+                  <div className="top-[50%] left-[5px] translate-y-[-50%] absolute p-[8px] bg-lightGreen rounded-[5px] text-primaryGreen">
+                    <Mail size={20} />
+                  </div>
+                  <input
+                    className="outline-primaryGreen w-[500px] py-[13px] pl-[45px] pr-[140px] rounded-[5px]"
+                    type="text"
+                    placeholder="Nhập email của bạn..."
+                  />
+                  <Link
+                    to=""
+                    className="absolute top-[50%] right-[10px] translate-y-[-50%] text-[17px] text-white font-bold px-[28px] py-[8px] w-[169px] bg-secondaryRed hover:bg-red-500 transition flex justify-center items-center gap-2 rounded-[5px]"
+                  >
+                    Đăng ký
+                    <ArrowRight />
+                  </Link>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="footer w-full h-auto border">
+        <div className="footer-container w-[1280px] h-[500px] bg-slate-200 m-auto">
+          {/* Footer Top */}
+          <div className="footer-top grid grid-cols-4 py-[45px] border border-b-black">
+            <div className="item flex justify-center items-center gap-3">
+              <img src={IconProduct} alt="" />
+              <h5 className="text-[16px] text-textBlack font-medium">
+                Sản phẩm tươi sạch
+              </h5>
+            </div>
+
+            <div className="item flex justify-center items-center gap-3">
+              <img src={IconDelivery} alt="" />
+              <h5 className="text-[16px] text-textBlack font-medium">
+                Giao hàng miễn phí
+              </h5>
+            </div>
+
+            <div className="item flex justify-center items-center gap-3">
+              <img src={IconDiscount} alt="" />
+              <h5 className="text-[16px] text-textBlack font-medium">
+                Giảm giá lớn hằng ngày
+              </h5>
+            </div>
+
+            <div className="item flex justify-center items-center gap-3">
+              <img src={IconMarket} alt="" />
+              <h5 className="text-[16px] text-textBlack font-medium">
+                Giá tốt nhất trên thị trường
+              </h5>
+            </div>
+          </div>
+
+          {/* Footer Center */}
+          <div className="footer-center grid grid-cols-5 py-[45px] border border-b-black">
+            <div className="item flex flex-col justify-start items-start gap-3">
+              <img src={Logo} alt="" />
+              <h5 className="text-[16px] text-textBlack font-medium">
+                Chúng tôi tự hào cung cấp một trải nghiệm mua sắm độc đáo, tập
+                trung vào việc cung cấp những sản phẩm nông sản sạch, an toàn và
+                đạt chuẩn hữu cơ.
+              </h5>
+              <div className="">
+                <p>3/2, Xuân Khánh, Ninh Kiều, Cần Thơ</p>
+              </div>
+            </div>
+
+            <div className="item flex justify-center items-center gap-3">
+              <img src={IconDelivery} alt="" />
+              <h5 className="text-[16px] text-textBlack font-medium">
+                Giao hàng miễn phí
+              </h5>
+            </div>
+
+            <div className="item flex justify-center items-center gap-3">
+              <img src={IconDiscount} alt="" />
+              <h5 className="text-[16px] text-textBlack font-medium">
+                Giảm giá lớn hằng ngày
+              </h5>
+            </div>
+
+            <div className="item flex justify-center items-center gap-3">
+              <img src={IconMarket} alt="" />
+              <h5 className="text-[16px] text-textBlack font-medium">
+                Giá tốt nhất trên thị trường
+              </h5>
             </div>
           </div>
         </div>

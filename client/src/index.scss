@@ -8,3 +8,160 @@ body {
   font-family: "Inter", sans-serif;
   scroll-behavior: smooth;
 }
+
+//login/
+.login-section::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-image: url(./assets/images/log-in-bg.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+}
+.from-floating input:focus + label,
+.from-floating input:valid + label {
+  top: -6px;
+  transform: none;
+  font-size: 0.75rem;
+  opacity: 1;
+}
+//
+.text-14px-white {
+  color: background;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.text-14px-grayDark {
+  color: #4a5568;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.shadow-4-canh {
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+}
+
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+.sub-menu {
+  transform-origin: 50% -30px;
+}
+/* styles.css */
+.custom-width {
+  width: calc(78px + (90 - 78) * ((100vw - 320px) / (1920 - 320)));
+}
+
+.order-table thead tr th {
+  text-align: center;
+  font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+  font-weight: 600;
+  white-space: nowrap;
+  min-width: 90px;
+}
+.order-table tbody tr td {
+  text-align: center;
+  padding: 12px 15px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+// product sellerdashBoAR
+.custome-pagination .pagination {
+  gap: calc(6px + (13 - 6) * ((100vw - 320px) / (1920 - 320)));
+}
+ul {
+  margin-bottom: 0;
+}
+.custome-pagination .pagination .page-item.active .page-link {
+  background-color: var(--theme-color);
+  border-color: var(--theme-color);
+  color: #fff;
+}
+
+//
+.container-fluid-lg {
+  padding: 0 calc(12px + (160 - 12) * ((100vw - 320px) / (1920 - 320)));
+}
+// profile
+.custom-gap {
+  gap: calc(15px + (21 - 15) * ((100vw - 320px) / (1920 - 320)));
+}
+//setting
+.privacy-box {
+  font-size: calc(15px + (18 - 15) * ((100vw - 320px) / (1920 - 320)));
+}
+.btn-md {
+  padding: calc(8px + (11 - 8) * ((100vw - 320px) / (1920 - 320)))
+    calc(16px + (24 - 16) * ((100vw - 320px) / (1920 - 320)));
+  font-size: calc(14px + (16 - 14) * ((100vw - 320px) / (1920 - 320)));
+  font-weight: 500;
+}
+.custom-form-check .form-check-input {
+  width: calc(15px + (17 - 15) * ((100vw - 320px) / (1920 - 320)));
+  height: calc(15px + (17 - 15) * ((100vw - 320px) / (1920 - 320)));
+
+  /* margin-top: 0; */
+}
+
+//sidebar sellerdAshbarod
+// SellerDasdBoar
+.user-dashboard-section:focus {
+  border-left: 3px solid var(#0da487);
+  font-weight: 600;
+  background-color: transparent;
+  color: #0da487;
+}
+//
+.login-section::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-image: url(./assets/images/log-in-bg.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
+}
+
+.custom-height {
+  height: calc(1.5em + 0.75rem + 2px);
+}
+// .wapper p {
+//     margin: calc(11px + (16 - 11) * ((100vw - 320px) / (1920 - 320))) auto 0;
+// }
+.vendore-breadscrumb-section {
+  background-image: url(./assets/images/breadcrumb.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding: calc(52px + (100 - 52) * ((100vw - 320px) / (1920 - 320))) 0px;
+}
