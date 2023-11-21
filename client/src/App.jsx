@@ -20,6 +20,7 @@ import AddUser from "./pages/admin/AddUser";
 import EditUser from "./pages/admin/EditUser";
 import DeleteUser from "./pages/admin/DeleteUser";
 import AddProduct from "./pages/admin/AddProduct";
+import Home from "./pages/user/Home";
 
 function App() {
   return (
@@ -76,7 +77,7 @@ function App() {
       <Route path="/edit/product/:productId" element={<EditProduct />} />
       <Route path="/delete/product/:id" element={<DeleteProduct />} />
       <Route path="/list/product" element={<ProductList />} />
-      <Route path="/" element={<ProductList />} />
+      <Route path="/" element={<Home />} />
     </Routes>
   );
 }

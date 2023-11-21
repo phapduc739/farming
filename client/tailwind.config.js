@@ -17,6 +17,8 @@ export default {
         backgroundLightYellow: "#F6F5F0",
         lightGray: "#6c757d",
         darkGray: "#e9ecef",
+        lineGray: "#ececec",
+        text2222: "#222222",
       },
     },
   },
