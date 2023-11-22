@@ -21,7 +21,7 @@ import EditUser from "./pages/admin/EditUser";
 import DeleteUser from "./pages/admin/DeleteUser";
 import AddProduct from "./pages/admin/AddProduct";
 import Home from "./pages/user/Home";
-import CartItem from "./pages/user/CartItem";
+import CartItem from "./pages/user/components/CartItem";
 import ShoppingCart from "./pages/user/ShoppingCart";
 
 function App() {

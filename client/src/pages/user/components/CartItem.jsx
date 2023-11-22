@@ -1,7 +1,7 @@
 // CartItem.js
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { removeFromCart, updateQuantity } from "../../actions/cartActions";
+import { removeFromCart, updateQuantity } from "../../../actions/cartActions";
 
 const CartItem = ({ id, name, price, quantity }) => {
   const dispatch = useDispatch();
