@@ -33,6 +33,15 @@ const ProductList = () => {
     }
   };
 
+  const formatPrice = (price) => {
+    const formattedPrice = Number(price).toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+
+    return formattedPrice;
+  };
+
   return (
     <>
       {products.map((product) => (
@@ -57,18 +66,23 @@ const ProductList = () => {
           </h5>
           <div className="flex justify-between items-center gap-2">
             <h6 className="text-[15px] text-primaryGreen font-[600]">
-              {product.price}đ
+              {formatPrice(product.price)}
             </h6>
             <p className="text-[14px] text-textGray font-[400] line-through">
-              100000đ
+              10.000đ
             </p>
           </div>
           <div className="flex justify-between items-center gap-2">
             <div className="star text-[11px] text-yellow flex gap-1">
               {/* Thêm logic để hiển thị sao dựa trên product.rating */}
+              <i className="fa-solid fa-star"></i>
+              <i className="fa-solid fa-star"></i>
+              <i className="fa-solid fa-star"></i>
+              <i className="fa-solid fa-star"></i>
+              <i className="fa-solid fa-star"></i>
             </div>
             <h6 className="text-[15px] text-primaryGreen font-[600]">
-              {product.isAvailable ? "Còn hàng" : "Hết hàng"}
+              {product.status ? "Còn hàng" : "Hết hàng"}
             </h6>
           </div>
           <button
