@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 import { MapPin } from "react-feather";
 import IconVn from "../../assets/images/vn.png";
 import { ChevronDown } from "react-feather";
@@ -15,15 +17,12 @@ import { ArrowRight } from "react-feather";
 
 import HeroBg2 from "../../assets/images/2 1.png";
 import HeroBg3 from "../../assets/images/3 1.png";
-
 import Feature1 from "../../assets/images/fe1.jpg";
 import Feature2 from "../../assets/images/fe2.jpg";
 import Feature3 from "../../assets/images/fe3.png";
 import Feature4 from "../../assets/images/fe4.jpg";
-
 import Banner1 from "../../assets/images/banner1.jpg";
 import Banner2 from "../../assets/images/banner2.jpg";
-
 import Seedling from "../../assets/images/seedling.png";
 
 import { Clock } from "react-feather";
@@ -32,19 +31,25 @@ import ImageProduct from "../../assets/images/cachua.png";
 
 import { Plus } from "react-feather";
 import BannerRauCuQua from "../../assets/images/14.jpg";
-
 import BannerRauQua from "../../assets/images/Frame 92.png";
 import BannerNam from "../../assets/images/10.jpg";
-
 import BgSendEmail from "../../assets/images/image 6.png";
 
 import { Mail } from "react-feather";
 
 import IconProduct from "../../assets/images/product.svg";
-
 import IconDelivery from "../../assets/images/delivery.svg";
 import IconDiscount from "../../assets/images/discount.svg";
 import IconMarket from "../../assets/images/market.svg";
+
+import PayIcon from "../../assets/images/pay.png";
+import ConnectIcon from "../../assets/images/connect.png";
+
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../actions/cartActions";
+import ProductList from "./ProductList";
+
+import { getCartItemCount, getCartItems, getCartTotal } from "../../selectors";
 
 const CategoryData = [
   {
@@ -106,13 +111,61 @@ const ProductData = [
     unit: "1 Kg",
     price: "30.000đ",
   },
+  {
+    image: "src/assets/images/cachua.png",
+    name: "Cà chua xuất khẩu",
+    unit: "1 Kg",
+    price: "30.000đ",
+  },
+  {
+    image: "src/assets/images/cachua.png",
+    name: "Cà chua xuất khẩu",
+    unit: "1 Kg",
+    price: "30.000đ",
+  },
+  {
+    image: "src/assets/images/cachua.png",
+    name: "Cà chua xuất khẩu",
+    unit: "1 Kg",
+    price: "30.000đ",
+  },
 ];
 
 function Home() {
+  const cartItemCount = useSelector(getCartItemCount);
+
+  const [isHovered, setIsHovered] = useState(false);
+  const cartItems = useSelector(getCartItems);
+  const cartTotal = useSelector(getCartTotal);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      // Cleanup when the component unmounts
+      setIsHovered(false);
+    };
+  }, []);
+
+  const formatPrice = (price) => {
+    const formattedPrice = Number(price).toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+
+    return formattedPrice;
+  };
+
   return (
     <>
       {/* HEADER */}
-      <div className="header border border-black w-full h-auto">
+      <div className="header w-full h-auto">
         {/* Header top */}
         <div className="header-top w-full h-[42px] bg-primaryGreen ">
           <div className="header-top-container w-[1280px] h-full m-auto flex justify-between items-center">
@@ -181,18 +234,104 @@ function Home() {
                 <Heart name="heart" size={24} color="black" />
               </Link>
               |
-              <Link className="relative">
+              <div
+                className="relative group"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                {/* Biểu tượng giỏ hàng */}
                 <ShoppingCart name="cart" size={24} color="black" />
-                <div className="quantity-cart absolute top-[-12px] left-[14px] w-[22px] h-[22px] flex justify-center items-center rounded-[4px] bg-secondaryRed">
+
+                {/* Hiển thị số lượng sản phẩm và các nút khi giỏ hàng được hover */}
+                <div
+                  className={`absolute top-[-12px] left-[14px] w-[22px] h-[22px] flex justify-center items-center rounded-[4px] bg-secondaryRed group-hover:opacity-100 transition-opacity`}
+                >
                   <span className="text-[12px] text-white font-semibold">
-                    99
+                    {cartItemCount}
                   </span>
                 </div>
-              </Link>
+
+                {isHovered && (
+                  <div className="absolute z-50 top-[26px] right-0 w-[300px] p-4 bg-white border rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+                    {cartItems.map((item) => (
+                      <Link
+                        to={`/product/detail/${item.id}`}
+                        key={item.id}
+                        className="flex items-center mb-2"
+                      >
+                        <img
+                          src={`http://localhost:4000/${
+                            item.images && item.images.length > 0
+                              ? item.images[0]
+                              : ""
+                          }`}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover mr-2 border"
+                        />
+                        <div className="">
+                          <p className="text-[16px] text-primaryGreen font-bold">
+                            {item.name}
+                          </p>
+                          <p className="text-[14px] text-textGray font-[500]">
+                            {item.quantity} {item.unit} x{" "}
+                            {formatPrice(item.price)}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                    <div className="flex justify-between items-center py-2 border-t border-b">
+                      <p className="text-[16px] text-textGray font-medium">
+                        Tổng tiền:
+                      </p>
+                      <p className="text-[18px] text-primaryGreen font-bold">
+                        {formatPrice(cartTotal)}
+                      </p>
+                    </div>
+                    <div className="flex justify-between mt-4">
+                      <Link
+                        to="/cart"
+                        className="text-primaryGreen text-[16px] border-[2px] border-primaryGreen px-[12px] py-[6px] hover:bg-primaryGreen hover:text-white transition"
+                      >
+                        View Cart
+                      </Link>
+                      <Link
+                        to=""
+                        className="text-[16px] px-[12px] py-[6px] border-[2px] border-primaryGreen bg-primaryGreen hover:bg-[#097b64] text-white transition"
+                      >
+                        Checkout
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
               |
-              <Link to="/register/user">
-                <User name="user" size={24} color="black" />
-              </Link>
+              <div className="relative group">
+                <Link>
+                  <User name="cart" size={24} color="black" />
+                </Link>
+                <div className="user-options absolute top-full right-0 bg-white p-3 rounded-[5px] shadow-lg hidden opacity-0 group-hover:block group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="flex flex-col gap-3 w-[120px]">
+                    <Link
+                      className="text-[14px] text-textGray hover:text-primaryGreen"
+                      to="/login"
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      className="text-[14px] text-textGray hover:text-primaryGreen"
+                      to="/register/user"
+                    >
+                      Register
+                    </Link>
+                    <Link
+                      className="text-[14px] text-textGray hover:text-primaryGreen"
+                      to="/forgot-password"
+                    >
+                      Forgot Password
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -448,9 +587,9 @@ function Home() {
       </div>
 
       {/* MAIN CONTENT */}
-      <div className="main-content w-full h-auto border border-green">
-        <div className="main-content-container w-[1280px] h-auto bg-slate-300 m-auto flex gap-6">
-          <div className="main-content-left flex flex-col gap-6 w-[300px] h-full bg-red-300">
+      <div className="main-content w-full h-auto">
+        <div className="main-content-container w-[1280px] h-auto m-auto flex gap-6">
+          <div className="main-content-left flex flex-col gap-6 w-[300px] h-full">
             {/* All Category */}
             <div className="categories w-full p-6 h-auto bg-backgroundLightGray rounded-[5px]">
               <div className="title">
@@ -594,8 +733,10 @@ function Home() {
                 </div>
               </div>
 
-              <div className="good-price-all-product py-[24px] border grid grid-cols-4">
-                <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
+              <div className="good-price-all-product py-[24px] grid grid-cols-4">
+                <ProductList />
+
+                {/* <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
                   <div className="w-[170px] h-[140px]">
                     <img
                       className="w-full h-full object-cover border"
@@ -627,7 +768,10 @@ function Home() {
                       Còn hàng
                     </h6>
                   </div>
-                  <button className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition">
+                  <button
+                    className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition"
+                    onClick={handleAddToCart}
+                  >
                     Thêm
                     <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">
                       <Plus size={18} color="#0DA487" />
@@ -913,7 +1057,7 @@ function Home() {
                       <Plus size={18} color="#0DA487" />
                     </div>
                   </button>
-                </Link>
+                </Link> */}
               </div>
             </div>
 
@@ -965,7 +1109,7 @@ function Home() {
                 </div>
               </div>
 
-              <div className="good-price-all-product border h-[135px]">
+              <div className="good-price-all-product h-[135px]">
                 <ul className="grid grid-cols-5 gap-x-6 h-full">
                   {CategoryData.map((category, index) => (
                     <li key={index}>
@@ -1037,7 +1181,7 @@ function Home() {
             </div>
 
             {/* Dành cho bạn */}
-            <div className="good-price">
+            <div className="for-you">
               <div className="good-price-title flex justify-between items-center">
                 <div className="">
                   <h2 className="text-[24px] text-text2222 font-bold">
@@ -1061,7 +1205,7 @@ function Home() {
                 </div>
               </div>
 
-              <div className="good-price-all-product py-[24px] border grid grid-cols-4">
+              <div className="good-price-all-product py-[24px] grid grid-cols-4">
                 <Link className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition">
                   <div className="w-[170px] h-[140px]">
                     <img
@@ -1594,10 +1738,10 @@ function Home() {
       </div>
 
       {/* Footer */}
-      <div className="footer w-full h-auto border">
-        <div className="footer-container w-[1280px] h-[500px] bg-slate-200 m-auto">
+      <div className="footer w-full h-auto bg-backgroundLightGray">
+        <div className="footer-container w-[1280px] h-auto m-auto">
           {/* Footer Top */}
-          <div className="footer-top grid grid-cols-4 py-[45px] border border-b-black">
+          <div className="footer-top grid grid-cols-4 py-[45px] border-b border-b-black border-dashed">
             <div className="item flex justify-center items-center gap-3">
               <img src={IconProduct} alt="" />
               <h5 className="text-[16px] text-textBlack font-medium">
@@ -1628,38 +1772,116 @@ function Home() {
           </div>
 
           {/* Footer Center */}
-          <div className="footer-center grid grid-cols-5 py-[45px] border border-b-black">
-            <div className="item flex flex-col justify-start items-start gap-3">
+          <div className="footer-center grid grid-cols-4 py-[45px] border-b border-b-black border-dashed">
+            <div className="item flex flex-col justify-start items-start gap-6">
               <img src={Logo} alt="" />
-              <h5 className="text-[16px] text-textBlack font-medium">
-                Chúng tôi tự hào cung cấp một trải nghiệm mua sắm độc đáo, tập
-                trung vào việc cung cấp những sản phẩm nông sản sạch, an toàn và
-                đạt chuẩn hữu cơ.
-              </h5>
-              <div className="">
-                <p>3/2, Xuân Khánh, Ninh Kiều, Cần Thơ</p>
+              <div className="flex flex-col justify-start items-start gap-3">
+                <h5 className="text-[16px] text-textBlack font-medium">
+                  Chúng tôi tự hào cung cấp một trải nghiệm mua sắm độc đáo, tập
+                  trung vào việc cung cấp những sản phẩm nông sản sạch, an toàn
+                  và đạt chuẩn hữu cơ.
+                </h5>
+                <div className="flex justify-start items-center gap-2 text-[14px] text-textBlack">
+                  <i className="fa-solid fa-house"></i>
+                  <p className="text-textBlack font-normal">
+                    Xuân Khánh, Ninh Kiều, Cần Thơ
+                  </p>
+                </div>
+                <div className="flex justify-start items-center gap-2 text-[14px] text-textBlack">
+                  <i className="fa-solid fa-envelope"></i>
+                  <p>support@farmersmarket.com</p>
+                </div>
               </div>
             </div>
 
-            <div className="item flex justify-center items-center gap-3">
-              <img src={IconDelivery} alt="" />
+            <div className="item flex flex-col justify-start items-center gap-6">
+              <h3 className="pl-[40px] text-[20px] text-textBlack font-[600]">
+                Tất cả trang
+              </h3>
+              <div className="flex flex-col justify-start items-start gap-3">
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Trang chủ
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Giới thiệu
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Tin tức
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Liên hệ
+                </Link>
+              </div>
+            </div>
+
+            <div className="item flex flex-col justify-start items-start gap-6">
+              <h3 className="text-[20px] text-textBlack font-[600]">
+                Danh mục
+              </h3>
+              <div className="flex flex-col justify-start items-start gap-3">
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Lúa mì và ngũ cốc
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Rau củ quả hữu cơ
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Hạt giống và cây trồng
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Thực phẩm chế biến sạch
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Thảo dược và gia vị
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Đặc sản khu vực
+                </Link>
+              </div>
+            </div>
+
+            <div className="item flex flex-col justify-start items-start gap-6">
+              <h3 className="text-[20px] text-textBlack font-[600]">
+                Trung tâm hỗ trợ
+              </h3>
+              <div className="flex flex-col justify-start items-start gap-3">
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Đơn hàng của bạn
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Tài khoản của bạn
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Theo dõi đơn hàng
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  Sản phẩm yêu thích
+                </Link>
+                <Link to="" className="text-[16px] text-textBlack font-normal">
+                  FAQ
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer bottom */}
+          <div className="footer-center grid grid-cols-3 py-[45px]">
+            <div className="item flex flex-col justify-start items-start gap-6">
               <h5 className="text-[16px] text-textBlack font-medium">
-                Giao hàng miễn phí
+                ©2023 Farmers Martket All rights reserved
               </h5>
             </div>
 
-            <div className="item flex justify-center items-center gap-3">
-              <img src={IconDiscount} alt="" />
-              <h5 className="text-[16px] text-textBlack font-medium">
-                Giảm giá lớn hằng ngày
-              </h5>
+            <div className="item flex flex-col justify-start items-center gap-6">
+              <div className="flex flex-col justify-start items-start gap-3">
+                <img src={PayIcon} alt="" />
+              </div>
             </div>
 
-            <div className="item flex justify-center items-center gap-3">
-              <img src={IconMarket} alt="" />
-              <h5 className="text-[16px] text-textBlack font-medium">
-                Giá tốt nhất trên thị trường
-              </h5>
+            <div className="item flex flex-col justify-start items-end gap-6">
+              <div className="flex flex-col justify-start items-start gap-3">
+                <img src={ConnectIcon} alt="" />
+              </div>
             </div>
           </div>
         </div>

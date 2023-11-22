@@ -21,6 +21,8 @@ import EditUser from "./pages/admin/EditUser";
 import DeleteUser from "./pages/admin/DeleteUser";
 import AddProduct from "./pages/admin/AddProduct";
 import Home from "./pages/user/Home";
+import CartItem from "./pages/user/CartItem";
+import ShoppingCart from "./pages/user/ShoppingCart";
 
 function App() {
   return (
@@ -69,6 +71,7 @@ function App() {
       <Route path="/register/user" element={<Register />} />
       <Route path="/login/user" element={<Login />} />
       <Route path="/user/info" element={<UserInfo />} />
+      <Route path="/cart" element={<ShoppingCart />} />
 
       <Route path="/create/category" element={<CreateCategory />} />
       <Route path="/edit/category/:categoryId" element={<EditCategory />} />
