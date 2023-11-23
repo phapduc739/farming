@@ -6,22 +6,27 @@ import {
 } from "../../redux/actions/cartActions";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
+import { useNavigate } from "react-router-dom";
 
 import Header from "../user/common/Header";
 import Footer from "../user/common/Footer";
 
 const ShoppingCart = () => {
   const items = useSelector((state) => state.cart.items);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const [quantityErrors, setQuantityErrors] = useState("");
 
   useEffect(() => {
     // Tính tổng giá từ danh sách sản phẩm trong giỏ hàng
     const calculateTotalPrice = () => {
       let total = 0;
       items.forEach((item) => {
-        total += item.price * item.quantity;
+        total += item.price * item.quantityInCart;
       });
       return total;
     };
@@ -33,8 +38,28 @@ const ShoppingCart = () => {
     dispatch(removeFromCart(productId));
   };
 
-  const handleUpdateQuantity = (productId, newQuantity) => {
-    dispatch(updateQuantity(productId, newQuantity));
+  const handleUpdateQuantity = (productId, quantityInCart) => {
+    const selectedItem = items.find((item) => item.id === productId);
+
+    if (selectedItem) {
+      // Kiểm tra xem quantityInCart có lớn hơn số lượng có sẵn không
+      if (quantityInCart > selectedItem.quantity) {
+        // Handle error for invalid quantity
+        setQuantityErrors((prevErrors) => ({
+          ...prevErrors,
+          [productId]: "Bạn đã đặt quá số lượng có sẵn",
+        })); // Bạn có thể cập nhật state hoặc thông báo lỗi cho người dùng tùy thuộc vào nhu cầu của bạn
+      } else {
+        // Dispatch action to update quantity in Redux store
+        dispatch(updateQuantity(productId, quantityInCart));
+
+        setQuantityErrors((prevErrors) => {
+          const newErrors = { ...prevErrors };
+          delete newErrors[productId];
+          return newErrors;
+        });
+      }
+    }
   };
 
   const formatPrice = (price) => {
@@ -44,6 +69,16 @@ const ShoppingCart = () => {
     });
 
     return formattedPrice;
+  };
+
+  const handleProceedToCheckout = () => {
+    if (isAuthenticated === true) {
+      // Nếu đã đăng nhập, chuyển hướng đến trang thanh toán
+      navigate("/checkout");
+    } else {
+      // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+      navigate("/login/user");
+    }
   };
 
   return (
@@ -120,7 +155,7 @@ const ShoppingCart = () => {
                               className="w-[50px] pl-[15px] pr-20px py-[10px] outline-primaryGreen"
                               type="number"
                               min="1"
-                              value={item.quantity}
+                              value={item.quantityInCart}
                               onChange={(e) => {
                                 handleUpdateQuantity(
                                   item.id,
@@ -128,6 +163,11 @@ const ShoppingCart = () => {
                                 );
                               }}
                             />
+                            {quantityErrors[item.id] && (
+                              <p className="text-red-500 text-sm mt-1">
+                                {quantityErrors[item.id]}
+                              </p>
+                            )}
                           </div>
                         </td>
 
@@ -137,7 +177,7 @@ const ShoppingCart = () => {
                               Tổng tiền
                             </h4>
                             <h6 className="text-[18px] text-textBlack font-medium">
-                              {formatPrice(item.price * item.quantity)}
+                              {formatPrice(item.price * item.quantityInCart)}
                             </h6>
                           </div>
                         </td>
@@ -200,7 +240,7 @@ const ShoppingCart = () => {
                   Giảm giá
                 </h4>
                 <h4 className="text-[14px] text-textGray font-medium">
-                  (-) 100.000đ
+                  (-) 0đ
                 </h4>
               </div>
 
@@ -208,9 +248,7 @@ const ShoppingCart = () => {
                 <h4 className="text-[14px] text-textGray font-medium">
                   Phí vận chuyển
                 </h4>
-                <h4 className="text-[14px] text-textGray font-medium">
-                  30.000đ
-                </h4>
+                <h4 className="text-[14px] text-textGray font-medium">0đ</h4>
               </div>
 
               <div className="total flex justify-between items-center">
@@ -218,14 +256,17 @@ const ShoppingCart = () => {
                   Tổng thanh toán
                 </h4>
                 <h4 className="text-[16px] text-primaryGreen font-semibold">
-                  1.030.000đ
+                  {formatPrice(totalPrice)}
                 </h4>
               </div>
 
               <div className="flex flex-col gap-3">
-                <div className="process-to-checkout bg-secondaryRed hover:bg-[#f45a5a] transition px-[18px] py-[11px] rounded-[5px]">
+                <div
+                  className="process-to-checkout bg-secondaryRed hover:bg-[#f45a5a] transition px-[18px] py-[11px] rounded-[5px]"
+                  onClick={handleProceedToCheckout}
+                >
                   <Link
-                    to="/checkout"
+                    to={isAuthenticated ? "/checkout" : "/login/user"}
                     className="w-full h-full text-[14px] text-white font-semibold flex justify-center items-center"
                   >
                     Tiến đến Thanh toán

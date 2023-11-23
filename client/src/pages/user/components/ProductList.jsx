@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Plus } from "react-feather";
-import { addToCart } from "../../../redux/actions/cartActions";
+import {
+  addToCart,
+  socketUpdateQuantity,
+} from "../../../redux/actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
+import io from "socket.io-client";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -22,6 +26,21 @@ const ProductList = () => {
 
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    const socket = io("http://localhost:4000");
+
+    socket.on("quantity-update", (data) => {
+      console.log("Received quantity update from server:", data);
+
+      // Gửi action để cập nhật thông tin số lượng trong Redux store
+      dispatch(socketUpdateQuantity(data));
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [dispatch]);
 
   const handleAddToCart = (productId) => {
     const selectedProduct = products.find(
@@ -73,16 +92,9 @@ const ProductList = () => {
             </p>
           </div>
           <div className="flex justify-between items-center gap-2">
-            <div className="star text-[11px] text-yellow flex gap-1">
-              {/* Thêm logic để hiển thị sao dựa trên product.rating */}
-              <i className="fa-solid fa-star"></i>
-              <i className="fa-solid fa-star"></i>
-              <i className="fa-solid fa-star"></i>
-              <i className="fa-solid fa-star"></i>
-              <i className="fa-solid fa-star"></i>
-            </div>
             <h6 className="text-[15px] text-primaryGreen font-[600]">
-              {product.status ? "Còn hàng" : "Hết hàng"}
+              {product.status ? "Còn hàng" : "Hết hàng"} ({product.quantity}{" "}
+              {product.unit})
             </h6>
           </div>
           <button

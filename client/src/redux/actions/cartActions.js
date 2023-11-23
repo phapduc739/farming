@@ -1,3 +1,5 @@
+// actions/cartActions.js
+
 export const addToCart = (product) => {
   return {
     type: "ADD_TO_CART",
@@ -12,12 +14,18 @@ export const removeFromCart = (productId) => {
   };
 };
 
-export const updateQuantity = (productId, quantity) => {
+export const updateQuantity = (productId, quantityInCart, quantity) => {
   return {
     type: "UPDATE_QUANTITY",
     payload: {
       id: productId,
+      quantityInCart,
       quantity,
     },
   };
 };
+
+export const socketUpdateQuantity = (data) => ({
+  type: "SOCKET_UPDATE_QUANTITY",
+  payload: data,
+});

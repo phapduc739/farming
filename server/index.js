@@ -1,23 +1,45 @@
 require("dotenv").config();
+const http = require("http");
 
 const express = require("express");
 const app = express();
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
 const mysql = require("mysql2/promise");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
-// const fs = require("fs");
 const fs = require("fs").promises;
 const util = require("util");
 const unlink = util.promisify(fs.unlink);
 const bodyParser = require("body-parser");
+const WebSocket = require("ws");
+const wss = new WebSocket.Server({ server });
+
+wss.on("connection", (ws) => {
+  // Gửi sự kiện 'quantity-update' với dữ liệu mới đến tất cả client
+  ws.send(
+    JSON.stringify({
+      type: "quantity-update",
+      payload: {
+        id: productId,
+        newQuantity: updatedQuantity,
+      },
+    })
+  );
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.json());
+
 app.use(cors());
+
 app.use("/uploads", express.static("uploads"));
 
 const db = mysql.createPool({
@@ -28,6 +50,15 @@ const db = mysql.createPool({
 });
 
 const port = 4000;
+
+io.on("connection", (socket) => {
+  console.log("A client connected");
+
+  // Gửi sự kiện cho client khi có sự thay đổi dữ liệu
+  setInterval(() => {
+    io.emit("server-event", { message: "Hello from server!" });
+  }, 5000); // Gửi mỗi 5 giây, thay đổi theo nhu cầu của bạn
+});
 
 // Khởi tạo kho lưu trữ hình ảnh
 const storage = multer.diskStorage({
@@ -357,8 +388,15 @@ app.put(
       if (req.file) {
         // Kiểm tra xem tệp tin cũ có tồn tại không và xóa nó
         if (imagePathOld) {
-          // Sử dụng fs.promises.unlink để sử dụng promise
-          await fs.promises.unlink(imagePathOld);
+          try {
+            // Sử dụng fs.promises.unlink để sử dụng promise
+            await fs.promises.unlink(imagePathOld);
+            console.log(`Đã xóa tệp tin cũ: ${imagePathOld}`);
+          } catch (unlinkError) {
+            console.error(`Lỗi khi xóa tệp tin cũ: ${unlinkError.message}`);
+          }
+        } else {
+          console.log("Không có tệp tin cũ để xóa.");
         }
 
         // Cập nhật đường dẫn mới trong cơ sở dữ liệu
@@ -425,6 +463,18 @@ app.delete("/delete/category/:categoryId", async (req, res) => {
       error: "Lỗi khi xóa người dùng!",
     });
   }
+});
+
+app.post("/update-quantity/:productId", (req, res) => {
+  const { productId } = req.params;
+  const newQuantityInCart = req.body.newQuantityInCart;
+
+  // Thực hiện cập nhật số lượng trong database
+
+  // Gửi thông báo đến tất cả các client rằng số lượng đã được cập nhật
+  io.emit("quantity-update", { id: productId, newQuantityInCart });
+
+  res.send("Quantity updated successfully");
 });
 
 // Api danh sách sản phẩm
@@ -734,6 +784,28 @@ app.delete("/delete/product/:productId", async (req, res) => {
   }
 });
 
+// SEARCH PRODUCT
+app.get("/api/search", async (req, res) => {
+  const term = req.query.term;
+
+  try {
+    const [results, fields] = await db.execute(
+      "SELECT p.id, p.name, p.description, p.price, p.quantity, p.status, p.unit, MIN(pi.id) as min_image_id, pi.image_url " +
+        "FROM products p " +
+        "LEFT JOIN product_images pi ON p.id = pi.product_id " +
+        "WHERE p.name LIKE ? " +
+        "GROUP BY p.id " +
+        "LIMIT 5",
+      [`%${term}%`]
+    );
+
+    res.json(results);
+  } catch (error) {
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/list/users", async (req, res) => {
   try {
     const [rows] = await db.execute("SELECT * FROM users");
@@ -831,8 +903,15 @@ app.put("/edit/user/:userId", upload.single("image"), async (req, res) => {
     if (req.file) {
       // Kiểm tra xem tệp tin cũ có tồn tại không và xóa nó
       if (imagePathOld) {
-        // Sử dụng fs.promises.unlink để sử dụng promise
-        await fs.promises.unlink(imagePathOld);
+        try {
+          // Sử dụng fs.promises.unlink để sử dụng promise
+          await fs.promises.unlink(imagePathOld);
+          console.log(`Đã xóa tệp tin cũ: ${imagePathOld}`);
+        } catch (unlinkError) {
+          console.error(`Lỗi khi xóa tệp tin cũ: ${unlinkError.message}`);
+        }
+      } else {
+        console.log("Không có tệp tin cũ để xóa.");
       }
 
       // Cập nhật đường dẫn mới trong cơ sở dữ liệu
@@ -899,6 +978,6 @@ app.delete("/delete/user/:userId", async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

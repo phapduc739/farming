@@ -1,4 +1,5 @@
-// cartReducer.js
+import socket from "../socket";
+
 const initialState = {
   items: [],
 };
@@ -11,24 +12,30 @@ const cartReducer = (state = initialState, action) => {
       );
 
       if (existingProduct) {
-        // Nếu sản phẩm đã tồn tại trong giỏ hàng, cập nhật số lượng và giá thành
+        const newQuantityInCart = existingProduct.quantityInCart + 1;
+
+        // Kiểm tra và xử lý logic vượt quá số lượng có sẵn ở đây
+        if (newQuantityInCart > action.payload.quantity) {
+          console.error("Số lượng trong giỏ hàng vượt quá số lượng có sẵn!");
+          return state;
+        }
+
         return {
           ...state,
           items: state.items.map((item) =>
             item.id === action.payload.id
               ? {
                   ...item,
-                  quantity: item.quantity + 1,
-                  totalPrice: (item.quantity + 1) * item.price,
+                  quantityInCart: newQuantityInCart,
+                  totalPrice: newQuantityInCart * item.price,
                 }
               : item
           ),
         };
       } else {
-        // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới
         const newProduct = {
           ...action.payload,
-          quantity: 1,
+          quantityInCart: 1,
           totalPrice: action.payload.price,
         };
 
@@ -38,24 +45,65 @@ const cartReducer = (state = initialState, action) => {
         };
       }
     }
+
     case "REMOVE_FROM_CART":
       return {
         ...state,
         items: state.items.filter((item) => item.id !== action.payload),
       };
-    case "UPDATE_QUANTITY":
-      return {
-        ...state,
-        items: state.items.map((item) =>
-          item.id === action.payload.id
-            ? {
-                ...item,
-                quantity: action.payload.quantity,
-                totalPrice: action.payload.quantity * item.price,
-              }
-            : item
-        ),
-      };
+
+    case "UPDATE_QUANTITY": {
+      const { id, quantityInCart, quantity } = action.payload;
+      const existingProduct = state.items.find((product) => product.id === id);
+
+      if (existingProduct) {
+        const newQuantityInCart = quantityInCart;
+
+        if (newQuantityInCart > quantity) {
+          console.error("Số lượng trong giỏ hàng vượt quá số lượng có sẵn!");
+          return state;
+        }
+
+        return {
+          ...state,
+          items: state.items.map((item) =>
+            item.id === id
+              ? {
+                  ...item,
+                  quantityInCart: newQuantityInCart,
+                  totalPrice: newQuantityInCart * item.price,
+                }
+              : item
+          ),
+        };
+      }
+
+      return state;
+    }
+
+    case "SOCKET_UPDATE_QUANTITY": {
+      console.log("Socket update quantity action received:", action.payload);
+      const { id, newQuantityInCart } = action.payload;
+      const existingProduct = state.items.find((product) => product.id === id);
+
+      if (existingProduct) {
+        return {
+          ...state,
+          items: state.items.map((item) =>
+            item.id === id
+              ? {
+                  ...item,
+                  quantityInCart: newQuantityInCart,
+                  totalPrice: newQuantityInCart * item.price,
+                }
+              : item
+          ),
+        };
+      }
+
+      return state;
+    }
+
     default:
       return state;
   }

@@ -7,7 +7,6 @@ import {
 } from "../../../redux/selectors";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../redux/actions/userActions";
-
 import { MapPin } from "react-feather";
 import IconVn from "../../../assets/images/vn.png";
 import { ChevronDown } from "react-feather";
@@ -17,9 +16,9 @@ import { PhoneCall } from "react-feather";
 import { Heart } from "react-feather";
 import { ShoppingCart } from "react-feather";
 import { User } from "react-feather";
-import { Search } from "react-feather";
-import { AlignLeft } from "react-feather";
 import { Zap } from "react-feather";
+import ButtonAllCategory from "./ButtonAllCategory";
+import SearchProduct from "./SearchProduct";
 
 export default function Header() {
   const cartItemCount = useSelector(getCartItemCount);
@@ -71,6 +70,16 @@ export default function Header() {
     navigate("/");
   };
 
+  const handleProceedToCheckout = () => {
+    if (isAuthenticated === true) {
+      // Nếu đã đăng nhập, chuyển hướng đến trang thanh toán
+      navigate("/checkout");
+    } else {
+      // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
+      navigate("/login/user");
+    }
+  };
+
   return (
     <>
       <div className="header w-full h-auto">
@@ -116,21 +125,8 @@ export default function Header() {
                 </span>
                 <ChevronDown name="map" size={16} color="black" />
               </button>
-              <div className="search flex justify-center items-center">
-                <form action="" className="flex justify-center items-center">
-                  <input
-                    type="text"
-                    className="w-[400px] text-[16px] p-3 border border-lineGray rounded-tl-[5px] rounded-bl-[5px] outline-primaryGreen"
-                    placeholder="Tìm kiếm nông sản ở đây..."
-                  />
-                  <button
-                    type="submit"
-                    className="bg-yellow p-[15px] rounded-tr-[5px] rounded-br-[5px]"
-                  >
-                    <Search name="search" size={20} color="white" />
-                  </button>
-                </form>
-              </div>
+
+              <SearchProduct />
             </div>
 
             <div className="header-center-right flex justify-center item-center gap-[15px]">
@@ -203,8 +199,9 @@ export default function Header() {
                         Giỏ hàng
                       </Link>
                       <Link
-                        to=""
+                        to={isAuthenticated ? "/checkout" : "/login/user"}
                         className="text-[16px] px-[12px] py-[6px] border-[2px] border-primaryGreen bg-primaryGreen hover:bg-[#097b64] text-white transition"
+                        onClick={handleProceedToCheckout}
                       >
                         Thanh toán
                       </Link>
@@ -273,14 +270,7 @@ export default function Header() {
         {/* Header bottom */}
         <div className="header-bottom w-full h-[52px]">
           <div className="header-bottom-container w-[1280px] h-full m-auto flex justify-between items-center">
-            <div className="header-bottom-left">
-              <button className="menu-list flex justify-start items-center gap-[15px] bg-primaryGreen px-[28px] py-[14px] rounded-[5px]">
-                <AlignLeft size={24} color="white" />
-                <span className="text-[18px] text-white font-semibold">
-                  Tất cả danh mục
-                </span>
-              </button>
-            </div>
+            <ButtonAllCategory />
             <div className="header-bottom-main">
               <ul className="flex justify-center items-center gap-5">
                 <li className="text-[16px] text-[text2222] flex justify-center items-center font-medium">
