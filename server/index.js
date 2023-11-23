@@ -49,7 +49,7 @@ app.get("/", (req, res) => {
 
 // Api đăng ký
 app.post("/register", async (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { name, email, password } = req.body;
 
   // Kiểm tra username đã tồn tại chưa
   const [existingUser] = await db.execute(
@@ -63,13 +63,25 @@ app.post("/register", async (req, res) => {
     });
   }
 
+  const imagePath = "";
+
+  const currentDate = new Date().toISOString().split("T")[0];
+
   // Tạo mật khẩu băm
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Thêm user mới
   const [user] = await db.execute(
-    "INSERT INTO users (fullName, email, password) VALUES (?, ?, ?)",
-    [fullname, email, hashedPassword]
+    "INSERT INTO users (name, email, password, role, image, dateJoin, status) VALUES (?, ?, ?, ?, ?, ? ,?)",
+    [
+      name,
+      email,
+      hashedPassword, // Save the hashed password
+      "User",
+      imagePath,
+      currentDate,
+      "Enable",
+    ]
   );
 
   // Tạo token
@@ -128,6 +140,8 @@ app.post("/login", async (req, res) => {
 
   const userId = user[0].id;
 
+  const role = user[0].role;
+
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
@@ -135,9 +149,12 @@ app.post("/login", async (req, res) => {
     message: "Đăng nhập thành công!",
     userId,
     email,
+    role,
     accessToken,
     refreshToken,
   });
+
+  console.log("User from database:", user);
 });
 
 app.get("/token", (req, res) => {

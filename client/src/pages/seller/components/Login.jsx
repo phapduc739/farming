@@ -5,8 +5,8 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { login } from "../actions/userActions";
-import useRefreshToken from "../hooks/useRefreshToken";
+import { login } from "../../../redux/actions/userActions";
+import useRefreshToken from "../../../hooks/useRefreshToken";
 
 const schema = yup
   .object({

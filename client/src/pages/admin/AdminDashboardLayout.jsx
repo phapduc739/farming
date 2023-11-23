@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../actions/adminActions";
+import { logout } from "../../redux/actions/userActions";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Logo from "../../assets/images/Logo.png";
@@ -10,26 +10,27 @@ import ManageProduct from "./ManageProduct";
 import ManageOrder from "./ManageOrder";
 
 function AdminDashboardLayout({ children }) {
-  const location = useLocation();
-
-  const { admin, email, accessToken, adminId } = useSelector(
-    (state) => state.admin
+  const { user, userId, email, role, accessToken } = useSelector(
+    (state) => state.user
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Kiểm tra nếu không có accessToken hoặc userId, chuyển hướng đến trang đăng nhập
-    if (!accessToken || !adminId) {
+    if (!accessToken || !userId) {
       navigate("/login/admin");
+    } else if (role !== "Admin") {
+      navigate("/404"); // Chuyển hướng đến trang 404 nếu role không phải là admin
     }
-  }, [accessToken, adminId, email, navigate]);
+  }, [user, userId, email, role, accessToken]);
 
   const handleLogout = () => {
     // Xóa accessToken, userId và refreshToken khỏi localStorage
     localStorage.removeItem("accessToken");
-    localStorage.removeItem("adminId");
+    localStorage.removeItem("userId");
     localStorage.removeItem("email");
+    localStorage.removeItem("role");
     localStorage.removeItem("refreshToken");
 
     // Dispatch action đăng xuất
@@ -40,11 +41,6 @@ function AdminDashboardLayout({ children }) {
   };
 
   return (
-    // <div>
-    //   <p>Welcome admin {email}</p>
-
-    //   <button onClick={handleLogout}>Logout</button>
-    // </div>
     <>
       <div className="header fixed top-0 left-0 flex w-full h-[60px] border-b-[1px]">
         <div className="logo flex justify-between items-center w-[260px] px-[12px]">

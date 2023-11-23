@@ -11,20 +11,22 @@ function ManageProduct() {
   const [products, setProducts] = useState([]);
   const [databaseChange, setDatabaseChange] = useState(false);
 
-  const { admin, email, accessToken, adminId } = useSelector(
-    (state) => state.admin
+  const { user, userId, email, role, accessToken } = useSelector(
+    (state) => state.user
   );
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   useEffect(() => {
     // Kiểm tra nếu không có accessToken hoặc userId, chuyển hướng đến trang đăng nhập
-    if (!accessToken || !adminId) {
+    if (!accessToken || !userId) {
       navigate("/login/admin");
+    } else if (role !== "Admin") {
+      navigate("/404"); // Chuyển hướng đến trang 404 nếu role không phải là admin
     } else {
-      fetchData();
+      fetchData(); // Gọi hàm fetchData khi accessToken và userId có sẵn
     }
-  }, [accessToken, adminId, email, navigate]);
+  }, [user, userId, email, role, accessToken, databaseChange]);
 
   // const handleLogout = () => {
   //   // Xóa accessToken, userId và refreshToken khỏi localStorage

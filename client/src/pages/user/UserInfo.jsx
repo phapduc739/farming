@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../actions/userActions";
+import { logout } from "../../redux/actions/userActions";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import Header from "./common/Header";
+import Fooder from "./common/Footer";
 
 function UserInfo() {
-  const { user, email, accessToken, userId } = useSelector(
-    (state) => state.user
-  );
+  const { email, accessToken, userId } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -32,11 +32,13 @@ function UserInfo() {
   };
 
   return (
-    <div>
+    <>
+      <Header />
       <p>Welcome {email}</p>
 
       <button onClick={handleLogout}>Logout</button>
-    </div>
+      <Fooder />
+    </>
   );
 }
 

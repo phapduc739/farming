@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import FilterUser from "./FilterUser";
 import axios from "axios";
 
-import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../../actions/adminActions";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
 
@@ -15,39 +14,22 @@ function ManageUser() {
   const [users, setUsers] = useState([]);
   const [databaseChange, setDatabaseChange] = useState(false);
 
-  const { admin, email, accessToken, adminId } = useSelector(
-    (state) => state.admin
+  const { user, userId, email, role, accessToken } = useSelector(
+    (state) => state.user
   );
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   useEffect(() => {
     // Kiểm tra nếu không có accessToken hoặc userId, chuyển hướng đến trang đăng nhập
-    if (!accessToken || !adminId) {
+    if (!accessToken || !userId) {
       navigate("/login/admin");
+    } else if (role !== "Admin") {
+      navigate("/404"); // Chuyển hướng đến trang 404 nếu role không phải là admin
     } else {
-      fetchData();
+      fetchData(); // Gọi hàm fetchData khi accessToken và userId có sẵn
     }
-  }, [accessToken, adminId, email, navigate]);
-
-  // const handleLogout = () => {
-  //   // Xóa accessToken, userId và refreshToken khỏi localStorage
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("adminId");
-  //   localStorage.removeItem("email");
-  //   localStorage.removeItem("refreshToken");
-
-  //   // Dispatch action đăng xuất
-  //   dispatch(logout());
-
-  //   // Chuyển hướng đến trang đăng nhập
-  //   navigate("/login/admin");
-  // };
-
-  const handleFilterChange = (filters) => {
-    setUsers([]);
-    fetchData(filters);
-  };
+  }, [user, userId, email, role, accessToken, databaseChange]);
 
   const fetchData = () => {
     axios
@@ -55,7 +37,6 @@ function ManageUser() {
       .then((response) => {
         setUsers(response.data);
         setDatabaseChange(!databaseChange);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách danh mục:", error);
@@ -111,7 +92,7 @@ function ManageUser() {
               <i className="fa-solid fa-magnifying-glass"></i>
             </div>
             <div className="relative btn-add flex gap-2">
-              <FilterUser onFilterChange={handleFilterChange} />{" "}
+              <FilterUser />{" "}
               <button
                 className="bg-primaryGreen flex justify-center items-center gap-2 rounded-[4px] py-[8px] px-[14px] text-white text-[14px] hover:bg-[#08886e] transition"
                 onClick={navigateToAddUser}

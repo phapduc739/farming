@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromCart, updateQuantity } from "../../actions/cartActions";
+import {
+  removeFromCart,
+  updateQuantity,
+} from "../../redux/actions/cartActions";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
 
@@ -114,7 +117,7 @@ const ShoppingCart = () => {
                               Số lượng
                             </h4>
                             <input
-                              className="w-[50px] pl-[15px] pr-20px py-[10px]"
+                              className="w-[50px] pl-[15px] pr-20px py-[10px] outline-primaryGreen"
                               type="number"
                               min="1"
                               value={item.quantity}
@@ -230,11 +233,11 @@ const ShoppingCart = () => {
                 </div>
                 <div className="return-to-shopping bg-lineGray hover:bg-[#c5c5c5] transition px-[18px] py-[11px] rounded-[5px]">
                   <Link
-                    to="/checkout"
+                    to="/"
                     className="w-full h-full text-[14px] text-textBlack font-normal flex justify-center items-center gap-2"
                   >
                     <ArrowLeft size={18} />
-                    Tiến đến Thanh toán
+                    Trở về trang chủ
                   </Link>
                 </div>
               </div>

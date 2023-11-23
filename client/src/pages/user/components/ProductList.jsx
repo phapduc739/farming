@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Plus } from "react-feather";
-import { addToCart } from "../../../actions/cartActions";
+import { addToCart } from "../../../redux/actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
 
 const ProductList = () => {

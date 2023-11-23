@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   getCartItemCount,
   getCartItems,
   getCartTotal,
-} from "../../../selectors";
+} from "../../../redux/selectors";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../../redux/actions/userActions";
 
 import { MapPin } from "react-feather";
 import IconVn from "../../../assets/images/vn.png";
@@ -21,6 +23,9 @@ import { Zap } from "react-feather";
 
 export default function Header() {
   const cartItemCount = useSelector(getCartItemCount);
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -49,6 +54,21 @@ export default function Header() {
     });
 
     return formattedPrice;
+  };
+
+  const handleLogout = () => {
+    // Xóa accessToken, userId và refreshToken khỏi localStorage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("email");
+    localStorage.removeItem("role");
+    localStorage.removeItem("refreshToken");
+
+    // Dispatch action đăng xuất
+    dispatch(logout());
+
+    // Chuyển hướng đến trang đăng nhập
+    navigate("/");
   };
 
   return (
@@ -81,9 +101,9 @@ export default function Header() {
         <div className="header-center w-full h-[100px]">
           <div className="header-center-container w-[1280px] h-full m-auto flex justify-between items-center">
             <div className="header-center-left">
-              <div className="logo">
+              <Link to="/" className="logo">
                 <img src={Logo} alt="" />
-              </div>
+              </Link>
             </div>
 
             <div className="header-center-main flex justify-center items-center gap-[13px]">
@@ -197,28 +217,54 @@ export default function Header() {
                 <Link>
                   <User name="cart" size={24} color="black" />
                 </Link>
-                <div className="user-options absolute top-full right-0 bg-white p-3 rounded-[5px] shadow-lg hidden opacity-0 group-hover:block group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="flex flex-col gap-3 w-[120px]">
-                    <Link
-                      className="text-[14px] text-textGray hover:text-primaryGreen"
-                      to="/login"
-                    >
-                      Đăng nhập
-                    </Link>
-                    <Link
-                      className="text-[14px] text-textGray hover:text-primaryGreen"
-                      to="/register/user"
-                    >
-                      Đăng ký
-                    </Link>
-                    <Link
-                      className="text-[14px] text-textGray hover:text-primaryGreen"
-                      to="/forgot-password"
-                    >
-                      Quên mật khẩu
-                    </Link>
+
+                {isAuthenticated ? (
+                  <div className="user-options absolute top-full right-0 bg-white p-3 rounded-[5px] shadow-lg hidden opacity-0 group-hover:block group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="flex flex-col gap-3 w-[120px]">
+                      <Link
+                        className="text-[14px] text-textGray hover:text-primaryGreen"
+                        to="/profile/user"
+                      >
+                        Hồ sơ cá nhân
+                      </Link>
+                      <Link
+                        className="text-[14px] text-textGray hover:text-primaryGreen"
+                        to="/order/user"
+                      >
+                        Đơn hàng
+                      </Link>
+                      <Link
+                        className="text-[14px] text-textGray hover:text-primaryGreen"
+                        to=""
+                      >
+                        <button onClick={handleLogout}>Đăng xuất</button>
+                      </Link>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="user-options absolute top-full right-0 bg-white p-3 rounded-[5px] shadow-lg hidden opacity-0 group-hover:block group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="flex flex-col gap-3 w-[120px]">
+                      <Link
+                        className="text-[14px] text-textGray hover:text-primaryGreen"
+                        to="/login/user"
+                      >
+                        Đăng nhập
+                      </Link>
+                      <Link
+                        className="text-[14px] text-textGray hover:text-primaryGreen"
+                        to="/register/user"
+                      >
+                        Đăng ký
+                      </Link>
+                      <Link
+                        className="text-[14px] text-textGray hover:text-primaryGreen"
+                        to="/forgot-password"
+                      >
+                        Quên mật khẩu
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import FilterUser from "./FilterUser";
 import axios from "axios";
 import { useSelector } from "react-redux";
-// import { logout } from "../../actions/adminActions";
 import { useNavigate } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
 import { format } from "date-fns";
@@ -13,45 +11,30 @@ function ManageCategory() {
   const [categories, setCategories] = useState([]);
   const [databaseChange, setDatabaseChange] = useState(false);
 
-  const { admin, email, accessToken, adminId } = useSelector(
-    (state) => state.admin
+  const { user, userId, email, role, accessToken } = useSelector(
+    (state) => state.user
   );
-  // const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   useEffect(() => {
     // Kiểm tra nếu không có accessToken hoặc userId, chuyển hướng đến trang đăng nhập
-    if (!accessToken || !adminId) {
+    if (!accessToken || !userId) {
       navigate("/login/admin");
+    } else if (role !== "Admin") {
+      navigate("/404"); // Chuyển hướng đến trang 404 nếu role không phải là admin
     } else {
-      fetchData();
+      fetchData(); // Gọi hàm fetchData khi accessToken và userId có sẵn
     }
-  }, [accessToken, adminId, email, navigate]);
+  }, [user, userId, email, role, accessToken, databaseChange]);
 
-  // const handleLogout = () => {
-  //   // Xóa accessToken, userId và refreshToken khỏi localStorage
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("adminId");
-  //   localStorage.removeItem("email");
-  //   localStorage.removeItem("refreshToken");
-
-  //   // Dispatch action đăng xuất
-  //   dispatch(logout());
-
-  //   // Chuyển hướng đến trang đăng nhập
-  //   navigate("/login/admin");
-  // };
-
-  const fetchData = (filters) => {
+  const fetchData = () => {
     // Xử lý gọi API với các giá trị bộ lọc
     axios
-      .get("http://localhost:4000/list/categories", {
-        params: filters,
-      })
+      .get("http://localhost:4000/list/categories")
       .then((response) => {
         setCategories(response.data);
         setDatabaseChange(!databaseChange);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách danh mục:", error);

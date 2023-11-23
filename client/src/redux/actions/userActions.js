@@ -1,11 +1,12 @@
-export const login = (user, userId, email, accessToken, refreshToken) => {
+export const login = (user, userId, email, role, accessToken, refreshToken) => {
   return {
     type: "LOGIN",
     user,
     userId,
+    email,
+    role,
     accessToken,
     refreshToken,
-    email,
   };
 };
 

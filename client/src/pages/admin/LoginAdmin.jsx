@@ -5,7 +5,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { login } from "../../actions/adminActions";
+import { login } from "../../redux/actions/userActions";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import LogoF from "../../assets/images/Logo.png";
 
@@ -24,7 +24,7 @@ export default function LoginAdmin() {
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-  const { accessToken } = useSelector((state) => state.admin);
+  const { accessToken } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -41,19 +41,19 @@ export default function LoginAdmin() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:4000/login/admin", {
+      const response = await axios.post("http://localhost:4000/login", {
         email: data.email,
         password: data.password,
       });
 
       if (response.status === 200) {
-        const { admin, adminId, email, accessToken, refreshToken } =
+        const { user, userId, email, role, accessToken, refreshToken } =
           response.data;
 
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
-        dispatch(login(admin, adminId, email, accessToken, refreshToken));
+        dispatch(login(user, userId, email, role, accessToken, refreshToken));
 
         reset();
 

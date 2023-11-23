@@ -1,12 +1,12 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import CreateProduct from "./pages/CreateProduct";
 import ProductList from "./pages/ProductList";
 import EditProduct from "./pages/admin/EditProduct";
 import DeleteProduct from "./pages/admin/DeleteProduct";
 import CreateCategory from "./pages/CreateCategory";
-import Login from "./components/Login";
-import UserInfo from "./components/UserInfo";
-import Register from "./pages/seller/Register";
+import Login from "./pages/user/Login";
+import UserInfo from "./pages/user/UserInfo";
+import Register from "./pages/user/Register";
 import LoginAdmin from "./pages/admin/LoginAdmin";
 import ManageUser from "./pages/admin/ManageUser";
 import ManageCategory from "./pages/admin/ManageCategory";
@@ -23,6 +23,7 @@ import AddProduct from "./pages/admin/AddProduct";
 import Home from "./pages/user/Home";
 import CartItem from "./pages/user/components/CartItem";
 import ShoppingCart from "./pages/user/ShoppingCart";
+import Page404 from "./pages/user/Page404";
 
 function App() {
   return (
@@ -70,9 +71,15 @@ function App() {
       {/* tuyến đường phía User */}
       <Route path="/register/user" element={<Register />} />
       <Route path="/login/user" element={<Login />} />
-      <Route path="/user/info" element={<UserInfo />} />
+      <Route path="//profile/user" element={<UserInfo />} />
       <Route path="/cart" element={<ShoppingCart />} />
+      {/* Tuyến đường mặc định cho trang không tìm thấy */}
+      <Route path="/404" element={<Page404 />} />
 
+      {/* Tuyến đường mặc định khi không tìm thấy */}
+      <Route path="*" element={<Navigate to="/404" />} />
+
+      {/*  */}
       <Route path="/create/category" element={<CreateCategory />} />
       <Route path="/edit/category/:categoryId" element={<EditCategory />} />
 
