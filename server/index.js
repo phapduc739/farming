@@ -1005,6 +1005,65 @@ app.post("/update-shipping-address", (req, res) => {
   });
 });
 
+// Api đặt hàng
+app.post("/orders", (req, res) => {
+  const {
+    customer_name,
+    customer_email,
+    shipping_address,
+    payment_method,
+    items,
+  } = req.body;
+
+  const total_price = items.reduce(
+    (total, item) => total + item.quantity * item.price_per_item,
+    0
+  );
+
+  // Thực hiện truy vấn để thêm đơn hàng vào bảng orders
+  db.query(
+    "INSERT INTO orders (customer_name, customer_email, shipping_address, payment_method, total_price, order_date) VALUES (?, ?, ?, ?, ?, NOW())",
+    [
+      customer_name,
+      customer_email,
+      shipping_address,
+      payment_method,
+      total_price,
+    ],
+    (err, results) => {
+      if (err) {
+        console.error("Error inserting order:", err);
+        return res.status(500).json({ error: "Lỗi khi thêm đơn hàng." });
+      }
+
+      const orderId = results.insertId;
+
+      // Thêm chi tiết đơn hàng vào bảng order_items
+      const orderItemsQuery =
+        "INSERT INTO order_items (order_id, product_name, quantity, price_per_item, total_price) VALUES (?, ?, ?, ?, ?)";
+      items.forEach((item) => {
+        const values = [
+          orderId,
+          item.product_name,
+          item.quantity,
+          item.price_per_item,
+          item.quantity * item.price_per_item,
+        ];
+        db.query(orderItemsQuery, values, (err) => {
+          if (err) {
+            console.error("Error inserting order item:", err);
+            return res
+              .status(500)
+              .json({ error: "Lỗi khi thêm chi tiết đơn hàng." });
+          }
+        });
+      });
+
+      res.status(201).json({ message: "Đơn hàng đã được đặt thành công." });
+    }
+  );
+});
+
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

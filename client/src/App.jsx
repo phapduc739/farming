@@ -25,6 +25,7 @@ import CartItem from "./pages/user/components/CartItem";
 import ShoppingCart from "./pages/user/ShoppingCart";
 import Page404 from "./pages/user/Page404";
 import Checkout from "./pages/user/Checkout";
+import OrderSuccess from "./pages/user/OrderSuccess";
 
 function App() {
   return (
@@ -75,6 +76,7 @@ function App() {
       <Route path="//profile/user/:userId" element={<UserInfo />} />
       <Route path="/cart" element={<ShoppingCart />} />
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/order-success" element={<OrderSuccess />} />
 
       {/* Tuyến đường mặc định cho trang không tìm thấy */}
       {/* <Route path="/404" element={<Page404 />} /> */}
