@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../redux/actions/userActions";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Logo from "../../assets/images/Logo.png";
+import Logo from "../../assets/images/logoweb.png";
 import LogoAdmin from "../../assets/images/Logo-Admin.jpg";
 import ManageUser from "./ManageUser";
 import ManageCategory from "./ManageCategory";

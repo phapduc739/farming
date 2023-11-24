@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import FilterUser from "./FilterUser";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
 
@@ -27,25 +26,6 @@ function ManageProduct() {
       fetchData(); // Gọi hàm fetchData khi accessToken và userId có sẵn
     }
   }, [user, userId, email, role, accessToken, databaseChange]);
-
-  // const handleLogout = () => {
-  //   // Xóa accessToken, userId và refreshToken khỏi localStorage
-  //   localStorage.removeItem("accessToken");
-  //   localStorage.removeItem("adminId");
-  //   localStorage.removeItem("email");
-  //   localStorage.removeItem("refreshToken");
-
-  //   // Dispatch action đăng xuất
-  //   dispatch(logout());
-
-  //   // Chuyển hướng đến trang đăng nhập
-  //   navigate("/login/admin");
-  // };
-
-  const handleFilterChange = (filters) => {
-    setProducts([]);
-    fetchData(filters);
-  };
 
   const fetchData = () => {
     axios
@@ -119,7 +99,6 @@ function ManageProduct() {
               <i className="fa-solid fa-magnifying-glass"></i>
             </div>
             <div className="relative btn-add flex gap-2">
-              <FilterUser onFilterChange={handleFilterChange} />{" "}
               <button
                 className="bg-primaryGreen flex justify-center items-center gap-2 rounded-[4px] py-[8px] px-[14px] text-white text-[14px] hover:bg-[#08886e] transition"
                 onClick={navigateToAddUser}

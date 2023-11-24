@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import FilterUser from "./FilterUser";
 import axios from "axios";
 
 import { useSelector } from "react-redux";
@@ -92,7 +91,6 @@ function ManageUser() {
               <i className="fa-solid fa-magnifying-glass"></i>
             </div>
             <div className="relative btn-add flex gap-2">
-              <FilterUser />{" "}
               <button
                 className="bg-primaryGreen flex justify-center items-center gap-2 rounded-[4px] py-[8px] px-[14px] text-white text-[14px] hover:bg-[#08886e] transition"
                 onClick={navigateToAddUser}

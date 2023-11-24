@@ -4,10 +4,10 @@ import {
   getCartItemCount,
   getCartItems,
   getCartTotal,
+  getUserId,
 } from "../../../redux/selectors";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../../redux/actions/userActions";
-import { MapPin } from "react-feather";
 import IconVn from "../../../assets/images/vn.png";
 import { ChevronDown } from "react-feather";
 import Logo from "../../../assets/images/logo.png";
@@ -19,6 +19,9 @@ import { User } from "react-feather";
 import { Zap } from "react-feather";
 import ButtonAllCategory from "./ButtonAllCategory";
 import SearchProduct from "./SearchProduct";
+import LocationButton from "./LocationButton";
+
+import { Home } from "react-feather";
 
 export default function Header() {
   const cartItemCount = useSelector(getCartItemCount);
@@ -30,6 +33,7 @@ export default function Header() {
 
   const cartItems = useSelector(getCartItems);
   const cartTotal = useSelector(getCartTotal);
+  const userId = useSelector(getUserId);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -88,7 +92,7 @@ export default function Header() {
           <div className="header-top-container w-[1280px] h-full m-auto flex justify-between items-center">
             <div className="header-top-left">
               <div className="map-pin flex justify-center items-center gap-1">
-                <MapPin name="map" size={16} color="white" />
+                <Home size={16} color="white" />
                 <span className="text-[14px] text-white font-medium">
                   3/2, Ninh Kiều, Cần Thơ
                 </span>
@@ -116,16 +120,7 @@ export default function Header() {
             </div>
 
             <div className="header-center-main flex justify-center items-center gap-[13px]">
-              <button className="map flex justify-between items-center gap-2 border border-lineGray p-[7px] rounded-[5px]">
-                <div className="map-pin w-[35px] h-[35px] bg-[#f3f5f9] flex justify-center items-center">
-                  <MapPin name="map" size={16} color="black" />
-                </div>
-                <span className="text-[16px] text-primaryGreen font-semibold">
-                  Vị trí của bạn
-                </span>
-                <ChevronDown name="map" size={16} color="black" />
-              </button>
-
+              <LocationButton />
               <SearchProduct />
             </div>
 
@@ -220,7 +215,7 @@ export default function Header() {
                     <div className="flex flex-col gap-3 w-[120px]">
                       <Link
                         className="text-[14px] text-textGray hover:text-primaryGreen"
-                        to="/profile/user"
+                        to={`/profile/user/${userId}`}
                       >
                         Hồ sơ cá nhân
                       </Link>

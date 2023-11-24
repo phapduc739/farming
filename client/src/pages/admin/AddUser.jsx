@@ -213,7 +213,6 @@ const AddUser = () => {
                   >
                     {" "}
                     <option value="">Chọn vai trò</option>
-                    <option value="Admin">Admin</option>
                     <option value="Seller">Seller</option>
                     <option value="User">User</option>
                   </select>

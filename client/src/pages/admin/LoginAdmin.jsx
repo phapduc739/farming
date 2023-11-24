@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { login } from "../../redux/actions/userActions";
 import useRefreshToken from "../../hooks/useRefreshToken";
-import LogoF from "../../assets/images/Logo.png";
+import LogoF from "../../assets/images/logoweb.png";
 
 const schema = yup
   .object({

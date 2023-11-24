@@ -808,7 +808,9 @@ app.get("/api/search", async (req, res) => {
 
 app.get("/list/users", async (req, res) => {
   try {
-    const [rows] = await db.execute("SELECT * FROM users");
+    const [rows] = await db.execute(
+      "SELECT * FROM users ORDER BY created_at DESC"
+    );
     res.status(200).json(rows);
   } catch (error) {
     console.error(error);
@@ -861,7 +863,7 @@ app.post("/create/user", upload.single("image"), async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await db.execute(
-      "INSERT INTO users (name, email, password, role, image, dateJoin, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO users (name, email, password, role, image, dateJoin, status, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       [
         name || null,
         email || null,
@@ -870,6 +872,7 @@ app.post("/create/user", upload.single("image"), async (req, res) => {
         imagePath || null,
         currentDate || null,
         "Enable",
+        "Thanh toán khi nhận hàng",
       ]
     );
 
@@ -976,6 +979,30 @@ app.delete("/delete/user/:userId", async (req, res) => {
       error: "Lỗi khi xóa người dùng!",
     });
   }
+});
+
+// Thêm địa chỉ giao hàng
+app.post("/update-shipping-address", (req, res) => {
+  const { userId, address } = req.body;
+  const { province, district, ward, street, phoneNumber } = address;
+
+  // Kiểm tra giá trị phoneNumber trước khi sử dụng
+  const phoneNumberText = phoneNumber ? `Số điện thoại: ${phoneNumber}` : "";
+
+  const shippingAddress = `Địa chỉ: ${street}, ${ward}, ${district}, ${province}. ${phoneNumberText}`;
+
+  const query = "UPDATE users SET shipping_address = ? WHERE id = ?";
+  const values = [shippingAddress, userId];
+
+  db.execute(query, values, (error, results) => {
+    if (error) {
+      console.error("Error updating shipping address:", error);
+      res.status(500).send("Internal Server Error");
+    } else {
+      console.log("Shipping address updated successfully");
+      res.status(200).send("Shipping address updated successfully");
+    }
+  });
 });
 
 server.listen(port, () => {

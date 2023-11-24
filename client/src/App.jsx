@@ -5,7 +5,7 @@ import EditProduct from "./pages/admin/EditProduct";
 import DeleteProduct from "./pages/admin/DeleteProduct";
 import CreateCategory from "./pages/CreateCategory";
 import Login from "./pages/user/Login";
-import UserInfo from "./pages/user/UserInfo";
+import UserInfo from "./pages/user/ProfileUser";
 import Register from "./pages/user/Register";
 import LoginAdmin from "./pages/admin/LoginAdmin";
 import ManageUser from "./pages/admin/ManageUser";
@@ -72,15 +72,15 @@ function App() {
       {/* tuyến đường phía User */}
       <Route path="/register/user" element={<Register />} />
       <Route path="/login/user" element={<Login />} />
-      <Route path="//profile/user" element={<UserInfo />} />
+      <Route path="//profile/user/:userId" element={<UserInfo />} />
       <Route path="/cart" element={<ShoppingCart />} />
       <Route path="/checkout" element={<Checkout />} />
 
       {/* Tuyến đường mặc định cho trang không tìm thấy */}
-      <Route path="/404" element={<Page404 />} />
+      {/* <Route path="/404" element={<Page404 />} /> */}
 
       {/* Tuyến đường mặc định khi không tìm thấy */}
-      <Route path="*" element={<Navigate to="/404" />} />
+      {/* <Route path="*" element={<Navigate to="/404" />} /> */}
 
       {/*  */}
       <Route path="/create/category" element={<CreateCategory />} />

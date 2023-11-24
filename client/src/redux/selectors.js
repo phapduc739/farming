@@ -14,3 +14,5 @@ export const getCartTotal = (state) => {
 
   return total;
 };
+
+export const getUserId = (state) => state.user.userId;
