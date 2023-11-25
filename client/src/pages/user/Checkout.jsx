@@ -12,12 +12,21 @@ import { CreditCard } from "react-feather";
 
 import discount from "../../assets/images/discount.svg";
 
+import { clearCart } from "../../redux/actions/cartActions";
+
+import axios from "axios";
+
 const Checkout = () => {
   const items = useSelector((state) => state.cart.items);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+  const userId = useSelector((state) => state.user.userId);
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const [totalPrice, setTotalPrice] = useState(0);
+
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     // Tính tổng giá từ danh sách sản phẩm trong giỏ hàng
@@ -32,6 +41,26 @@ const Checkout = () => {
     setTotalPrice(calculateTotalPrice());
   }, [items]);
 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        // Gọi API với userId từ Redux state
+        const response = await axios.get(
+          `http://localhost:4000/user/${userId}`
+        );
+        const data = response.data;
+
+        // Set state với dữ liệu người dùng
+        setUserInfo(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    // Gọi hàm fetchUserData khi component được render
+    fetchUserInfo();
+  }, [userId]);
+
   const formatPrice = (price) => {
     const formattedPrice = Number(price).toLocaleString("vi-VN", {
       style: "currency",
@@ -41,15 +70,51 @@ const Checkout = () => {
     return formattedPrice;
   };
 
-  const handleProceedToCheckout = () => {
-    if (isAuthenticated === true) {
-      // Nếu đã đăng nhập, chuyển hướng đến trang thanh toán
-      navigate("/order-success");
-    } else {
-      // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
-      navigate("/login/user");
+  const handleProceedToCheckout = async () => {
+    try {
+      // Gửi thông tin đặt hàng lên server
+      const response = await axios.post("http://localhost:4000/orders", {
+        userId: userInfo.id,
+        customerName: userInfo.name,
+        shippingAddress: userInfo.shipping_address,
+        paymentMethod: "Thanh toán khi nhận hàng", // Có thể thay đổi theo cách bạn xử lý phương thức thanh toán
+        totalPrice: totalPrice,
+        status: "Đang xử lý",
+        items: items.map((item) => ({
+          productId: item.id,
+          nameItem: item.name,
+          quantity: item.quantityInCart,
+          price: item.price * item.quantityInCart,
+          unit: item.unit,
+        })),
+      });
+
+      console.log(items);
+      console.log(response);
+
+      // Kiểm tra xem đặt hàng thành công hay không
+      if (response.status === 200) {
+        const orderId = response.data.orderId;
+        dispatch(clearCart());
+        navigate(`/order-success/${orderId}`);
+      } else {
+        console.error("Error placing order:", response.data);
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
     }
   };
+
+  if (
+    !userInfo ||
+    !userInfo.shipping_address ||
+    !userInfo.shipping_address.includes("Số điện thoại:")
+  ) {
+    return null;
+  }
+
+  const [addressPart, phonePart] =
+    userInfo.shipping_address.split("Số điện thoại:");
 
   return (
     <>
@@ -86,13 +151,13 @@ const Checkout = () => {
                       </div>
                       <div className="">
                         <h1 className="text-[16px] text-textBlack font-semibold">
-                          Jack Jennas
+                          {userInfo.name}
                         </h1>
                         <p className="text-[16px] text-textGray font-normal">
-                          Địa chỉ: 3/2, Ninh Kiều, Cần Thơ
+                          {addressPart.trim()}
                         </p>
                         <p className="text-[16px] text-textGray font-normal">
-                          Số điện thoại: 099999999
+                          Số điện thoại: {phonePart.trim()}
                         </p>
                       </div>
                       <span className="absolute top-4 right-4 bg-primaryGreen text-white text-[12px] font-semibold px-[6px] py-[3px] rounded">
@@ -271,7 +336,7 @@ const Checkout = () => {
                   onClick={handleProceedToCheckout}
                 >
                   <Link
-                    to={isAuthenticated ? "/order-success" : "/login/user"}
+                    // to={isAuthenticated ? "/order-success" : "/login/user"}
                     className="w-full h-full text-[14px] text-white font-semibold flex justify-center items-center"
                   >
                     Đặt hàng ngay

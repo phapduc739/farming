@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 25, 2023 lúc 04:30 AM
+-- Thời gian đã tạo: Th10 25, 2023 lúc 09:13 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -50,6 +50,69 @@ INSERT INTO `categories` (`id`, `name`, `description`, `image`, `quantity`, `cre
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  `shipping_address` varchar(255) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `total_price` decimal(10,2) NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `customer_name`, `shipping_address`, `payment_method`, `total_price`, `status`, `created_at`) VALUES
+(54, 40, 'Max', 'Địa chỉ: 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ. Số điện thoại: 0374890472', 'Thanh toán khi nhận hàng', 70000.00, 'Đang xử lý', '2023-11-25 06:20:38'),
+(55, 40, 'Max', 'Địa chỉ: 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ. Số điện thoại: 0374890472', 'Thanh toán khi nhận hàng', 70000.00, 'Đang xử lý', '2023-11-25 06:21:45'),
+(56, 40, 'Max', 'Địa chỉ: 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ. Số điện thoại: 0374890472', 'Thanh toán khi nhận hàng', 160000.00, 'Đang xử lý', '2023-11-25 07:36:03'),
+(57, 40, 'Max', 'Địa chỉ: 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ. Số điện thoại: 0374890472', 'Thanh toán khi nhận hàng', 1375000.00, 'Đang xử lý', '2023-11-25 07:43:35'),
+(58, 40, 'Max', 'Địa chỉ: 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ. Số điện thoại: 0374890472', 'Thanh toán khi nhận hàng', 1305000.00, 'Đang xử lý', '2023-11-25 07:48:11'),
+(59, 40, 'Max', 'Địa chỉ: 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ. Số điện thoại: 0374890472', 'Thanh toán khi nhận hàng', 1740000.00, 'Đang xử lý', '2023-11-25 08:07:47');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `unit` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `name`, `quantity`, `price`, `unit`) VALUES
+(40, 54, 39, 'Cam sành', 2, 70000.00, ''),
+(41, 55, 39, 'Cam sành', 2, 70000.00, ''),
+(42, 56, 40, 'Nho nhập khẩu', 4, 160000.00, ''),
+(43, 57, 43, 'Gạo ST25 Ông Cua', 5, 900000.00, ''),
+(44, 57, 42, 'Hạt Điều Rang Bơ 500G', 5, 475000.00, ''),
+(45, 58, 44, 'Gạo Thơm Vua Gạo Hương Việt', 3, 480000.00, ''),
+(46, 58, 43, 'Gạo ST25 Ông Cua', 3, 540000.00, ''),
+(47, 58, 42, 'Hạt Điều Rang Bơ 500G', 3, 285000.00, ''),
+(48, 59, 41, 'Dưa hấu không hạt', 1, 30000.00, 'Kg'),
+(49, 59, 42, 'Hạt Điều Rang Bơ 500G', 2, 190000.00, 'Túi'),
+(50, 59, 43, 'Gạo ST25 Ông Cua', 4, 720000.00, 'Túi'),
+(51, 59, 44, 'Gạo Thơm Vua Gạo Hương Việt', 5, 800000.00, 'Túi');
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `products`
 --
 
@@ -73,14 +136,14 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `price`, `categoryID`, `quantity`, `status`, `request`, `unit`, `discount`, `user_id`, `created_at`) VALUES
-(37, 'Táo Mỹ', 'Táo Mỹ nhập khẩu', 39000.00, 97, '10', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:08:46'),
-(38, 'Chuối xuất khẩu', 'Chuối xuất khẩu nước ngoài', 27000.00, 97, '6', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:09:46'),
-(39, 'Cam sành', 'Cam sành miền Tây', 35000.00, 98, '3', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:10:46'),
-(40, 'Nho nhập khẩu', 'Nho nhập khẩu', 40000.00, 97, '30', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:11:46'),
-(41, 'Dưa hấu không hạt', 'Dưa hấu không hạt', 30000.00, 97, '33', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:12:46'),
-(42, 'Hạt Điều Rang Bơ 500G', 'Hạt Điều Rang Bơ 500G', 95000.00, 98, '33', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:13:46'),
-(43, 'Gạo ST25 Ông Cua', 'Gạo ST25 Ông Cua', 180000.00, 96, '60', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:14:46'),
-(44, 'Gạo Thơm Vua Gạo Hương Việt', 'Gạo Thơm Vua Gạo Hương Việt', 160000.00, 96, '24', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:15:46'),
+(37, 'Táo Mỹ', 'Táo Mỹ nhập khẩu', 39000.00, 97, '0', 'Hết hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:08:46'),
+(38, 'Chuối xuất khẩu', 'Chuối xuất khẩu nước ngoài', 27000.00, 97, '0', 'Hết hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:09:46'),
+(39, 'Cam sành', 'Cam sành miền Tây', 35000.00, 98, '0', 'Hết hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:10:46'),
+(40, 'Nho nhập khẩu', 'Nho nhập khẩu', 40000.00, 97, '26', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:11:46'),
+(41, 'Dưa hấu không hạt', 'Dưa hấu không hạt', 30000.00, 97, '30', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:12:46'),
+(42, 'Hạt Điều Rang Bơ 500G', 'Hạt Điều Rang Bơ 500G', 95000.00, 98, '23', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:13:46'),
+(43, 'Gạo ST25 Ông Cua', 'Gạo ST25 Ông Cua', 180000.00, 96, '45', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:14:46'),
+(44, 'Gạo Thơm Vua Gạo Hương Việt', 'Gạo Thơm Vua Gạo Hương Việt', 160000.00, 96, '2', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:15:46'),
 (45, 'Ngô xuất khẩu', 'Ngô xuất khẩu', 30000.00, 100, '70', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:22:36');
 
 -- --------------------------------------------------------
@@ -136,7 +199,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `image`, `dateJoin`, `status`, `payment_method`, `shipping_address`, `created_at`) VALUES
 (39, 'Emma', 'emma@gmail.com', '$2a$10$9zCwNw2Af6n5Tk3VWZ9kseEZZUxE5bHJfPWfpuYnGt9xfnap9cQfS', 'Seller', 'uploads\\image-1700736415998.png', '2023-11-20', 'Enable', NULL, NULL, '2023-11-24 07:35:17'),
-(40, 'Max', 'max@gamil.com', '$2a$10$kAtV6HGJRNB/79etDq/pNOD1otpsY2ZCnBwCv3iumlii/9bTR.ToK', 'User', 'uploads\\image-1700471773164.png', '2023-11-20', 'Disable', NULL, 'Địa chỉ: 111, Phường Ỷ La, Thành phố Tuyên Quang, Tỉnh Tuyên Quang. Số điện thoại: 111', '2023-11-24 07:35:17'),
+(40, 'Max', 'max@gamil.com', '$2a$10$kAtV6HGJRNB/79etDq/pNOD1otpsY2ZCnBwCv3iumlii/9bTR.ToK', 'User', 'uploads\\image-1700471773164.png', '2023-11-20', 'Disable', NULL, 'Địa chỉ: 3/2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ. Số điện thoại: 0374890472', '2023-11-24 07:35:17'),
 (41, 'Bean', 'bean@gmail.com', '$2a$10$FXkE3OMjFCWPwxODgZXn8OUGoM.iTnXIynFzSMawkeoCpIKaaklyK', 'User', 'uploads\\image-1700471795782.png', '2023-11-20', 'Enable', NULL, NULL, '2023-11-24 07:35:17'),
 (42, 'Cox', 'cox@gmail.com', '$2a$10$eaP6iJrmhqlsvj2Ipf5CnOOJQYRMsnOyjJ01iBuXPyCAo3ew3mlsC', 'Seller', 'uploads\\image-1700471826941.png', '2023-11-20', 'Enable', NULL, NULL, '2023-11-24 07:35:17'),
 (43, 'Fran', 'fran@gmail.com', '$2a$10$hmfP77tKg2.iEfsD1StJPOeJMhjSxsxBDIJZKxEPC9WHcyBZdCIOO', 'Seller', 'uploads\\image-1700471850811.png', '2023-11-20', 'Disable', NULL, NULL, '2023-11-24 07:35:17'),
@@ -152,6 +215,21 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `image`, `dateJo
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Chỉ mục cho bảng `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Chỉ mục cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Chỉ mục cho bảng `products`
@@ -185,6 +263,18 @@ ALTER TABLE `categories`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
+-- AUTO_INCREMENT cho bảng `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+
+--
+-- AUTO_INCREMENT cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+
+--
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
@@ -205,6 +295,19 @@ ALTER TABLE `users`
 --
 -- Các ràng buộc cho các bảng đã đổ
 --
+
+--
+-- Các ràng buộc cho bảng `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Các ràng buộc cho bảng `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Các ràng buộc cho bảng `products`

@@ -1,5 +1,3 @@
-import socket from "../socket";
-
 const initialState = {
   items: [],
 };
@@ -81,28 +79,11 @@ const cartReducer = (state = initialState, action) => {
       return state;
     }
 
-    case "SOCKET_UPDATE_QUANTITY": {
-      console.log("Socket update quantity action received:", action.payload);
-      const { id, newQuantityInCart } = action.payload;
-      const existingProduct = state.items.find((product) => product.id === id);
-
-      if (existingProduct) {
-        return {
-          ...state,
-          items: state.items.map((item) =>
-            item.id === id
-              ? {
-                  ...item,
-                  quantityInCart: newQuantityInCart,
-                  totalPrice: newQuantityInCart * item.price,
-                }
-              : item
-          ),
-        };
-      }
-
-      return state;
-    }
+    case "CLEAR_CART":
+      return {
+        ...state,
+        items: [],
+      };
 
     default:
       return state;

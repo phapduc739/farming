@@ -94,14 +94,26 @@ const ProductList = () => {
             </p>
           </div>
           <div className="flex justify-between items-center gap-2">
-            <h6 className="text-[15px] text-primaryGreen font-[600]">
-              {product.status ? "Còn hàng" : "Hết hàng"} ({product.quantity}{" "}
-              {product.unit})
+            <h6
+              className={`text-[15px] font-[600] ${
+                product.status === "Còn hàng"
+                  ? "text-primaryGreen"
+                  : "text-red-500"
+              }`}
+            >
+              {product.status === "Còn hàng"
+                ? `Còn hàng (${product.quantity} ${product.unit})`
+                : "Hết hàng"}
             </h6>
           </div>
           <button
-            className="relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] text-textGray font-[400] hover:text-text2222 transition"
+            className={`relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
+              product.status === "Hết hàng"
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
             onClick={() => handleAddToCart(product.id)}
+            disabled={product.status === "Hết hàng"}
           >
             Thêm
             <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">

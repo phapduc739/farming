@@ -25,6 +25,12 @@ export const updateQuantity = (productId, quantityInCart, quantity) => {
   };
 };
 
+export const clearCart = () => {
+  return {
+    type: "CLEAR_CART",
+  };
+};
+
 export const socketUpdateQuantity = (data) => ({
   type: "SOCKET_UPDATE_QUANTITY",
   payload: data,

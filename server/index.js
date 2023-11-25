@@ -1019,64 +1019,110 @@ app.post("/update-shipping-address", (req, res) => {
 });
 
 // Api đặt hàng
-app.post("/orders", (req, res) => {
-  const {
-    customer_name,
-    customer_email,
-    shipping_address,
-    payment_method,
-    items,
-  } = req.body;
+app.post("/orders", async (req, res) => {
+  try {
+    const {
+      userId,
+      customerName,
+      shippingAddress,
+      paymentMethod,
+      totalPrice,
+      status,
+      items,
+    } = req.body;
 
-  const total_price = items.reduce(
-    (total, item) => total + item.quantity * item.price_per_item,
-    0
-  );
+    // Thêm dữ liệu vào bảng orders
+    const [orderResult] = await db.execute(
+      "INSERT INTO orders (user_id, customer_name, shipping_address, payment_method, total_price, status) VALUES (?, ?, ?, ?, ?, ?)",
+      [userId, customerName, shippingAddress, paymentMethod, totalPrice, status]
+    );
 
-  // Thực hiện truy vấn để thêm đơn hàng vào bảng orders
-  db.query(
-    "INSERT INTO orders (customer_name, customer_email, shipping_address, payment_method, total_price, order_date) VALUES (?, ?, ?, ?, ?, NOW())",
-    [
-      customer_name,
-      customer_email,
-      shipping_address,
-      payment_method,
-      total_price,
-    ],
-    (err, results) => {
-      if (err) {
-        console.error("Error inserting order:", err);
-        return res.status(500).json({ error: "Lỗi khi thêm đơn hàng." });
-      }
+    const orderId = orderResult.insertId;
 
-      const orderId = results.insertId;
+    // Chuẩn bị dữ liệu cho bảng order_items
+    const orderItemsValues = items.map((item) => [
+      orderId,
+      item.productId,
+      item.nameItem,
+      item.quantity,
+      item.price,
+      item.unit,
+    ]);
 
-      // Thêm chi tiết đơn hàng vào bảng order_items
-      const orderItemsQuery =
-        "INSERT INTO order_items (order_id, product_name, quantity, price_per_item, total_price) VALUES (?, ?, ?, ?, ?)";
-      items.forEach((item) => {
-        const values = [
-          orderId,
-          item.product_name,
-          item.quantity,
-          item.price_per_item,
-          item.quantity * item.price_per_item,
-        ];
-        db.query(orderItemsQuery, values, (err) => {
-          if (err) {
-            console.error("Error inserting order item:", err);
-            return res
-              .status(500)
-              .json({ error: "Lỗi khi thêm chi tiết đơn hàng." });
-          }
-        });
-      });
+    console.log(orderItemsValues);
 
-      res.status(201).json({ message: "Đơn hàng đã được đặt thành công." });
+    // Sử dụng phương thức execute nhiều lần để thêm nhiều hàng
+    for (const orderItem of orderItemsValues) {
+      await db.execute(
+        "INSERT INTO order_items (order_id, product_id, name, quantity, price, unit) VALUES (?, ?, ?, ?, ?, ?)",
+        orderItem
+      );
+
+      // Giảm số lượng sản phẩm trong bảng products
+      await db.execute(
+        "UPDATE products SET quantity = quantity - ? WHERE id = ?",
+        [orderItem[3], orderItem[1]]
+      );
+
+      // Kiểm tra nếu quantity của sản phẩm xuống 0, đặt status là 'Hết hàng'
+      await db.execute(
+        "UPDATE products SET status = 'Hết hàng' WHERE id = ? AND quantity = 0",
+        [orderItem[1]]
+      );
     }
-  );
+
+    res.status(200).json({ success: true, orderId });
+  } catch (error) {
+    console.error("Error placing order:", error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
 });
 
+// Lấy đơn hàng
+app.get("/order/:orderId/user/:userId", async (req, res) => {
+  const { userId, orderId } = req.params;
+
+  try {
+    // Lấy thông tin chi tiết của đơn hàng từ bảng orders và order_items
+    const [orderDetails] = await db.execute(
+      "SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.id = ? AND o.user_id = ?",
+      [orderId, userId]
+    );
+
+    // Nếu không có dữ liệu trả về, đơn hàng không tồn tại hoặc không thuộc về người dùng
+    if (!orderDetails.length) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    // Tạo đối tượng chứa thông tin đơn hàng và order_items
+    const orderInfo = {
+      order: {
+        id: orderDetails[0].id,
+        user_id: orderDetails[0].user_id,
+        customer_name: orderDetails[0].customer_name,
+        shipping_address: orderDetails[0].shipping_address,
+        total_price: orderDetails[0].total_price,
+        unit: orderDetails[0].unit,
+      },
+      orderItems: orderDetails.map((item) => ({
+        id: item.id,
+        order_id: item.order_id,
+        product_id: item.product_id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        unit: item.unit,
+      })),
+    };
+
+    res.status(200).json(orderInfo);
+  } catch (error) {
+    console.error("Error fetching order details:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+//
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

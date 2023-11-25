@@ -76,7 +76,7 @@ function App() {
       <Route path="//profile/user/:userId" element={<UserInfo />} />
       <Route path="/cart" element={<ShoppingCart />} />
       <Route path="/checkout" element={<Checkout />} />
-      <Route path="/order-success" element={<OrderSuccess />} />
+      <Route path="/order-success/:orderId" element={<OrderSuccess />} />
 
       {/* Tuyến đường mặc định cho trang không tìm thấy */}
       {/* <Route path="/404" element={<Page404 />} /> */}
