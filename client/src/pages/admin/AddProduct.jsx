@@ -4,7 +4,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
 
+import { useSelector } from "react-redux/es/hooks/useSelector";
+
 const AddProduct = () => {
+  const userId = useSelector((state) => state.user.userId);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [errors, setErrors] = useState({});
 
@@ -95,6 +99,7 @@ const AddProduct = () => {
     formData.append("unit", product.unit);
     formData.append("quantity", product.quantity);
     formData.append("categoryID", product.categoryID);
+    formData.append("userId", userId);
     for (let i = 0; i < images.length; i++) {
       formData.append("images", images[i]);
     }
@@ -313,7 +318,8 @@ const AddProduct = () => {
                     <option value="Kg">Kilogram</option>
                     <option value="Gram">Gram</option>
                     <option value="Hộp">Hộp</option>
-                    <option value="Quả">Quả</option>
+                    <option value="Quả">Quả</option>{" "}
+                    <option value="Túi">Túi</option>
                   </select>
                   {errors.unit && (
                     <div className="text-red-500 text-[12px]">

@@ -31,6 +31,7 @@ const EditProduct = () => {
           unit,
           quantity,
           status,
+          request,
           categoryID,
           images,
         } = response.data;
@@ -42,6 +43,7 @@ const EditProduct = () => {
           unit,
           quantity,
           status,
+          request,
           categoryID,
         });
         setImages(images);
@@ -62,6 +64,7 @@ const EditProduct = () => {
     unit: "", // Kiểm tra và set giá trị mặc định nếu undefined
     quantity: "", // Kiểm tra và set giá trị mặc định nếu undefined    rating: "",
     status: "",
+    request: "",
     categoryID: "",
   });
 
@@ -99,6 +102,7 @@ const EditProduct = () => {
     formData.append("price", product.price);
     formData.append("unit", product.unit);
     formData.append("status", product.status);
+    formData.append("request", product.request);
     formData.append("quantity", product.quantity);
     formData.append("categoryID", product.categoryID);
     if (images.length > 0) {
@@ -339,6 +343,7 @@ const EditProduct = () => {
                     <option value="Gram">Gram</option>
                     <option value="Hộp">Hộp</option>
                     <option value="Quả">Quả</option>
+                    <option value="Túi">Túi</option>
                   </select>
                   {errors.unit && (
                     <div className="text-red-500 text-[12px]">
@@ -368,6 +373,33 @@ const EditProduct = () => {
                   {errors.status && (
                     <div className="text-red-500 text-[12px]">
                       {errors.status}
+                    </div>
+                  )}
+                </label>
+
+                {/*  */}
+                <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
+                  <div className="flex gap-1">
+                    <h3 className="">Yêu cầu</h3>
+                    <span className="text-red-500">*</span>
+                  </div>
+                  <select
+                    name="status"
+                    value={product.request}
+                    onChange={(e) =>
+                      setProduct({ ...product, request: e.target.value })
+                    }
+                    className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
+                  >
+                    {" "}
+                    <option value="">Chọn yêu cầu</option>
+                    <option value="Đang xét duyệt">Đang xét duyệt</option>
+                    <option value="Đã duyệt">Đã duyệt</option>
+                    <option value="Đã từ chối">Đã từ chối</option>
+                  </select>
+                  {errors.request && (
+                    <div className="text-red-500 text-[12px]">
+                      {errors.request}
                     </div>
                   )}
                 </label>

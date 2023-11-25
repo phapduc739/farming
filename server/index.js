@@ -324,7 +324,7 @@ app.post("/create/category", upload.single("image"), async (req, res) => {
     const imagePath = req.file.path;
 
     const result = await db.execute(
-      "INSERT INTO categories (name, description, image, quantity, createAt) VALUES (?, ?, ?, 0, NOW())",
+      "INSERT INTO categories (name, description, image, quantity, create_at) VALUES (?, ?, ?, 0, NOW())",
       [name, description, imagePath]
     );
 
@@ -490,6 +490,7 @@ app.get("/list/products", async (req, res) => {
     p.unit,
     p.quantity,
     p.status,
+    p.request,
     p.categoryID,
     pi.image_url,
     c.name AS category_name
@@ -512,6 +513,7 @@ app.get("/list/products", async (req, res) => {
           price: row.price,
           unit: row.unit,
           status: row.status,
+          request: row.request,
           quantity: row.quantity,
           categoryID: row.categoryID,
           category_name: row.category_name,
@@ -534,12 +536,23 @@ app.get("/list/products", async (req, res) => {
 
 app.post("/create/product", upload.array("images", 12), async (req, res) => {
   try {
-    const { name, description, price, unit, quantity, categoryID } = req.body;
+    const { name, description, price, unit, quantity, categoryID, userId } =
+      req.body;
 
     // Insert the product into the products table
     const [result] = await db.execute(
-      "INSERT INTO products (name, description, price, unit, quantity, categoryID, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [name, description, price, unit, quantity, categoryID, "Còn hàng"]
+      "INSERT INTO products (name, description, price, unit, quantity, categoryID, status, request, user_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        name,
+        description,
+        price,
+        unit,
+        quantity,
+        categoryID,
+        "Còn hàng",
+        "Đang xét duyệt",
+        userId,
+      ]
     );
 
     const productId = result.insertId;
@@ -573,7 +586,7 @@ app.get("/product/:productId", async (req, res) => {
   const productId = req.params.productId;
   try {
     const [productInfo] = await db.execute(
-      "SELECT p.id, p.name, p.description, p.price, p.quantity, p.status, p.unit, pi.id AS image_id, pi.product_id, pi.image_url " +
+      "SELECT p.id, p.name, p.description, p.price, p.quantity, p.status, p.request, p.unit, pi.id AS image_id, pi.product_id, pi.image_url " +
         "FROM products p " +
         "LEFT JOIN product_images pi ON p.id = pi.product_id " +
         "WHERE p.id = ?",
@@ -591,6 +604,7 @@ app.get("/product/:productId", async (req, res) => {
         price: productInfo[0].price,
         quantity: productInfo[0].quantity,
         status: productInfo[0].status,
+        request: productInfo[0].request,
         unit: productInfo[0].unit,
 
         images: productInfo.map((row) => ({
@@ -650,13 +664,14 @@ app.put(
 
     try {
       await db.execute(
-        "UPDATE products SET name = ?, description = ?, price = ?, quantity = ?, status = ?, unit = ? WHERE id = ?",
+        "UPDATE products SET name = ?, description = ?, price = ?, quantity = ?, status = ?, request = ?, unit = ? WHERE id = ?",
         [
           updatedProductData.name,
           updatedProductData.description,
           updatedProductData.price,
           updatedProductData.quantity,
           updatedProductData.status,
+          updatedProductData.request,
           updatedProductData.unit,
           productId,
         ]
@@ -808,9 +823,7 @@ app.get("/api/search", async (req, res) => {
 
 app.get("/list/users", async (req, res) => {
   try {
-    const [rows] = await db.execute(
-      "SELECT * FROM users ORDER BY created_at DESC"
-    );
+    const [rows] = await db.execute("SELECT * FROM users");
     res.status(200).json(rows);
   } catch (error) {
     console.error(error);

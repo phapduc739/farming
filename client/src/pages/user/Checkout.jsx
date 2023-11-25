@@ -66,7 +66,7 @@ const Checkout = () => {
           </div>
         </div>
 
-        <div className="checkout-info w-full h-auto border border-red-500">
+        <div className="checkout-info w-full h-auto">
           <div className="checkout-info-container w-[1280px] h-auto m-auto py-[48px] grid grid-cols-5 gap-x-6">
             {/*  */}
             <div className="checkout-item col-span-3 h-auto rounded-[5px]">

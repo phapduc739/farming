@@ -33,7 +33,6 @@ function ManageProduct() {
       .then((response) => {
         setProducts(response.data);
         setDatabaseChange(!databaseChange);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Lỗi khi lấy danh sách danh mục:", error);
@@ -125,60 +124,75 @@ function ManageProduct() {
                   <th className="p-2 uppercase">Số lượng</th>
                   <th className="p-2 uppercase">Đơn vị tính</th>
                   <th className="p-2 uppercase">Trạng thái</th>
+                  <th className="p-2 uppercase">Yêu cầu</th>
                   <th className="p-2 uppercase">Hành động</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {products.map((row) => (
-                  <tr key={row.id} className="text-[14px] text-textBlack">
-                    <td className="p-2">
-                      <input
-                        type="checkbox"
-                        checked={checkboxStates[row.id] || false}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, row.id)
-                        }
-                      />
-                    </td>
-                    <td className="p-2 flex justify-start items-center gap-2">
-                      <div className="w-[50px] h-[50px]">
-                        <img
-                          className="object-cover rounded-[50%]"
-                          src={`http://localhost:4000/${row.images[0]}`}
-                          alt=""
+                {products
+                  .sort((a, b) => b.id - a.id) // Sắp xếp theo id tăng dần
+                  .map((row) => (
+                    <tr key={row.id} className="text-[14px] text-textBlack">
+                      <td className="p-2">
+                        <input
+                          type="checkbox"
+                          checked={checkboxStates[row.id] || false}
+                          onChange={(event) =>
+                            handleCheckboxChange(event, row.id)
+                          }
                         />
-                      </div>
-                      <div className="flex flex-col gap-[5px]">
-                        <h3 className="font-[600]">{row.name}</h3>
-                      </div>
-                    </td>
-                    <td className="p-2">{row.id}</td>
-                    <td className="p-2">{formatPrice(row.price)}</td>
-                    <td className="p-2">{row.quantity}</td>
-                    <td className="p-2">{row.unit}</td>
-                    <td
-                      className={`p-2 ${
-                        row.status === "Còn hàng"
-                          ? "text-green-500 font-semibold"
-                          : "text-red-500 font-semibold"
-                      }`}
-                    >
-                      {row.status}
-                    </td>
-                    <td className="p-2">
-                      <button
-                        className="mr-2"
-                        onClick={() => navigateToEditUser(row.id)}
+                      </td>
+                      <td className="p-2 flex justify-start items-center gap-2">
+                        <div className="w-[50px] h-[50px]">
+                          <img
+                            className="object-cover rounded-[50%]"
+                            src={`http://localhost:4000/${row.images[0]}`}
+                            alt=""
+                          />
+                        </div>
+                        <div className="flex flex-col gap-[5px]">
+                          <h3 className="font-[600]">{row.name}</h3>
+                        </div>
+                      </td>
+                      <td className="p-2">{row.id}</td>
+                      <td className="p-2">{formatPrice(row.price)}</td>
+                      <td className="p-2">{row.quantity}</td>
+                      <td className="p-2">{row.unit}</td>
+                      <td
+                        className={`p-2 ${
+                          row.status === "Còn hàng"
+                            ? "text-green-500 font-semibold"
+                            : "text-red-500 font-semibold"
+                        }`}
                       >
-                        <i className="fa-regular fa-pen-to-square"></i>
-                      </button>
+                        {row.status}
+                      </td>
+                      <td
+                        className={`p-2 ${
+                          row.request === "Đang xét duyệt"
+                            ? "text-yellow font-semibold"
+                            : row.request === "Đã duyệt"
+                            ? "text-green-500 font-semibold"
+                            : "text-red-500 font-semibold"
+                        }`}
+                      >
+                        {row.request}
+                      </td>
 
-                      <button onClick={() => navigateToDeleteUser(row.id)}>
-                        <i className="fa-regular fa-trash-can"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      <td className="p-2">
+                        <button
+                          className="mr-2"
+                          onClick={() => navigateToEditUser(row.id)}
+                        >
+                          <i className="fa-regular fa-pen-to-square"></i>
+                        </button>
+
+                        <button onClick={() => navigateToDeleteUser(row.id)}>
+                          <i className="fa-regular fa-trash-can"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

@@ -172,7 +172,7 @@ export default function Header() {
                             {item.name}
                           </p>
                           <p className="text-[14px] text-textGray font-[500]">
-                            {item.quantity} {item.unit} x{" "}
+                            {item.quantityInCart} {item.unit} x{" "}
                             {formatPrice(item.price)}
                           </p>
                         </div>

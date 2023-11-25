@@ -118,48 +118,52 @@ function ManageCategory() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {categories.map((row) => (
-                  <tr key={row.id} className="text-[14px] text-textBlack">
-                    <td className="p-2">
-                      <input
-                        type="checkbox"
-                        checked={checkboxStates[row.name] || false}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, row.name)
-                        }
-                      />
-                    </td>
-                    <td className="p-2 flex justify-start items-center gap-2">
-                      <div className="w-[50px] h-[50px]">
-                        <img
-                          className="object-cover rounded-[50%]"
-                          src={`http://localhost:4000/${row.image}`}
-                          alt=""
+                {categories
+                  .sort((a, b) => b.id - a.id) // Sắp xếp theo id tăng dần
+                  .map((row) => (
+                    <tr key={row.id} className="text-[14px] text-textBlack">
+                      <td className="p-2">
+                        <input
+                          type="checkbox"
+                          checked={checkboxStates[row.name] || false}
+                          onChange={(event) =>
+                            handleCheckboxChange(event, row.name)
+                          }
                         />
-                      </div>
-                      <div className="flex flex-col gap-[5px]">
-                        <h3 className="font-[600]">{row.name}</h3>
-                        <h3 className="font-[500]">{row.description}</h3>
-                      </div>
-                    </td>
-                    <td className="p-2">{row.quantity}</td>
-                    <td className="p-2">
-                      {format(new Date(row.createAt), "dd/MM/yyyy")}
-                    </td>{" "}
-                    <td className="p-2">
-                      <button
-                        className="mr-2"
-                        onClick={() => navigateToEditCategory(row.id)}
-                      >
-                        <i className="fa-regular fa-pen-to-square"></i>
-                      </button>
+                      </td>
+                      <td className="p-2 flex justify-start items-center gap-2">
+                        <div className="w-[50px] h-[50px]">
+                          <img
+                            className="object-cover rounded-[50%]"
+                            src={`http://localhost:4000/${row.image}`}
+                            alt=""
+                          />
+                        </div>
+                        <div className="flex flex-col gap-[5px]">
+                          <h3 className="font-[600]">{row.name}</h3>
+                          <h3 className="font-[500]">{row.description}</h3>
+                        </div>
+                      </td>
+                      <td className="p-2">{row.quantity}</td>
+                      <td className="p-2">
+                        {format(new Date(row.create_at), "HH:mm:ss dd/MM/yyyy")}
+                      </td>{" "}
+                      <td className="p-2">
+                        <button
+                          className="mr-2"
+                          onClick={() => navigateToEditCategory(row.id)}
+                        >
+                          <i className="fa-regular fa-pen-to-square"></i>
+                        </button>
 
-                      <button onClick={() => navigateToDeleteCategory(row.id)}>
-                        <i className="fa-regular fa-trash-can"></i>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                        <button
+                          onClick={() => navigateToDeleteCategory(row.id)}
+                        >
+                          <i className="fa-regular fa-trash-can"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>

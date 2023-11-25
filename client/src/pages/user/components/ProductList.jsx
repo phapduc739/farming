@@ -81,7 +81,9 @@ const ProductList = () => {
           </div>
 
           <h5 className="text-[16px] text-text2222 font-normal">
-            {product.name}
+            {product.name.length > 18
+              ? `${product.name.slice(0, 18)}...`
+              : product.name}{" "}
           </h5>
           <div className="flex justify-between items-center gap-2">
             <h6 className="text-[15px] text-primaryGreen font-[600]">
