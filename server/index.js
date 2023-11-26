@@ -1085,7 +1085,12 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
   try {
     // Lấy thông tin chi tiết của đơn hàng từ bảng orders và order_items
     const [orderDetails] = await db.execute(
-      "SELECT o.*, oi.* FROM orders o JOIN order_items oi ON o.id = oi.order_id WHERE o.id = ? AND o.user_id = ?",
+      "SELECT o.*, oi.*, pi.image_url AS product_image_url " +
+        "FROM orders o " +
+        "JOIN order_items oi ON o.id = oi.order_id " +
+        "JOIN products p ON oi.product_id = p.id " +
+        "JOIN product_images pi ON p.id = pi.product_id " +
+        "WHERE o.id = ? AND o.user_id = ?",
       [orderId, userId]
     );
 
@@ -1094,7 +1099,7 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
       return res.status(404).json({ error: "Order not found" });
     }
 
-    // Tạo đối tượng chứa thông tin đơn hàng và order_items
+    // Tạo đối tượng chứa thông tin đơn hàng, order_items, và image_url của products
     const orderInfo = {
       order: {
         id: orderDetails[0].id,
@@ -1112,6 +1117,7 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
         quantity: item.quantity,
         price: item.price,
         unit: item.unit,
+        product_image_url: item.product_image_url, // Thêm thông tin hình ảnh vào mỗi order item
       })),
     };
 

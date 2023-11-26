@@ -51,11 +51,11 @@ const OrderSuccess = () => {
   return (
     <>
       <Header />
-      <div className="cart w-full h-auto border">
+      <div className="cart w-full h-auto">
         <div className="cart-title w-full bg-backgroundLightGray py-[38px] flex justify-between items-center">
           <div className="w-[1280px] m-auto flex justify-between items-center">
             {/* Đặt hàng thành công */}
-            <div className="w-full h-[300px] bg-backgroundLightGray border flex justify-center items-center">
+            <div className="w-full h-[300px] bg-backgroundLightGray flex justify-center items-center">
               <div className="flex flex-col gap-2">
                 <div className="relative flex justify-center items-center">
                   <img src={Success} alt="" />
@@ -81,12 +81,15 @@ const OrderSuccess = () => {
           <div className="cart-info-container w-[1280px] h-auto m-auto py-[48px] grid grid-cols-4 gap-x-6">
             <div className="cart-item col-span-3 bg-backgroundLightGray h-auto rounded-[5px]">
               <div className="items h-auto p-3">
-                <h1 className="text-[18px] text-textBalck font-normal">
-                  Tổng giá trị đơn hàng:{" "}
-                  <span className="text-textGray">
-                    {formatPrice(orderInfo.order.total_price)}
-                  </span>
-                </h1>
+                {orderInfo && (
+                  <h1 className="my-2 ml-2 text-[18px] text-textBalck font-medium">
+                    Tổng giá trị đơn hàng:{" "}
+                    <span className="font-bold text-primaryGreen">
+                      {formatPrice(orderInfo.order.total_price)}
+                    </span>
+                  </h1>
+                )}
+
                 <table className="table-auto w-full h-auto">
                   <tbody>
                     {orderInfo &&
@@ -96,13 +99,13 @@ const OrderSuccess = () => {
                             <div className="image w-[70px] h-[70px]">
                               <img
                                 className="w-full h-full object-cover border"
-                                // src={`http://localhost:4000/${
-                                //   orderItem.order.images &&
-                                //   orderItem.order.images.length > 0
-                                //     ? orderItem.order.images[0]
-                                //     : ""
-                                // }`}
-                                // alt={orderItem.order.name}
+                                src={`http://localhost:4000/${
+                                  orderItem.product_image_url &&
+                                  orderItem.product_image_url.length > 0
+                                    ? orderItem.product_image_url
+                                    : ""
+                                }`}
+                                alt={orderItem.name}
                               />
                             </div>
                           </td>
