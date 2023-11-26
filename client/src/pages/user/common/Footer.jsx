@@ -71,16 +71,22 @@ export default function Footer() {
                 Tất cả trang
               </h3>
               <div className="flex flex-col justify-start items-start gap-3">
-                <Link to="" className="text-[16px] text-textBlack font-normal">
+                <Link to="/" className="text-[16px] text-textBlack font-normal">
                   Trang chủ
                 </Link>
-                <Link to="" className="text-[16px] text-textBlack font-normal">
+                <Link
+                  to="/intro"
+                  className="text-[16px] text-textBlack font-normal"
+                >
                   Giới thiệu
                 </Link>
                 <Link to="" className="text-[16px] text-textBlack font-normal">
                   Tin tức
                 </Link>
-                <Link to="" className="text-[16px] text-textBlack font-normal">
+                <Link
+                  to="/contact"
+                  className="text-[16px] text-textBlack font-normal"
+                >
                   Liên hệ
                 </Link>
               </div>
@@ -129,7 +135,10 @@ export default function Footer() {
                 <Link to="" className="text-[16px] text-textBlack font-normal">
                   Sản phẩm yêu thích
                 </Link>
-                <Link to="" className="text-[16px] text-textBlack font-normal">
+                <Link
+                  to="/faq"
+                  className="text-[16px] text-textBlack font-normal"
+                >
                   FAQ
                 </Link>
               </div>

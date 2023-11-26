@@ -1,4 +1,5 @@
 import Header from "../../pages/user/common/Header";
+import Footer from "./common/Footer";
 import BgSignIn from "../../assets/images/sign-up.png";
 import BgFacebook from "../../assets/images/facebook.png";
 import BgGoogle from "../../assets/images/google.png";
@@ -211,6 +212,7 @@ export default function Register() {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 }

@@ -2,12 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Plus } from "react-feather";
-import {
-  addToCart,
-  socketUpdateQuantity,
-} from "../../../redux/actions/cartActions";
+import { addToCart } from "../../../redux/actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
-import io from "socket.io-client";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -26,21 +22,6 @@ const ProductList = () => {
 
     fetchProducts();
   }, []);
-
-  useEffect(() => {
-    const socket = io("http://localhost:4000");
-
-    socket.on("quantity-update", (data) => {
-      console.log("Received quantity update from server:", data);
-
-      // Gửi action để cập nhật thông tin số lượng trong Redux store
-      dispatch(socketUpdateQuantity(data));
-    });
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [dispatch]);
 
   const handleAddToCart = (productId) => {
     const selectedProduct = products.find(

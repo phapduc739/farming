@@ -273,7 +273,7 @@ export default function Header() {
                   <ChevronDown size={20} color="#222222" />
                 </li>
                 <li className="text-[16px] text-[text2222] flex justify-center items-center font-medium">
-                  Cửa hàng
+                  <Link to="/serller-dashboard">Cửa hàng</Link>
                   <ChevronDown size={20} color="#222222" />
                 </li>
 
@@ -288,7 +288,7 @@ export default function Header() {
                 </li>
 
                 <li className="text-[16px] text-[text2222] flex justify-center items-center font-medium">
-                  Liên hệ
+                  <Link to="/contact">Liên hệ</Link>
                   <ChevronDown size={20} color="#222222" />
                 </li>
               </ul>

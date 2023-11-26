@@ -5,8 +5,14 @@ import { useParams } from "react-router-dom";
 import Header from "./common/Header";
 import Footer from "./common/Footer";
 import AddressForm from "./components/AddressForm";
+import { useSelector } from "react-redux/es/hooks/useSelector";
+import { useNavigate } from "react-router-dom";
 
 const ProfileUser = () => {
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+
+  const navigate = useNavigate();
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState("");
 
@@ -29,6 +35,10 @@ const ProfileUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        if (!isAuthenticated) {
+          navigate("/login/user");
+          return;
+        }
         console.log("categoryId:", userId); // Đảm bảo giá trị của categoryId được log
         const response = await axios.get(
           `http://localhost:4000/user/${userId}`
@@ -91,17 +101,6 @@ const ProfileUser = () => {
       console.error("Lỗi khi cập nhật dữ liệu người dùng:", error);
     }
   };
-
-  if (
-    !user ||
-    !user.shipping_address ||
-    !user.shipping_address.includes("Số điện thoại:")
-  ) {
-    return null;
-  }
-
-  const [addressPart, phonePart] =
-    user.shipping_address.split("Số điện thoại:");
 
   return (
     <>

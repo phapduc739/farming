@@ -4,10 +4,12 @@ import Features from "../user/components/Features";
 import MainContent from "./components/MainContent";
 import NewsLetter from "./components/NewsLetter";
 import Footer from "./common/Footer";
+// import HaversineCalculator from "./common/HaversineCalculator";
 
 function Home() {
   return (
     <>
+      {/* <HaversineCalculator /> */}
       {/* Header */}
       <Header />
 

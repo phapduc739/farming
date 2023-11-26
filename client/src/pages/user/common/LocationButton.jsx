@@ -37,6 +37,7 @@ const LocationButton = () => {
         const shortenedAddress =
           address.length > 20 ? `${address.substring(0, 20)}...` : address;
         setLocationName(shortenedAddress);
+        console.log(response);
         console.log(address);
       } else {
         console.error("Error getting location name");

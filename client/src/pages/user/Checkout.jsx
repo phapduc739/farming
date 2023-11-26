@@ -44,6 +44,10 @@ const Checkout = () => {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
+        if (!isAuthenticated) {
+          navigate("/login/user");
+          return;
+        }
         // Gọi API với userId từ Redux state
         const response = await axios.get(
           `http://localhost:4000/user/${userId}`
@@ -52,6 +56,7 @@ const Checkout = () => {
 
         // Set state với dữ liệu người dùng
         setUserInfo(data);
+        console.log(data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -105,16 +110,16 @@ const Checkout = () => {
     }
   };
 
-  if (
-    !userInfo ||
-    !userInfo.shipping_address ||
-    !userInfo.shipping_address.includes("Số điện thoại:")
-  ) {
-    return null;
-  }
+  // if (
+  //   !userInfo ||
+  //   !userInfo.shipping_address ||
+  //   !userInfo.shipping_address.includes("Số điện thoại:")
+  // ) {
+  //   return null;
+  // }
 
-  const [addressPart, phonePart] =
-    userInfo.shipping_address.split("Số điện thoại:");
+  // const [addressPart, phonePart] =
+  //   userInfo.shipping_address.split("Số điện thoại:");
 
   return (
     <>
@@ -150,7 +155,7 @@ const Checkout = () => {
                         <input checked type="checkbox" name="" id="" />
                       </div>
                       <div className="">
-                        <h1 className="text-[16px] text-textBlack font-semibold">
+                        {/* <h1 className="text-[16px] text-textBlack font-semibold">
                           {userInfo.name}
                         </h1>
                         <p className="text-[16px] text-textGray font-normal">
@@ -158,7 +163,7 @@ const Checkout = () => {
                         </p>
                         <p className="text-[16px] text-textGray font-normal">
                           Số điện thoại: {phonePart.trim()}
-                        </p>
+                        </p> */}
                       </div>
                       <span className="absolute top-4 right-4 bg-primaryGreen text-white text-[12px] font-semibold px-[6px] py-[3px] rounded">
                         Mặc định

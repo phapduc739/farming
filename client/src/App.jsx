@@ -1,9 +1,6 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import CreateProduct from "./pages/CreateProduct";
-import ProductList from "./pages/ProductList";
+import { Routes, Route } from "react-router-dom";
 import EditProduct from "./pages/admin/EditProduct";
 import DeleteProduct from "./pages/admin/DeleteProduct";
-import CreateCategory from "./pages/CreateCategory";
 import Login from "./pages/user/Login";
 import UserInfo from "./pages/user/ProfileUser";
 import Register from "./pages/user/Register";
@@ -21,12 +18,17 @@ import EditUser from "./pages/admin/EditUser";
 import DeleteUser from "./pages/admin/DeleteUser";
 import AddProduct from "./pages/admin/AddProduct";
 import Home from "./pages/user/Home";
-import CartItem from "./pages/user/components/CartItem";
+// import CartItem from "./pages/user/components/CartItem";
 import ShoppingCart from "./pages/user/ShoppingCart";
-import Page404 from "./pages/user/Page404";
+// import Page404 from "./pages/user/Page404";
 import Checkout from "./pages/user/Checkout";
 import OrderSuccess from "./pages/user/OrderSuccess";
-
+import SellerDashboard from "./pages/seller/SellerDashboard";
+import Faq from "./pages/seller/Faq";
+import Intro from "./pages/seller/Intro";
+import Contact from "./pages/seller/Contact";
+import SellerDetail from "./pages/seller/SellerDetail";
+import ProductDetail from "./pages/seller/ProductDetail";
 function App() {
   return (
     <Routes>
@@ -66,18 +68,23 @@ function App() {
         path="/manage/products/delete-product/:productId"
         element={<DeleteProduct />}
       />
-
+      {/* Tuyến đường của người bán */}
+      <Route path="/serller-dashboard" element={<SellerDashboard />} />
+      <Route path="/seller-detail" element={<SellerDetail />} />
+      <Route path="/product-detail/:id" element={<ProductDetail />} />
       {/* Tuyến đường quản lý đơn hàng */}
       <Route path="/manage/orders" element={<ManageOrder />} />
 
       {/* tuyến đường phía User */}
       <Route path="/register/user" element={<Register />} />
       <Route path="/login/user" element={<Login />} />
-      <Route path="//profile/user/:userId" element={<UserInfo />} />
+      <Route path="/profile/user/:userId" element={<UserInfo />} />
       <Route path="/cart" element={<ShoppingCart />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/order-success/:orderId" element={<OrderSuccess />} />
-
+      <Route path="/faq" element={<Faq />} />
+      <Route path="/intro" element={<Intro />} />
+      <Route path="/contact" element={<Contact />} />
       {/* Tuyến đường mặc định cho trang không tìm thấy */}
       {/* <Route path="/404" element={<Page404 />} /> */}
 
@@ -85,13 +92,9 @@ function App() {
       {/* <Route path="*" element={<Navigate to="/404" />} /> */}
 
       {/*  */}
-      <Route path="/create/category" element={<CreateCategory />} />
       <Route path="/edit/category/:categoryId" element={<EditCategory />} />
-
-      <Route path="/create/product" element={<CreateProduct />} />
       <Route path="/edit/product/:productId" element={<EditProduct />} />
       <Route path="/delete/product/:id" element={<DeleteProduct />} />
-      <Route path="/list/product" element={<ProductList />} />
       <Route path="/" element={<Home />} />
     </Routes>
   );

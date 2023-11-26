@@ -17,21 +17,6 @@ const fs = require("fs").promises;
 const util = require("util");
 const unlink = util.promisify(fs.unlink);
 const bodyParser = require("body-parser");
-const WebSocket = require("ws");
-const wss = new WebSocket.Server({ server });
-
-wss.on("connection", (ws) => {
-  // Gửi sự kiện 'quantity-update' với dữ liệu mới đến tất cả client
-  ws.send(
-    JSON.stringify({
-      type: "quantity-update",
-      payload: {
-        id: productId,
-        newQuantity: updatedQuantity,
-      },
-    })
-  );
-});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,15 +35,6 @@ const db = mysql.createPool({
 });
 
 const port = 4000;
-
-io.on("connection", (socket) => {
-  console.log("A client connected");
-
-  // Gửi sự kiện cho client khi có sự thay đổi dữ liệu
-  setInterval(() => {
-    io.emit("server-event", { message: "Hello from server!" });
-  }, 5000); // Gửi mỗi 5 giây, thay đổi theo nhu cầu của bạn
-});
 
 // Khởi tạo kho lưu trữ hình ảnh
 const storage = multer.diskStorage({
@@ -1018,6 +994,26 @@ app.post("/update-shipping-address", (req, res) => {
   });
 });
 
+// API endpoint để xóa dữ liệu cột shipping_address
+app.post("/api/users/delete-shipping-address", async (req, res) => {
+  const userId = req.body.userId;
+
+  try {
+    // Thực hiện câu lệnh SQL để đặt giá trị shipping_address thành NULL
+    const [rows, fields] = await db.execute(
+      "UPDATE users SET shipping_address = NULL WHERE id = ?",
+      [userId]
+    );
+
+    // Gửi phản hồi về client
+    res.json({ success: true, message: "Đã xóa địa chỉ thành công" });
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    console.error("Lỗi khi xóa địa chỉ:", error);
+    res.status(500).json({ success: false, message: "Lỗi khi xóa địa chỉ" });
+  }
+});
+
 // Api đặt hàng
 app.post("/orders", async (req, res) => {
   try {
@@ -1128,7 +1124,27 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
   }
 });
 
+// API endpoint để lấy tất cả sản phẩm trong một danh mục và ảnh đầu tiên của mỗi sản phẩm
+app.get("/all/product/category/:categoryId", async (req, res) => {
+  const categoryId = req.params.categoryId;
+
+  try {
+    const [categoryDetails] = await db.execute(`
+    SELECT p.id AS product_id, p.name AS product_name, p.price AS product_price, p.quantity AS product_quantity, p.status AS product_status, p.unit AS product_unit, 
+           pi.image_url AS product_image_url
+    FROM products p
+    JOIN product_images pi ON p.id = pi.product_id
+    WHERE p.categoryID = ${categoryId}
+  `);
+
+    res.status(200).json(categoryDetails);
+  } catch (error) {
+    console.log("Lỗi khi lấy chi tiết danh mục", error);
+    res.status(500).json({ error: "Lỗi server" });
+  }
+});
+
 //
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
