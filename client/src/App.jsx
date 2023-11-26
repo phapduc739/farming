@@ -71,7 +71,7 @@ function App() {
       {/* Tuyến đường của người bán */}
       <Route path="/serller-dashboard" element={<SellerDashboard />} />
       <Route path="/seller-detail" element={<SellerDetail />} />
-      <Route path="/product-detail/:id" element={<ProductDetail />} />
+      <Route path="/product/detail/:id" element={<ProductDetail />} />
       {/* Tuyến đường quản lý đơn hàng */}
       <Route path="/manage/orders" element={<ManageOrder />} />
 
