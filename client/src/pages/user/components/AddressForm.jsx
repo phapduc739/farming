@@ -108,7 +108,34 @@ const AddressForm = () => {
     return valid;
   };
 
-  const handleSaveAddress = () => {
+  const geocodeAddress = async (address) => {
+    try {
+      const response = await axios.get(
+        "https://maps.googleapis.com/maps/api/geocode/json",
+        {
+          params: {
+            address: address,
+            key: "AIzaSyBnFedHyyQAA6CvyELBvra9XzQy0p3KkFA",
+          },
+        }
+      );
+
+      console.log(response.data); // Log dữ liệu trả về từ API
+
+      if (response.data.results.length > 0) {
+        const location = response.data.results[0].geometry.location;
+        return { latitude: location.lat, longitude: location.lng };
+      } else {
+        console.error("Không tìm thấy tọa độ cho địa chỉ:", address);
+        return null;
+      }
+    } catch (error) {
+      console.error("Lỗi khi thực hiện Geocoding:", error);
+      return null;
+    }
+  };
+
+  const handleSaveAddress = async () => {
     // Validate form trước khi lưu
     if (!validateForm()) {
       return;
@@ -127,18 +154,27 @@ const AddressForm = () => {
       (ward) => ward.code === parseInt(selectedWard)
     )?.name;
 
+    const addressString = `${selectedWardName}, ${selectedDistrictName}, ${selectedProvinceName}, ${street}`;
+
+    // Thực hiện Geocoding
+    const coordinates = await geocodeAddress(addressString);
+
+    // Lưu địa chỉ vào danh sách và gửi lên server
     const newAddress = {
       province: selectedProvinceName,
       district: selectedDistrictName,
       ward: selectedWardName,
       street,
       phoneNumber,
+      coordinates,
     };
 
     setSavedAddresses([...savedAddresses, newAddress]);
     saveAddressToServer(newAddress);
 
-    window.location.reload();
+    console.log(newAddress);
+
+    // window.location.reload();
   };
 
   const saveAddressToServer = (address) => {

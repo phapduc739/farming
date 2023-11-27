@@ -26,6 +26,7 @@ const ProfileUser = () => {
     status: "",
     image: "",
     role: "",
+    phone: "",
   });
   const [image, setImage] = useState(null);
   const imageInputRef = useRef();
@@ -39,14 +40,14 @@ const ProfileUser = () => {
           navigate("/login/user");
           return;
         }
-        console.log("categoryId:", userId); // Đảm bảo giá trị của categoryId được log
+        console.log("UserId:", userId); // Đảm bảo giá trị của categoryId được log
         const response = await axios.get(
           `http://localhost:4000/user/${userId}`
         );
-        const { name, email, image, role, status, shipping_address } =
+        const { name, email, image, role, status, shipping_address, phone } =
           response.data;
         console.log(response.data);
-        setUser({ name, email, image, role, status, shipping_address });
+        setUser({ name, email, image, role, status, shipping_address, phone });
         setSelectedImage(image);
       } catch (error) {
         console.error("Lỗi khi lấy thông tin danh mục:", error);
@@ -242,10 +243,10 @@ const ProfileUser = () => {
                           </div>
                           <div>
                             <p className="text-[14px] font-normal">
-                              {addressPart.trim()}
+                              Địa chỉ: {user.shipping_address}
                             </p>
                             <p className="text-[14px] font-normal">
-                              Số điện thoại: {phonePart.trim()}
+                              Số điện thoại: {user.phone}
                             </p>
                           </div>
                         </div>

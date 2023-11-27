@@ -10,6 +10,7 @@ function Home() {
   return (
     <>
       {/* <HaversineCalculator /> */}
+      {/* <HaversineCalculator /> */}
       {/* Header */}
       <Header />
 

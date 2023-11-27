@@ -973,15 +973,20 @@ app.delete("/delete/user/:userId", async (req, res) => {
 // Thêm địa chỉ giao hàng
 app.post("/update-shipping-address", (req, res) => {
   const { userId, address } = req.body;
-  const { province, district, ward, street, phoneNumber } = address;
+  const { province, district, ward, street, phoneNumber, coordinates } =
+    address;
 
-  // Kiểm tra giá trị phoneNumber trước khi sử dụng
-  const phoneNumberText = phoneNumber ? `Số điện thoại: ${phoneNumber}` : "";
+  const shippingAddress = `${street}, ${ward}, ${district}, ${province}.`;
 
-  const shippingAddress = `Địa chỉ: ${street}, ${ward}, ${district}, ${province}. ${phoneNumberText}`;
-
-  const query = "UPDATE users SET shipping_address = ? WHERE id = ?";
-  const values = [shippingAddress, userId];
+  const query =
+    "UPDATE users SET payment_method = ?, shipping_address = ?, phone = ?, coordinates = ? WHERE id = ?";
+  const values = [
+    "Thanh toán khi nhận hàng",
+    shippingAddress,
+    phoneNumber,
+    JSON.stringify(coordinates),
+    userId,
+  ];
 
   db.execute(query, values, (error, results) => {
     if (error) {
