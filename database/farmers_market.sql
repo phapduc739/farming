@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 27, 2023 lúc 04:16 AM
+-- Thời gian đã tạo: Th10 28, 2023 lúc 07:11 PM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -42,10 +42,10 @@ CREATE TABLE `categories` (
 
 INSERT INTO `categories` (`id`, `name`, `description`, `image`, `quantity`, `create_at`) VALUES
 (96, 'Lúa gạo và ngũ cốc', 'Lúa gạo và ngũ cốc Đồng bằng sông Cửu Long', 'uploads\\image-1700471264611.png', '2', '2023-11-20 03:00:00'),
-(97, 'Rau củ quả', 'Rau củ quả Đồng bằng sông Cửu Long', 'uploads\\image-1700471292329.png', '4', '2023-11-20 02:33:11'),
-(98, 'Sản phẩm chế biến', 'Sản phẩm chế biến Đồng bằng sông Cửu Long', 'uploads\\image-1700471322458.png', '2', '2023-11-20 04:40:55'),
+(97, 'Rau củ quả', 'Rau củ quả Đồng bằng sông Cửu Long', 'uploads\\image-1700471292329.png', '5', '2023-11-20 02:33:11'),
+(98, 'Sản phẩm chế biến', 'Sản phẩm chế biến Đồng bằng sông Cửu Long', 'uploads\\image-1700471322458.png', '3', '2023-11-20 04:40:55'),
 (99, 'Sản phẩm khác', 'Sản phẩm khác Đồng bằng sông Cửu Long', 'uploads\\image-1700471352075.png', '0', '2023-11-19 23:33:05'),
-(100, 'Trái cây', 'Trái cây Đồng bằng sông Cửu Long', 'uploads\\image-1700736484555.png', '1', '2023-11-23 02:17:00');
+(100, 'Trái cây', 'Trái cây Đồng bằng sông Cửu Long', 'uploads\\image-1700736484555.png', '0', '2023-11-23 02:17:00');
 
 -- --------------------------------------------------------
 
@@ -166,7 +166,9 @@ INSERT INTO `products` (`id`, `name`, `description`, `price`, `categoryID`, `qua
 (42, 'Hạt Điều Rang Bơ 500G', 'Hạt Điều Rang Bơ 500G', 95000.00, 98, '0', 'Hết hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:13:46'),
 (43, 'Gạo ST25 Ông Cua', 'Gạo ST25 Ông Cua', 180000.00, 96, '34', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:14:46'),
 (44, 'Gạo Thơm Vua Gạo Hương Việt', 'Gạo Thơm Vua Gạo Hương Việt', 160000.00, 96, '0', 'Hết hàng', 'Đã duyệt', 'Túi', NULL, 45, '2023-11-25 03:15:46'),
-(45, 'Ngô xuất khẩu', 'Ngô xuất khẩu', 30000.00, 100, '68', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:22:36');
+(45, 'Ngô xuất khẩu', 'Ngô xuất khẩu', 30000.00, 100, '68', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 45, '2023-11-25 03:22:36'),
+(49, 'đá', 'đá', 12345.00, 97, '122', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 55, '2023-11-28 17:48:01'),
+(50, 'cỏ', 'cỏ', 11111.00, 98, '111', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 55, '2023-11-28 18:03:14');
 
 -- --------------------------------------------------------
 
@@ -193,7 +195,9 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_url`) VALUES
 (90, 42, 'uploads/images-1700879633208.png'),
 (92, 43, 'uploads/images-1700879782569.png'),
 (94, 44, 'uploads/images-1700881245250.png'),
-(96, 45, 'uploads/images-1700882566285.png');
+(105, 45, 'uploads/images-1701194325493.png'),
+(106, 49, 'uploads/images-1701194338065.png'),
+(108, 50, 'uploads/images-1701194654688.png');
 
 -- --------------------------------------------------------
 
@@ -222,13 +226,14 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `image`, `dateJoin`, `status`, `payment_method`, `shipping_address`, `phone`, `coordinates`, `created_at`) VALUES
-(39, 'Emma', 'emma@gmail.com', '$2a$10$9zCwNw2Af6n5Tk3VWZ9kseEZZUxE5bHJfPWfpuYnGt9xfnap9cQfS', 'Seller', 'uploads\\image-1700736415998.png', '2023-11-20', 'Enable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
+(39, 'Emma', 'emma@gmail.com', '$2a$10$9zCwNw2Af6n5Tk3VWZ9kseEZZUxE5bHJfPWfpuYnGt9xfnap9cQfS', 'Seller', 'uploads\\image-1701192138852.png', '2023-11-20', 'Enable', '', '123, Xã Cao Chương Huyện Trùng Khánh, Tỉnh Cao Bằng', '123', '{\"latitude\":22.83333,\"longitude\":106.56074}', '2023-11-24 07:35:17'),
 (40, 'Max', 'max@gamil.com', '$2a$10$kAtV6HGJRNB/79etDq/pNOD1otpsY2ZCnBwCv3iumlii/9bTR.ToK', 'User', 'uploads\\image-1700471773164.png', '2023-11-20', 'Disable', 'Thanh toán khi nhận hàng', '3 tháng 2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', '777', '{\\\"latitude\\\":10.0306164,\\\"longitude\\\":105.7673942}', '2023-11-24 07:35:17'),
 (41, 'Bean', 'bean@gmail.com', '$2a$10$FXkE3OMjFCWPwxODgZXn8OUGoM.iTnXIynFzSMawkeoCpIKaaklyK', 'User', 'uploads\\image-1700471795782.png', '2023-11-20', 'Enable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
 (42, 'Cox', 'cox@gmail.com', '$2a$10$eaP6iJrmhqlsvj2Ipf5CnOOJQYRMsnOyjJ01iBuXPyCAo3ew3mlsC', 'Seller', 'uploads\\image-1700471826941.png', '2023-11-20', 'Enable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
 (43, 'Fran', 'fran@gmail.com', '$2a$10$hmfP77tKg2.iEfsD1StJPOeJMhjSxsxBDIJZKxEPC9WHcyBZdCIOO', 'Seller', 'uploads\\image-1700471850811.png', '2023-11-20', 'Disable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
 (44, 'Dan', 'dan@gmail.com', '$2a$10$uAY/8DSd7rXghEDYmiSrO.tURsKmtmWH8QNRTZzergAxsO5X1re0i', 'User', 'uploads\\image-1700471909759.png', '2023-11-20', 'Enable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
-(45, 'Admin (John)', 'admin@gmail.com', '$2b$10$hIp9FTF6dyyokXOEL9PFPuWVW4w3toqWCNptuUPGc52FrA/9CcTSG', 'Admin', 'uploads\\image-1700736430197.png', '2023-11-23', 'Enable', '', NULL, NULL, '', '2023-11-25 12:00:17');
+(45, 'Admin (John)', 'admin@gmail.com', '$2b$10$hIp9FTF6dyyokXOEL9PFPuWVW4w3toqWCNptuUPGc52FrA/9CcTSG', 'Admin', 'uploads\\image-1700736430197.png', '2023-11-23', 'Enable', '', NULL, NULL, '', '2023-11-25 12:00:17'),
+(55, 'Seller1', 'seller1@gmail.com', '$2a$10$xRzh4zq9a6WK8cO/KdWGcOb9MmPGlXLafnfqOxBE1PgYj55OEL09C', 'Seller', 'uploads\\image-1701192807273.png', '2023-11-28', 'Enable', NULL, '123, Xã Đôn Phong, Huyện Bạch Thông, Tỉnh Bắc Kạn', '123', '{\"latitude\":22.25758,\"longitude\":105.83295}', '2023-11-28 14:33:16');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -302,19 +307,19 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT cho bảng `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

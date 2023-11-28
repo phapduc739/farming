@@ -1,13 +1,54 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
 import BgSeller from "../../../../assets/images/cover.png";
 import BgStudio from "../../../../assets/images/studio.png";
+import IconHome from "../../../../assets/images/icon-home.svg";
+import IconProduct from "../../../../assets/images/icon-product.svg";
+import IconUser from "../../../../assets/images/icon-user.svg";
+import IconSetting from "../../../../assets/images/icon-setting.svg";
+import IconLogout from "../../../../assets/images/icon-logout.svg";
 
 function SideBar({ handleContentChange }) {
+  const [currentContent, setCurrentContent] = useState("dashboard");
+
   const handleButtonClick = (content) => {
-    // Gọi hàm handleContentChange để thay đổi nội dung hiện tại
+    // Call the prop function to change the content
     handleContentChange(content);
+
+    setCurrentContent(content);
+
+    // Remove the classes from all buttons
+    document.querySelectorAll(".sidebar-button").forEach((button) => {
+      button.classList.remove(
+        "text-theme-color",
+        "border-l-[3px]",
+        "border-theme-color",
+        "font-semibold",
+        "bg-lightGreen"
+      );
+    });
+
+    // Get the clicked button element by its content (adjust as needed)
+    const clickedButton = document.querySelector(
+      `.sidebar-button[data-content="${content}"]`
+    );
+
+    // Add the classes to the clicked button
+    if (clickedButton) {
+      clickedButton.classList.add(
+        "text-theme-color",
+        "border-l-[3px]",
+        "border-theme-color",
+        "font-semibold",
+        "bg-lightGreen"
+      );
+    }
   };
+
+  useEffect(() => {
+    // Gọi hàm handleButtonClick khi component được render
+    handleButtonClick(currentContent);
+  }, [currentContent, handleButtonClick]);
+
   return (
     <div className="px-3 scroll-m-0">
       <div className="dashboard-left-sidebar h-auto w-full relative   bg-them-gray">
@@ -42,45 +83,69 @@ function SideBar({ handleContentChange }) {
               </div>
             </div>
           </div>
-          <div className="profile-box relative">
-            <ul className="w-[100%]  ">
-              <li className="flex items-center w-[100%] h-[52px] pl-2 product user-dashboard-section">
-                <button onClick={() => handleButtonClick("dashboard")}>
-                  <i className="fa-solid fa-house  mx-3  "></i>
-                  <a>Trang quản lý </a>
+          <div className="profile-box relative w-full">
+            <ul className="  ">
+              <li className=" flex  items-center h-[50px]  product user-dashboard-section">
+                <button
+                  className="sidebar-button px-5 py-3 w-full flex items-center"
+                  data-content="dashboard"
+                  onClick={() => handleButtonClick("dashboard")}
+                >
+                  <img className="mr-2" src={IconHome} alt="" />
+                  <a className="text-[18px]">Trang quản lý</a>
                 </button>
               </li>
 
-              <li className="flex items-center w-[100%] h-[42px] pl-2 management ">
-                <button onClick={() => handleButtonClick("product")}>
-                  <i className="fa-solid fa-shop  mx-3"></i>
-                  <a>Sản phẩm</a>
+              <li className=" w-[100%] h-[50px]  management ">
+                <button
+                  className="sidebar-button px-5 py-3 w-full flex items-center"
+                  data-content="product"
+                  onClick={() => handleButtonClick("product")}
+                >
+                  <img className="mr-2" src={IconProduct} alt="" />
+                  <a className="text-[18px]">Sản phẩm</a>
                 </button>
               </li>
-              <li className="flex items-center w-[100%] h-[42px] pl-2 oder ">
-                <button onClick={() => handleButtonClick("order")}>
-                  <i className="fa-solid fa-shop  mx-3"></i>
-                  <a>Đơn hàng</a>
+              <li className=" w-[100%] h-[50px]  oder ">
+                <button
+                  className="px-5 py-3 sidebar-button w-full flex items-center "
+                  data-content="order"
+                  onClick={() => handleButtonClick("order")}
+                >
+                  <img className="mr-2" src={IconProduct} alt="" />
+                  <a className="text-[18px]">Đơn hàng</a>
                 </button>
               </li>
 
-              <li className="flex items-center w-[100%] h-[42px] pl-2 profile ">
-                <button onClick={() => handleButtonClick("profile")}>
-                  <i className="fa-solid fa-user  mx-3"></i>
-                  <a>Thông tin</a>
+              <li className=" w-[100%] h-[50px] profile ">
+                <button
+                  className="px-5 py-3 sidebar-button w-full flex items-center"
+                  data-content="profile"
+                  onClick={() => handleButtonClick("profile")}
+                >
+                  <img className="mr-2" src={IconUser} alt="" />
+                  <a className="text-[18px]">Thông tin</a>
                 </button>
               </li>
 
-              <li className="flex items-center w-[100%] h-[42px] pl-2 settings  ">
-                <button onClick={() => handleButtonClick("setting")}>
-                  <i className="fa-solid fa-gear  mx-3"></i>
-                  <a>Cài đặt</a>
+              <li className=" w-[100%] h-[50px]  settings  ">
+                <button
+                  className="px-5 py-3 sidebar-button w-full flex items-center"
+                  data-content="setting"
+                  onClick={() => handleButtonClick("setting")}
+                >
+                  <img className="mr-2" src={IconSetting} alt="" />
+                  <a className="text-[18px]">Cài đặt</a>
                 </button>
               </li>
-              <li className="flex items-center w-[100%] h-[42px] pl-2  exit ">
-                <button>
-                  <i className="fa-solid fa-arrow-right-from-bracket  mx-3"></i>
-                  <a>Thoát</a>
+              <li className=" w-[100%] h-[50px]   exit ">
+                <button
+                  className="px-5 py-3 sidebar-button w-full flex items-center"
+                  data-content="setting"
+                  onClick={() => handleButtonClick("exit")}
+                >
+                  <img className="mr-2" src={IconLogout} alt="" />
+                  <a className="text-[18px]">Thoát</a>
                 </button>
               </li>
             </ul>

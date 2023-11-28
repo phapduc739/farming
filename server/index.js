@@ -55,185 +55,278 @@ app.get("/", (req, res) => {
 });
 
 // Api đăng ký
-app.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+// app.post("/register", async (req, res) => {
+//   const { name, email, password } = req.body;
 
-  // Kiểm tra username đã tồn tại chưa
-  const [existingUser] = await db.execute(
-    "SELECT * FROM users WHERE email = ?",
-    [email]
-  );
+//   // Kiểm tra username đã tồn tại chưa
+//   const [existingUser] = await db.execute(
+//     "SELECT * FROM users WHERE email = ?",
+//     [email]
+//   );
 
-  if (existingUser.length > 0) {
-    return res.status(400).json({
-      message: "Email đã được sử dụng!",
-    });
+//   if (existingUser.length > 0) {
+//     return res.status(400).json({
+//       message: "Email đã được sử dụng!",
+//     });
+//   }
+
+//   const imagePath = "";
+
+//   const currentDate = new Date().toISOString().split("T")[0];
+
+//   // Tạo mật khẩu băm
+//   const hashedPassword = await bcrypt.hash(password, 10);
+
+//   // Thêm user mới
+//   const [user] = await db.execute(
+//     "INSERT INTO users (name, email, password, role, image, dateJoin, status) VALUES (?, ?, ?, ?, ?, ? ,?)",
+//     [
+//       name,
+//       email,
+//       hashedPassword, // Save the hashed password
+//       "User",
+//       imagePath,
+//       currentDate,
+//       "Enable",
+//     ]
+//   );
+
+//   // Tạo token
+//   const token = jwt.sign({ id: user.insertId }, "secretkey");
+
+//   res.json({
+//     message: "Đăng ký thành công!",
+//     token,
+//     email,
+//   });
+// });
+
+// // Hàm generate access token
+// function generateAccessToken(user) {
+//   return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+//     expiresIn: "15m",
+//   });
+// }
+
+// // Hàm generate refresh token
+// function generateRefreshToken(user) {
+//   return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+//     expiresIn: "7d",
+//   });
+// }
+
+// // Api đăng nhập
+// app.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+
+//   // Lấy thông tin user
+//   const [user] = await db.execute("SELECT * FROM users WHERE email = ?", [
+//     email,
+//   ]);
+
+//   if (user.length === 0) {
+//     return res.status(400).json({
+//       error: "Email không tồn tại!",
+//     });
+//   }
+
+//   // Kiểm tra password
+//   const validPassword = await bcrypt.compare(password, user[0].password);
+//   if (!validPassword) {
+//     return res.status(400).json({
+//       error: "Sai mật khẩu!",
+//     });
+//   }
+
+//   // Thời hạn token là 1 ngày
+//   const expiresIn = 60 * 60 * 24;
+
+//   const token = jwt.sign({ id: user[0].id }, "secretkey", {
+//     expiresIn,
+//   });
+
+//   const userId = user[0].id;
+
+//   const role = user[0].role;
+
+//   const accessToken = generateAccessToken(user);
+//   const refreshToken = generateRefreshToken(user);
+
+//   res.json({
+//     message: "Đăng nhập thành công!",
+//     userId,
+//     email,
+//     role,
+//     accessToken,
+//     refreshToken,
+//   });
+
+//   console.log("User from database:", user);
+// });
+
+// app.get("/token", (req, res) => {
+//   // Lấy và xác thực refresh token
+//   const refreshToken = req.header("x-refresh-token");
+
+//   // Verify và lấy userId
+//   const userId = verifyRefreshToken(refreshToken);
+
+//   // Tạo access token mới dựa trên userId
+//   const accessToken = generateAccessToken(userId);
+
+//   // Trả về access token mới
+//   res.json({ accessToken });
+// });
+
+// Hàm xác minh refresh token
+function verifyRefreshToken(refreshToken) {
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    return decoded.id;
+  } catch (error) {
+    throw new Error("Invalid refresh token");
+  }
+}
+
+// Middleware kiểm tra xác thực
+function authenticateToken(req, res, next) {
+  const token = req.header("Authorization");
+
+  if (!token) {
+    return res.status(401).json({ error: "Access token is required" });
   }
 
-  const imagePath = "";
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: "Invalid access token" });
+    }
+    req.user = user;
+    next();
+  });
+}
 
-  const currentDate = new Date().toISOString().split("T")[0];
+// Api đăng ký
+app.post("/register", async (req, res) => {
+  const { name, email, password, role } = req.body;
 
-  // Tạo mật khẩu băm
-  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    // Kiểm tra email đã tồn tại chưa
+    const [existingUser] = await db.execute(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
 
-  // Thêm user mới
-  const [user] = await db.execute(
-    "INSERT INTO users (name, email, password, role, image, dateJoin, status) VALUES (?, ?, ?, ?, ?, ? ,?)",
-    [
-      name,
+    if (existingUser.length > 0) {
+      return res.status(400).json({
+        message: "Email đã được sử dụng!",
+      });
+    }
+
+    // Tạo mật khẩu băm
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Thêm user mới vào cơ sở dữ liệu
+    const [user] = await db.execute(
+      "INSERT INTO users (name, email, password, role, image, dateJoin, status) VALUES (?, ?, ?, ?, ?, ? ,?)",
+      [
+        name,
+        email,
+        hashedPassword,
+        role,
+        "",
+        new Date().toISOString().split("T")[0],
+        "Enable",
+      ]
+    );
+
+    // Tạo token
+    const token = jwt.sign({ id: user.insertId }, process.env.JWT_SECRET);
+
+    res.json({
+      message: "Đăng ký thành công!",
+      token,
       email,
-      hashedPassword, // Save the hashed password
-      "User",
-      imagePath,
-      currentDate,
-      "Enable",
-    ]
-  );
-
-  // Tạo token
-  const token = jwt.sign({ id: user.insertId }, "secretkey");
-
-  res.json({
-    message: "Đăng ký thành công!",
-    token,
-    email,
-  });
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
-
-// Hàm generate access token
-function generateAccessToken(user) {
-  return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "15m",
-  });
-}
-
-// Hàm generate refresh token
-function generateRefreshToken(user) {
-  return jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
-  });
-}
 
 // Api đăng nhập
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  // Lấy thông tin user
-  const [user] = await db.execute("SELECT * FROM users WHERE email = ?", [
-    email,
-  ]);
+  try {
+    // Lấy thông tin user từ cơ sở dữ liệu
+    const [user] = await db.execute("SELECT * FROM users WHERE email = ?", [
+      email,
+    ]);
 
-  if (user.length === 0) {
-    return res.status(400).json({
-      error: "Email không tồn tại!",
+    if (user.length === 0) {
+      return res.status(400).json({
+        error: "Email không tồn tại!",
+      });
+    }
+
+    // Kiểm tra mật khẩu
+    const validPassword = await bcrypt.compare(password, user[0].password);
+    if (!validPassword) {
+      return res.status(400).json({
+        error: "Sai mật khẩu!",
+      });
+    }
+
+    // Thời hạn token là 1 ngày
+    const expiresIn = 60 * 60 * 24;
+
+    // Tạo access token và refresh token
+    const accessToken = jwt.sign({ id: user[0].id }, process.env.JWT_SECRET, {
+      expiresIn,
     });
-  }
-
-  // Kiểm tra password
-  const validPassword = await bcrypt.compare(password, user[0].password);
-  if (!validPassword) {
-    return res.status(400).json({
-      error: "Sai mật khẩu!",
+    const refreshToken = jwt.sign({ id: user[0].id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
     });
+
+    res.json({
+      message: "Đăng nhập thành công!",
+      userId: user[0].id,
+      email,
+      role: user[0].role,
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-
-  // Thời hạn token là 1 ngày
-  const expiresIn = 60 * 60 * 24;
-
-  const token = jwt.sign({ id: user[0].id }, "secretkey", {
-    expiresIn,
-  });
-
-  const userId = user[0].id;
-
-  const role = user[0].role;
-
-  const accessToken = generateAccessToken(user);
-  const refreshToken = generateRefreshToken(user);
-
-  res.json({
-    message: "Đăng nhập thành công!",
-    userId,
-    email,
-    role,
-    accessToken,
-    refreshToken,
-  });
-
-  console.log("User from database:", user);
 });
 
+// Api làm mới access token bằng refresh token
 app.get("/token", (req, res) => {
-  // Lấy và xác thực refresh token
   const refreshToken = req.header("x-refresh-token");
 
-  // Verify và lấy userId
-  const userId = verifyRefreshToken(refreshToken);
+  try {
+    // Xác thực refresh token và lấy userId
+    const userId = verifyRefreshToken(refreshToken);
 
-  // Tạo access token mới dựa trên userId
-  const accessToken = generateAccessToken(userId);
+    // Tạo access token mới dựa trên userId
+    const accessToken = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
 
-  // Trả về access token mới
-  res.json({ accessToken });
+    // Trả về access token mới
+    res.json({ accessToken });
+  } catch (error) {
+    console.error("Token refresh error:", error.message);
+    res.status(401).json({ error: "Invalid refresh token" });
+  }
 });
 
-// Api đăng nhập
-app.post("/login/admin", async (req, res) => {
-  const { email, password } = req.body;
-
-  // Lấy thông tin user
-  const [admin] = await db.execute("SELECT * FROM admin WHERE email = ?", [
-    email,
-  ]);
-
-  if (admin.length === 0) {
-    return res.status(400).json({
-      error: "Email không tồn tại!",
-    });
-  }
-
-  // Kiểm tra password
-  const validPassword = await bcrypt.compare(password, admin[0].password);
-  if (!validPassword) {
-    return res.status(400).json({
-      error: "Sai mật khẩu!",
-    });
-  }
-
-  // Thời hạn token là 1 ngày
-  const expiresIn = 60 * 60 * 24;
-
-  const token = jwt.sign({ id: admin[0].id }, "secretkey", {
-    expiresIn,
-  });
-
-  const adminId = admin[0].id;
-
-  const accessToken = generateAccessToken(admin);
-  const refreshToken = generateRefreshToken(admin);
-
-  res.json({
-    message: "Đăng nhập thành công!",
-    adminId,
-    email,
-    accessToken,
-    refreshToken,
-  });
-});
-
-app.get("/token/admin", (req, res) => {
-  // Lấy và xác thực refresh token
-  const refreshToken = req.header("x-refresh-token");
-
-  // Verify và lấy userId
-  const userId = verifyRefreshToken(refreshToken);
-
-  // Tạo access token mới dựa trên userId
-  const accessToken = generateAccessToken(userId);
-
-  // Trả về access token mới
-  res.json({ accessToken });
+// Api yêu cầu xác thực
+app.get("/protected", authenticateToken, (req, res) => {
+  // Các hành động chỉ có thể thực hiện khi đã xác thực thành công
+  res.json({ message: "Protected endpoint", user: req.user });
 });
 
 // Api danh sách danh mục
@@ -454,25 +547,84 @@ app.post("/update-quantity/:productId", (req, res) => {
 });
 
 // Api danh sách sản phẩm
+// app.get("/list/products", async (req, res) => {
+//   try {
+//     const [rows] = await db.execute(`
+//     SELECT
+//     p.id AS product_id,
+//     p.id,
+//     p.name,
+//     p.description,
+//     p.price,
+//     p.unit,
+//     p.quantity,
+//     p.status,
+//     p.request,
+//     p.categoryID,
+//     pi.image_url,
+//     c.name AS category_name
+//   FROM products p
+//   LEFT JOIN product_images pi ON p.id = pi.product_id
+//   LEFT JOIN categories c ON p.categoryID = c.id
+//     `);
+
+//     // Chuyển dữ liệu kết quả thành một danh sách sản phẩm với các hình ảnh tương ứng
+//     const products = {};
+
+//     rows.forEach((row) => {
+//       const productId = row.product_id;
+//       if (!products[productId]) {
+//         // Tạo một mục sản phẩm mới nếu chưa tồn tại
+//         products[productId] = {
+//           id: row.id,
+//           name: row.name,
+//           description: row.description,
+//           price: row.price,
+//           unit: row.unit,
+//           status: row.status,
+//           request: row.request,
+//           quantity: row.quantity,
+//           categoryID: row.categoryID,
+//           category_name: row.category_name,
+//           images: [],
+//         };
+//       }
+
+//       if (row.image_url) {
+//         // Thêm hình ảnh vào mục sản phẩm tương ứng
+//         products[productId].images.push(row.image_url);
+//       }
+//     });
+
+//     res.json(Object.values(products)); // Chuyển đổi danh sách sản phẩm thành mảng
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Lỗi lấy danh sách sản phẩm");
+//   }
+// });
+
 app.get("/list/products", async (req, res) => {
   try {
     const [rows] = await db.execute(`
-    SELECT
-    p.id AS product_id,
-    p.id,
-    p.name,
-    p.description,
-    p.price,
-    p.unit,
-    p.quantity,
-    p.status,
-    p.request,
-    p.categoryID,
-    pi.image_url,
-    c.name AS category_name
-  FROM products p
-  LEFT JOIN product_images pi ON p.id = pi.product_id
-  LEFT JOIN categories c ON p.categoryID = c.id
+      SELECT
+        p.id AS product_id,
+        p.name AS product_name,
+        p.description,
+        p.price,
+        p.unit,
+        p.quantity,
+        p.status,
+        p.request,
+        p.categoryID,
+        pi.image_url,
+        c.name AS category_name,
+        u.name AS name,
+        u.role AS role,
+        u.id AS id
+      FROM products p
+      LEFT JOIN product_images pi ON p.id = pi.product_id
+      LEFT JOIN categories c ON p.categoryID = c.id
+      LEFT JOIN users u ON p.user_id = u.id
     `);
 
     // Chuyển dữ liệu kết quả thành một danh sách sản phẩm với các hình ảnh tương ứng
@@ -483,8 +635,8 @@ app.get("/list/products", async (req, res) => {
       if (!products[productId]) {
         // Tạo một mục sản phẩm mới nếu chưa tồn tại
         products[productId] = {
-          id: row.id,
-          name: row.name,
+          id: row.product_id,
+          name: row.product_name,
           description: row.description,
           price: row.price,
           unit: row.unit,
@@ -493,6 +645,10 @@ app.get("/list/products", async (req, res) => {
           quantity: row.quantity,
           categoryID: row.categoryID,
           category_name: row.category_name,
+          user: {
+            name: row.name,
+            role: row.role,
+          },
           images: [],
         };
       }
@@ -507,6 +663,76 @@ app.get("/list/products", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Lỗi lấy danh sách sản phẩm");
+  }
+});
+
+// api lấy sản phẩm của seller
+app.get("/list/products/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const [rows] = await db.execute(
+      `
+      SELECT
+        p.id AS product_id,
+        p.name AS product_name,
+        p.description,
+        p.price,
+        p.unit,
+        p.quantity,
+        p.status,
+        p.request,
+        p.categoryID,
+        pi.image_url,
+        c.name AS category_name,
+        u.name AS user_name,
+        u.role AS user_role,
+        u.id AS user_id
+      FROM products p
+      LEFT JOIN product_images pi ON p.id = pi.product_id
+      LEFT JOIN categories c ON p.categoryID = c.id
+      LEFT JOIN users u ON p.user_id = u.id
+      WHERE u.id = ?
+    `,
+      [userId]
+    );
+
+    // Chuyển dữ liệu kết quả thành một danh sách sản phẩm với các hình ảnh tương ứng
+    const products = {};
+
+    rows.forEach((row) => {
+      const productId = row.product_id;
+      if (!products[productId]) {
+        // Tạo một mục sản phẩm mới nếu chưa tồn tại
+        products[productId] = {
+          id: row.product_id,
+          name: row.product_name,
+          description: row.description,
+          price: row.price,
+          unit: row.unit,
+          status: row.status,
+          request: row.request,
+          quantity: row.quantity,
+          categoryID: row.categoryID,
+          category_name: row.category_name,
+          user: {
+            name: row.user_name,
+            role: row.user_role,
+          },
+          images: [],
+        };
+      }
+
+      if (row.image_url) {
+        // Thêm hình ảnh vào mục sản phẩm tương ứng
+        products[productId].images.push(row.image_url);
+      }
+    });
+
+    res.json(Object.values(products)); // Chuyển đổi danh sách sản phẩm thành mảng
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Lỗi lấy danh sách sản phẩm theo userId");
   }
 });
 
@@ -921,6 +1147,62 @@ app.put("/edit/user/:userId", upload.single("image"), async (req, res) => {
 
     res.status(200).json({
       message: "Cập nhật người dùng thành công!",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Cập nhật người dùng thất bại!",
+    });
+  }
+});
+
+// api edit seller
+app.put("/edit/seller/:userId", upload.single("image"), async (req, res) => {
+  const userId = req.params.userId;
+  const { name, email, address, phone, coordinates } = req.body;
+
+  try {
+    let imagePathOld = ""; // Đường dẫn của ảnh cũ
+
+    // Lấy đường dẫn của ảnh cũ từ cơ sở dữ liệu
+    const [user] = await db.execute("SELECT image FROM users WHERE id = ?", [
+      userId,
+    ]);
+    if (user.length > 0) {
+      imagePathOld = user[0].image;
+    }
+
+    // Nếu có tệp tin mới được tải lên
+    if (req.file) {
+      // Kiểm tra xem tệp tin cũ có tồn tại không và xóa nó
+      if (imagePathOld) {
+        try {
+          // Sử dụng fs.promises.unlink để sử dụng promise
+          await fs.promises.unlink(imagePathOld);
+          console.log(`Đã xóa tệp tin cũ: ${imagePathOld}`);
+        } catch (unlinkError) {
+          console.error(`Lỗi khi xóa tệp tin cũ: ${unlinkError.message}`);
+        }
+      } else {
+        console.log("Không có tệp tin cũ để xóa.");
+      }
+
+      // Cập nhật đường dẫn mới trong cơ sở dữ liệu
+      const imagePathNew = req.file.path;
+      await db.execute("UPDATE users SET image = ? WHERE id = ?", [
+        imagePathNew,
+        userId,
+      ]);
+    }
+
+    // Thực hiện truy vấn cập nhật thông tin người dùng
+    await db.execute(
+      "UPDATE users SET name = ?, email = ?, shipping_address = ?, phone = ?, coordinates = ? WHERE id = ?",
+      [name, email, address, phone, coordinates, userId]
+    );
+
+    res.status(200).json({
+      message: "Cập nhật hồ sơ người bán hàng thành công!",
     });
   } catch (error) {
     console.error(error);

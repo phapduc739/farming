@@ -8,6 +8,8 @@ import Profile from "./components/SellerDashboard/Profile";
 import Setting from "./components/SellerDashboard/Setting";
 import Title from "./components/Title/Title";
 import Footer from "../user/common/Footer";
+import AddProduct from "./components/SellerDashboard/AddProduct";
+
 function SellerDashboard() {
   const [currentContent, setCurrentContent] = useState("dashboard");
 
@@ -15,7 +17,6 @@ function SellerDashboard() {
     // Gọi hàm này để thay đổi nội dung hiện tại dựa trên lựa chọn từ SideBar
     setCurrentContent(content);
   };
-  console.log(SellerDashboard);
 
   return (
     <>
@@ -32,6 +33,7 @@ function SellerDashboard() {
             <div className="w-3/4">
               {currentContent === "dashboard" && <DashBoard />}
               {currentContent === "product" && <Product />}
+              {currentContent === "add-product" && <AddProduct />}
               {currentContent === "order" && <Order />}
               {currentContent === "profile" && <Profile />}
               {currentContent === "setting" && <Setting />}

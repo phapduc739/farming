@@ -29,6 +29,18 @@ import Intro from "./pages/seller/Intro";
 import Contact from "./pages/seller/Contact";
 import SellerDetail from "./pages/seller/SellerDetail";
 import ProductDetail from "./pages/seller/ProductDetail";
+import Product from "./pages/seller/components/SellerDetail/Product";
+import LoginSeller from "./pages/seller/LoginSeller";
+import RegisterSeller from "./pages/seller/RegisterSeller";
+import SellerDashboardLayout from "./pages/seller/SellerDashboardLayout";
+import SellerManageProduct from "./pages/seller/components/CRUD Product/ManageProduct";
+import SellerAddProduct from "./pages/seller/components/CRUD Product/AddProduct";
+import SellerEditProduct from "./pages/seller/components/CRUD Product/EditProduct";
+import SellerDeleteProduct from "./pages/seller/components/CRUD Product/DeleteProduct";
+import SellerProfile from "./pages/seller/ProfileSeller";
+import SellerEditProfile from "./pages/seller/EditProfileSeller";
+import SellerManageOrder from "./pages/seller/components/CRUD Order/ManageOrder";
+
 function App() {
   return (
     <Routes>
@@ -68,14 +80,41 @@ function App() {
         path="/manage/products/delete-product/:productId"
         element={<DeleteProduct />}
       />
+
+      {/*  */}
       {/* Tuyến đường của người bán */}
-      <Route path="/serller-dashboard" element={<SellerDashboard />} />
-      <Route path="/seller-detail" element={<SellerDetail />} />
-      <Route path="/product/detail/:id" element={<ProductDetail />} />
-      {/* Tuyến đường quản lý đơn hàng */}
+      <Route path="/register/seller" element={<RegisterSeller />} />
+      <Route path="/login/seller" element={<LoginSeller />} />
+      <Route path="/seller-dashboard" element={<SellerDashboardLayout />} />
+      <Route path="/register/seller" element={<RegisterSeller />} />
+      <Route path="/login/seller" element={<LoginSeller />} />
+      <Route path="/seller/profile" element={<SellerProfile />} />
+      <Route
+        path="/seller/edit-profile/:userId"
+        element={<SellerEditProfile />}
+      />
+      <Route path="/seller/manage-product" element={<SellerManageProduct />} />
+      <Route
+        path="/seller/manage-product/add-prroduct"
+        element={<SellerAddProduct />}
+      />
+      <Route
+        path="/seller/manage-product/edit-product/:productId"
+        element={<SellerEditProduct />}
+      />
+      <Route
+        path="/seller/manage-product/delete-product/:productId"
+        element={<SellerDeleteProduct />}
+      />
+      <Route path="/seller/manage-order" element={<SellerManageOrder />} />
+
+      <Route path="/product/:id" element={<Product />} />
+      {/* <Route path="/seller-dashboard" element={<SellerDashboard />} /> */}
+      <Route path="/seller-detail/:id" element={<SellerDetail />} />
+      <Route path="/product-detail/:id" element={<ProductDetail />} />
       <Route path="/manage/orders" element={<ManageOrder />} />
 
-      {/* tuyến đường phía User */}
+      {/* Tuyến đường phía User */}
       <Route path="/register/user" element={<Register />} />
       <Route path="/login/user" element={<Login />} />
       <Route path="/profile/user/:userId" element={<UserInfo />} />

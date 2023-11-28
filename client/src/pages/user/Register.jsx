@@ -84,6 +84,12 @@ export default function Register() {
                       onSubmit={handleSubmit(onSubmit)}
                       className="flex flex-col"
                     >
+                      <input
+                        type="hidden"
+                        name="role"
+                        value="User"
+                        {...register("role")}
+                      />
                       <div className="from-floating relative mt-4">
                         <input
                           type="text"

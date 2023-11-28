@@ -14,10 +14,10 @@ function DashBoard() {
       <div className="contail-sell px-3">
         <div className="w-full h-[100%]  bg-them-gray flex  flex-wrap px-8 py-8  ">
           <div className="  h-[auto]    rounded-md">
-            <div className="tab-content px-5 " id="pills-tabContent">
+            <div className="tab-content  " id="pills-tabContent">
               <div className="dashboard-home ">
                 <div className="title relative">
-                  <h2 className="text-[21px] font-bold text-gray-700 relative ">
+                  <h2 className="text-[26px] font-bold text-text2222 relative ">
                     Trang quản lý của tôi
                   </h2>
                   <div className="title-leaf relative flex items-center justify-center mt-1 w-[120px] h-[30px]">
@@ -27,10 +27,13 @@ function DashBoard() {
                   </div>
                 </div>
                 <div className="dashboard-user-name block ">
-                  <h6 className="text-content">
-                    Xin chào, <span className="text-title font-bold">Bạn</span>
+                  <h6 className="text-content text-[16px]">
+                    Xin chào,{" "}
+                    <span className=" text-[16px] text-text2222 font-bold">
+                      Bạn
+                    </span>
                   </h6>
-                  <p className="text-content">
+                  <p className="text-content leading-[1.5] text-[14px] letter-spacing-1">
                     Từ Trang quản lý tài khoản của bạn, bạn có khả năng xem bản
                     tóm tắt về hoạt động tài khoản gần đây của mình và cập nhật
                     thông tin tài khoản của mình. Chọn một liên kết dưới đây để
@@ -42,76 +45,80 @@ function DashBoard() {
 
             <div className="total-box mt-4  ">
               <div className="grid grid-cols-3 h-[120px] gap-4">
-                <div className="border px-3 rounded-lg bg-white  text-center flex justify-center items-center">
-                  <div className="totle-contain w-[230px]  flex flex-wrap gap-5 h-full relative items-center ml-1 overflow-hidden">
-                    <div className="">
-                      <img
-                        src={BgProduct}
-                        className=" custom-width remove-background absolute right-[-30px]
-                                    opacity-20 top-[50%]  translate-y-[-50%] grayscale-[1]
-                                    duration-300 ease-in-out hover:rotate-[-15deg]
-                                    blur-up lazyloaded transition-filter duration-400 hover:blur-0 "
-                      />
-                    </div>
-                    <img
-                      src={BgProduct}
-                      className="w-[58px] h-[55px] remove-background"
-                    />
-                    <div className="totle-detail  ">
-                      <h5 className="text-gray-700 overflow-hidden">
-                        Tổng Sản Phẩm
-                      </h5>
-                      <h3 className="text-3xl font-bold">25</h3>
+                <div className="border w-full px-3 rounded-lg bg-white   flex justify-center items-center relative overflow-hidden">
+                  <div className=" w-full px-3 rounded-lg bg-white flex justify-center items-center  overflow-hidden">
+                    <div className="totle-contain w-full gap-2 flex h-full items-center ml-1">
+                      <div className="flex-shrink-0">
+                        <img
+                          src={BgProduct}
+                          className="custom-width remove-background absolute right-[-30px] opacity-20 top-[50%] translate-y-[-50%] grayscale-[1] duration-300 ease-in-out hover:rotate-[-15deg] blur-up lazyloaded transition-filter duration-400 hover:blur-0"
+                        />
+                      </div>
+                      <div>
+                        <img
+                          src={BgProduct}
+                          className="w-58px h-[58px] remove-background"
+                        />
+                      </div>
+                      <div className="totle-detail">
+                        <h5 className="text-textGray text-[14px] font-[400]">
+                          Tổng Sản Phẩm
+                        </h5>
+                        <h3 className="text-[18px] font-[600]">25</h3>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="border px-3 rounded-lg bg-white  text-center flex justify-center items-center">
-                  <div className="totle-contain w-[230px]  flex flex-wrap gap-5 h-full relative items-center ml-1 overflow-hidden">
-                    <div className="">
+                <div className="border w-full px-3 rounded-lg bg-white   flex justify-center items-center relative overflow-hidden">
+                  <div className=" w-full px-3 rounded-lg bg-white flex justify-center items-center  overflow-hidden">
+                    <div className="totle-contain w-full gap-2 flex h-full items-center ml-1">
+                      <div className="flex-shrink-0">
+                        <img
+                          src={BgBill}
+                          className=" custom-width remove-background absolute right-[-30px]
+                                    opacity-20 top-[50%]  translate-y-[-50%] grayscale-[1]
+                                    duration-300 ease-in-out hover:rotate-[-15deg]
+                                    blur-up lazyloaded transition-filter duration-400 hover:blur-0 "
+                        />
+                      </div>
                       <img
                         src={BgBill}
-                        className=" custom-width remove-background absolute right-[-30px]
-                                    opacity-20 top-[50%]  translate-y-[-50%] grayscale-[1]
-                                    duration-300 ease-in-out hover:rotate-[-15deg]
-                                    blur-up lazyloaded transition-filter duration-400 hover:blur-0 "
+                        className="w-[58px] h-[55px] remove-background "
                       />
-                    </div>
-                    <img
-                      src={BgBill}
-                      className="w-[58px] h-[55px] remove-background "
-                    />
-                    <div className="totle-detail ">
-                      <h5 className="text-gray-700 overflow-hidden">
-                        Tổng Doanh Số
-                      </h5>
-                      <h3 className="text-3xl font-bold">12550</h3>
+                      <div className="totle-detail ">
+                        <h5 className="text-textGray text-[14px] font-[400]">
+                          Tổng Doanh Số
+                        </h5>
+                        <h3 className="text-[18px] font-[600]">12550</h3>
+                      </div>
                     </div>
                   </div>
                 </div>
-
-                <div className="border px-3 rounded-lg bg-white  text-center flex justify-center items-center">
-                  <div className="totle-contain w-[230px]  flex flex-wrap gap-5 h-full relative items-center ml-1 overflow-hidden">
-                    <div className="">
-                      <img
-                        src={BgSale}
-                        className=" custom-width remove-background absolute right-[-30px]
+                <div className="border w-full px-3 rounded-lg bg-white   flex justify-center items-center relative overflow-hidden">
+                  <div className=" w-full px-3 rounded-lg bg-white flex justify-center items-center  overflow-hidden">
+                    <div className="totle-contain w-full gap-2 flex h-full items-center ml-1">
+                      <div className="flex-shrink-0">
+                        <img
+                          src={BgSale}
+                          className=" custom-width remove-background absolute right-[-30px]
                                     opacity-20 top-[50%]  translate-y-[-50%] grayscale-[1]
                                     duration-300 ease-in-out hover:rotate-[-15deg]
                                     blur-up  transition-filter duration-400 hover:blur-0 "
-                      />
-                    </div>
-                    <div>
-                      <img
-                        src={BgSale}
-                        className="w-[58px] h-[55px] remove-background "
-                      />
-                    </div>
-                    <div className="totle-detail ">
-                      <h5 className="text-gray-700 overflow-hidden ">
-                        Đơn Hàng Chờ
-                      </h5>
-                      <h3 className="text-3xl font-bold">36</h3>
+                        />
+                      </div>
+                      <div>
+                        <img
+                          src={BgSale}
+                          className="w-[58px] h-[55px] remove-background "
+                        />
+                      </div>
+                      <div className="totle-detail ">
+                        <h5 className="text-textGray text-[14px] font-[400] ">
+                          Đơn Hàng Chờ
+                        </h5>
+                        <h3 className="text-[18px] font-[600]">36</h3>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -123,31 +130,33 @@ function DashBoard() {
                 <div className="table-responsive mt-3">
                   <div className="bg-white rounded-lg overflow-hidden">
                     <div className="dashboard-title mb-5 pt-2 text-[18px] pl-2">
-                      <h3>Sản phẩm nổi bật</h3>
+                      <h3 className="text-[20px] font-[600] leading-[1.2]">
+                        Sản phẩm nổi bật
+                      </h3>
                     </div>
                     <table className="w-full table">
                       <thead className="pt-2 border-b border-solid border-inherit border-0">
                         <tr className="text-base font-semibold whitespace-nowrap min-w-[90px]">
                           <th
-                            className="border border-solid border-inherit border-0"
+                            className="border border-solid border-inherit border-0 text-[16px] font-[600]"
                             scope="col"
                           >
                             Hình ảnh
                           </th>
                           <th
-                            className="border border-solid border-inherit border-0"
+                            className="border border-solid border-inherit border-0 text-[16px] font-[600]"
                             scope="col"
                           >
                             Tên sản phẩm
                           </th>
                           <th
-                            className="border border-solid border-inherit border-0"
+                            className="border border-solid border-inherit border-0 text-[16px] font-[600]"
                             scope="col"
                           >
                             Giá
                           </th>
                           <th
-                            className="border border-solid border-inherit border-0"
+                            className="border border-solid border-inherit border-0 text-[16px] font-[600]"
                             scope="col"
                           >
                             Lượt bán
@@ -164,13 +173,19 @@ function DashBoard() {
                             />
                           </td>
                           <td className="max-w-[150px] border border-solid border-inherit border-0">
-                            <h6>Cà Phê Đắk Lắk</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Cà Phê Đắk Lắk
+                            </h6>
                           </td>
                           <td className="w-[90px] h-[72px] border border-solid border-inherit border-0">
-                            <h6>150.000₫</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              150.000₫
+                            </h6>
                           </td>
                           <td className="w-[90px] h-[72px] border border-solid border-inherit border-0">
-                            <h6>832</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              832
+                            </h6>
                           </td>
                         </tr>
                       </tbody>
@@ -185,13 +200,19 @@ function DashBoard() {
                             />
                           </td>
                           <td className="max-w-[150px] border border-solid border-inherit border-0">
-                            <h6>Cà rốt lớn</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Cà rốt lớn
+                            </h6>
                           </td>
                           <td className="w-16 h-16 border border-solid border-inherit border-0">
-                            <h6>50.000₫</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              50.000₫
+                            </h6>
                           </td>
                           <td className="w-16 h-16 border border-solid border-inherit border-0">
-                            <h6>332</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              332
+                            </h6>
                           </td>
                         </tr>
                       </tbody>
@@ -206,13 +227,19 @@ function DashBoard() {
                             />
                           </td>
                           <td className="max-w-[150px] border border-solid border-inherit border-0">
-                            <h6>Đậu Cove thường</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Đậu Cove thường
+                            </h6>
                           </td>
                           <td className="w-16 h-16 border border-solid border-inherit border-0">
-                            <h6>60.000₫</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              60.000₫
+                            </h6>
                           </td>
                           <td className="w-16 h-16 border border-solid border-inherit border-0">
-                            <h6>500</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              500
+                            </h6>
                           </td>
                         </tr>
                       </tbody>
@@ -226,13 +253,19 @@ function DashBoard() {
                             />
                           </td>
                           <td className="max-w-[150px] border border-solid border-inherit border-0">
-                            <h6>Cà Chua</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Cà Chua
+                            </h6>
                           </td>
                           <td className="w-16 h-16 border border-solid border-inherit border-0">
-                            <h6>40.000₫</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              40.000₫
+                            </h6>
                           </td>
                           <td className="w-16 h-16 border border-solid border-inherit border-0">
-                            <h6>1200</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              1200
+                            </h6>
                           </td>
                         </tr>
                       </tbody>
@@ -246,13 +279,19 @@ function DashBoard() {
                             />
                           </td>
                           <td className="max-w-[150px] border border-solid border-inherit border-0">
-                            <h6>Củ Dền</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Củ Dền
+                            </h6>
                           </td>
                           <td className="w-[90px] h-[72px] border border-solid border-inherit border-0">
-                            <h6>50.000₫</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              50.000₫
+                            </h6>
                           </td>
                           <td className="w-[90px] h-[72px] border border-solid border-inherit border-0">
-                            <h6>2000</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              2000
+                            </h6>
                           </td>
                         </tr>
                       </tbody>
@@ -265,13 +304,19 @@ function DashBoard() {
                             />
                           </td>
                           <td className="max-w-[150px]">
-                            <h6>Dưa Leo</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Dưa Leo
+                            </h6>
                           </td>
                           <td className="w-[90px] h-[72px]">
-                            <h6>54.000₫</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              54.000₫
+                            </h6>
                           </td>
                           <td className="w-[90px] h-[72px]">
-                            <h6>2123</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              2123
+                            </h6>
                           </td>
                         </tr>
                       </tbody>
@@ -283,25 +328,27 @@ function DashBoard() {
                 <div className="order-tab   relative  mt-3 ">
                   <div className="table-responsive bg-white rounded-lg overflow-auto p-2">
                     <div className="dashboard-title  mb-5 pt-2 text-[18px] pl-2">
-                      <h3>Đơn Hàng Gần Đây</h3>
+                      <h3 className="text-[20px] font-[600] leading-[1.2]">
+                        Đơn Hàng Gần Đây
+                      </h3>
                     </div>
                     <table className="table order-table w-full ">
                       <thead className="border-b border-solid border-inherit border-0">
                         <tr className="border border-solid border-inherit border-0 text-center table-row align-middle whitespace-nowrap flex items-center">
                           <th
-                            className="border border-solid border-inherit border-0"
+                            className="border border-solid border-inherit border-0 text-[16px] font-[600]"
                             scope="col"
                           >
                             Mã Đơn Hàng
                           </th>
                           <th
-                            className="border border-solid border-inherit border-0"
+                            className="border border-solid border-inherit border-0 text-[16px] font-[600]"
                             scope="col"
                           >
                             Tên Sản Phẩm
                           </th>
                           <th
-                            className="border border-solid border-inherit border-0"
+                            className="border border-solid border-inherit border-0 text-[16px] font-[600]"
                             scope="col"
                           >
                             Trạng Thái
@@ -311,90 +358,112 @@ function DashBoard() {
 
                       <tbody>
                         <tr className="text-center table-row align-middle whitespace-nowrap flex items-center">
-                          <td className="product-image border border-solid border-inherit border-0">
+                          <td className="product-image border border-solid border-inherit border-0 text-[14px] font-[600]">
                             #254834
                           </td>
                           <td className="border border-solid border-inherit border-0">
-                            <h6>Tiêu đen 500g</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Tiêu đen 500g
+                            </h6>
                           </td>
                           <td className="border border-solid border-inherit border-0">
-                            <label className=" inline-block py-1 px-3  text-xs rounded-full bg-red-400 bg-opacity-10 text-red-400">
+                            <label className="inline-block py-1 px-3  text-[12px] rounded-full bg-red-400 bg-opacity-10 text-red-400">
                               Đã Giao Hàng
                             </label>
                           </td>
                         </tr>
 
                         <tr className="text-center table-row align-middle whitespace-nowrap flex items-center">
-                          <td className="product-image border border-solid border-inherit border-0">
+                          <td className="product-image border border-solid border-inherit border-0 text-[14px] font-[600]">
                             #355678
                           </td>
                           <td className="border border-solid border-inherit border-0">
-                            <h6>Hạt điều hữu cơ 1kg</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Hạt điều hữu cơ 1kg
+                            </h6>
                           </td>
                           <td className="border border-solid border-inherit border-0">
-                            <label className="inline-block py-1 px-3 text-xs rounded-full bg-theme-color bg-opacity-10 text-theme-color">
+                            <label className="inline-block py-1 px-3 text-[12px] rounded-full bg-theme-color bg-opacity-10 text-theme-color">
                               Chờ xử lý
                             </label>
                           </td>
                         </tr>
 
                         <tr className="text-center table-row align-middle whitespace-nowrap flex items-center">
-                          <td className="product-image border border-solid border-inherit border-0">
+                          <td className="product-image border border-solid border-inherit border-0 text-[14px] font-[600]">
                             #647536
                           </td>
                           <td className="border border-solid border-inherit border-0">
-                            <h6>Dưa leo 500g</h6>
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Dưa leo 500g
+                            </h6>
                           </td>
                           <td className="border border-solid border-inherit border-0">
-                            <label className="inline-block py-1 px-3 text-xs rounded-full bg-red-400 bg-opacity-10 text-red-400">
+                            <label className="inline-block py-1 px-3 text-[12px] rounded-full bg-red-400 bg-opacity-10 text-red-400">
                               Đã Giao Hàng
                             </label>
                           </td>
                         </tr>
 
                         <tr className="text-center table-row align-middle whitespace-nowrap flex items-center">
-                          <td className="product-image">#125689</td>
-                          <td>
-                            <h6>Bí đỏ 1kg</h6>
+                          <td className="product-image border border-solid border-inherit border-0 text-[14px] font-[600]">
+                            #125689
                           </td>
                           <td>
-                            <label className="inline-block py-1 px-3 text-xs rounded-full bg-theme-color bg-opacity-10 text-theme-color">
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Bí đỏ 1kg
+                            </h6>
+                          </td>
+                          <td>
+                            <label className="inline-block py-1 px-3 text-[12px] rounded-full bg-theme-color bg-opacity-10 text-theme-color">
                               Chờ xử lý
                             </label>
                           </td>
                         </tr>
 
                         <tr className="text-center table-row align-middle whitespace-nowrap flex items-center">
-                          <td className="product-image">#215487</td>
-                          <td>
-                            <h6>Gạo Lứt 1kg</h6>
+                          <td className="product-image border border-solid border-inherit border-0 text-[14px] font-[600]">
+                            #215487
                           </td>
                           <td>
-                            <label className="inline-block py-1 px-3 text-xs rounded-full bg-red-400 bg-opacity-10 text-red-400">
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Gạo Lứt 1kg
+                            </h6>
+                          </td>
+                          <td>
+                            <label className="inline-block py-1 px-3 text-[12px] rounded-full bg-red-400 bg-opacity-10 text-red-400">
                               Đã Giao Hàng
                             </label>
                           </td>
                         </tr>
 
                         <tr className="text-center table-row align-middle whitespace-nowrap flex items-center">
-                          <td className="product-image">#365474</td>
-                          <td>
-                            <h6>Cà Phê 100g</h6>
+                          <td className="product-image border border-solid border-inherit border-0 text-[14px] font-[600]">
+                            #365474
                           </td>
                           <td>
-                            <label className=" inline-block py-1 px-3 text-xs rounded-full bg-theme-color bg-opacity-10 text-theme-color">
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Cà Phê 100g
+                            </h6>
+                          </td>
+                          <td>
+                            <label className=" inline-block py-1 px-3 text-[12px] rounded-full bg-theme-color bg-opacity-10 text-theme-color">
                               Chờ xử lý
                             </label>
                           </td>
                         </tr>
 
                         <tr className="text-center table-row align-middle whitespace-nowrap flex items-center">
-                          <td className="product-image">#368415</td>
-                          <td>
-                            <h6>Cà Chua 1kg</h6>
+                          <td className="product-image border border-solid border-inherit border-0 text-[14px] font-[600]">
+                            #368415
                           </td>
                           <td>
-                            <label className="inline-block py-1 px-3 text-xs rounded-full bg-theme-color bg-opacity-10 text-theme-color">
+                            <h6 className="14px leading-[1.2] font-[400]">
+                              Cà Chua 1kg
+                            </h6>
+                          </td>
+                          <td>
+                            <label className="inline-block py-1 px-3 text-[12px] rounded-full bg-theme-color bg-opacity-10 text-theme-color">
                               Chờ xử lý
                             </label>
                           </td>

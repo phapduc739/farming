@@ -46,7 +46,7 @@ const ProductList = () => {
     <>
       {products.map((product) => (
         <Link
-          to={`/product/detail/${product.id}`}
+          to={`/product-detail/${product.id}`}
           key={product.id}
           className="item-product w-full flex flex-col items-center gap-3 p-3 border hover:border-primaryGreen transition"
         >
@@ -94,7 +94,10 @@ const ProductList = () => {
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
-            onClick={() => handleAddToCart(product.id)}
+            onClick={(e) => {
+              e.preventDefault(e);
+              handleAddToCart(product.id);
+            }}
             disabled={product.status === "Hết hàng"}
           >
             Thêm

@@ -1,11 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BgStudio from "../../../../assets/images/studio.png";
 import PriceFilter from "./PriceFilter";
+import { NavLink } from "react-router-dom";
 
 export default function SideBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const handleCheckboxChange = (categoryId) => {
+    // Kiểm tra xem categoryId đã được chọn hay chưa
+    if (selectedCategories.includes(categoryId)) {
+      // Nếu đã chọn, loại bỏ khỏi danh sách
+      setSelectedCategories((prevSelected) =>
+        prevSelected.filter((id) => id !== categoryId)
+      );
+    } else {
+      // Nếu chưa chọn, thêm vào danh sách
+      setSelectedCategories((prevSelected) => [...prevSelected, categoryId]);
+    }
+  };
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
   };
@@ -15,6 +31,24 @@ export default function SideBar() {
   const toggleAccordion2 = () => {
     setIsOpen2(!isOpen2);
   };
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("http://localhost:4000/list/categories");
+        const data = await response.json();
+        setCategories(data);
+
+        // Nếu bạn muốn lấy sản phẩm cho tất cả danh mục, thêm phần lấy sản phẩm ở đây
+        // Ví dụ: const allProductsResponse = await fetch('http://localhost:4000/all/products/');
+        // const allProductsData = await allProductsResponse.json();
+        // setProducts(allProductsData);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu danh mục:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
   return (
     <>
       <div>
@@ -117,66 +151,25 @@ export default function SideBar() {
 
               {isOpen && (
                 <ul className="grid grid-cols-1 gap-2 overflow-hidden">
-                  <li className="flex items-center">
-                    <input
-                      className=" mr-4 w-[21px] h-[21px]  bg-white cursor-pointer"
-                      type="checkbox"
-                    ></input>
-                    <label className="w-full flex justify-between">
-                      <span className="text-[16px] text-text2222 ">
-                        Lúa gạo và ngủ cốc
-                      </span>
-                      <span className="text-[16px] text-text7777  ">(05)</span>
-                    </label>
-                  </li>
-                  <li className="flex items-center">
-                    <input
-                      className=" mr-4 w-[21px] h-[21px]  bg-white cursor-pointer"
-                      type="checkbox"
-                    ></input>
-                    <label className="w-full flex justify-between">
-                      <span className="text-[16px] text-text2222 ">
-                        Rau củ quả
-                      </span>
-                      <span className="text-[16px] text-text7777 ">(02)</span>
-                    </label>
-                  </li>
-                  <li className="flex items-center">
-                    <input
-                      className=" mr-4 w-[21px] h-[21px]  bg-white cursor-pointer"
-                      type="checkbox"
-                    ></input>
-                    <label className="w-full flex justify-between">
-                      <span className="text-[16px] text-text2222 ">
-                        Trái cây
-                      </span>
-                      <span className="text-[16px] text-text7777 ">(20)</span>
-                    </label>
-                  </li>
-                  <li className="flex items-center">
-                    <input
-                      className=" mr-4 w-[21px] h-[21px]  bg-white cursor-pointer"
-                      type="checkbox"
-                    ></input>
-                    <label className="w-full flex justify-between">
-                      <span className="text-[16px] text-text2222 ">
-                        Sản phẩm chế biến
-                      </span>
-                      <span className="text-[16px] text-text7777 ">(20)</span>
-                    </label>
-                  </li>
-                  <li className="flex items-center">
-                    <input
-                      className=" mr-4 w-[21px] h-[21px]  bg-white cursor-pointer"
-                      type="checkbox"
-                    ></input>
-                    <label className="w-full flex justify-between">
-                      <span className="text-[16px] text-text2222 ">
-                        Sản phẩm khác
-                      </span>
-                      <span className="text-[16px] text-text7777 ">(20)</span>
-                    </label>
-                  </li>
+                  {categories.map((category) => (
+                    <li key={category.id} className="flex items-center">
+                      <NavLink to={`/seller-detail/${category.id}`}>
+                        <input
+                          className="mr-4 w-[21px] h-[21px]  cursor-pointer"
+                          type="checkbox"
+                          onClick={handleCheckboxChange}
+                        />
+                      </NavLink>
+                      <label className="w-full flex justify-between">
+                        <span className="text-[16px] text-text2222">
+                          {category.name}
+                        </span>
+                        <span className="text-[16px] text-text7777">
+                          {category.quantity}
+                        </span>
+                      </label>
+                    </li>
+                  ))}
                 </ul>
               )}
             </div>

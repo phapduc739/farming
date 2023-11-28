@@ -5,23 +5,31 @@ import {
   addToCart,
   socketUpdateQuantity,
 } from "../../../../redux/actions/cartActions";
-
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
 
-export default function ProductItems({ selectedItem, history }) {
+export default function ProductCategory({ selectedItem, history }) {
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.items);
-
+  const { id } = useParams();
   useEffect(() => {
     async function fetchData() {
-      const response = await fetch("http://localhost:4000/list/products/");
-      const data = await response.json();
-      setProducts(data);
+      try {
+        const response = await fetch(
+          `http://localhost:4000/all/product/category/${id}`
+        );
+        const data = await response.json();
+
+        setProducts(data);
+      } catch (error) {
+        console.error("Lỗi khi tải dữ liệu sản phẩm:", error);
+      }
     }
+
     fetchData();
-  }, []);
+  }, [id]);
   useEffect(() => {
     const socket = io("http://localhost:4000");
 
@@ -47,17 +55,31 @@ export default function ProductItems({ selectedItem, history }) {
   };
 
   const filteredAndSortedProducts = () => {
+    let sortedProducts = [...products];
+
     switch (selectedItem) {
       case "Tất cả":
-        return products;
+        // Không cần sắp xếp, trả về mảng sản phẩm nguyên thủy
+        break;
       case "Thứ tự theo giá: từ thấp đến cao":
-        return [...products].sort((a, b) => a.price - b.price);
+        sortedProducts.sort((a, b) => a.product_price - b.product_price);
+        break;
       case "Thứ tự theo giá: cao thấp đến thấp":
-        return [...products].sort((a, b) => b.price - a.price);
+        sortedProducts.sort((a, b) => b.product_price - a.product_price);
+        break;
+      // Thêm các case khác nếu cần thiết
       default:
-        return products;
+        // Mặc định, không cần sắp xếp
+        break;
     }
+
+    console.log("selectedItem:", selectedItem);
+    console.log("sortedProducts:", sortedProducts);
+
+    return sortedProducts;
   };
+
+  selectedItem;
 
   const formatPrice = (price) => {
     const formattedPrice = Number(price).toLocaleString("vi-VN", {
@@ -86,11 +108,8 @@ export default function ProductItems({ selectedItem, history }) {
               <div className="w-[170px] h-[140px]">
                 <img
                   className="w-full h-full  object-contain border "
-                  src={`http://localhost:4000/${
-                    product.images && product.images.length > 0
-                      ? product.images[0]
-                      : ""
-                  }`}
+                  src={`http://localhost:4000/${product.product_image_url}`}
+                  alt={product.product_name}
                 />
               </div>
 
@@ -98,8 +117,8 @@ export default function ProductItems({ selectedItem, history }) {
                 <ul className="grid grid-cols-3 mt-2 right-0  absolute bg-white top-[80%] z-20 text-center px-[5px] py-[10px] w-full transition duration-300 ease-in-out opacity-0 group-hover:opacity-100 group-hover:visible -mb-[5px]">
                   <li>
                     <NavLink
-                      to={`/product-detail/${product.id}`}
-                      onClick={() => handleProductClick(product.id)}
+                      to={`/product-detail/${product.product_id}`}
+                      onClick={() => handleProductClick(product.product_id)}
                     >
                       <i className="fa-regular fa-eye"></i>
                     </NavLink>
@@ -120,9 +139,9 @@ export default function ProductItems({ selectedItem, history }) {
             <div className="flex flex-col">
               <span className="mb-2 text-[13px]">{product.category}</span>
               <h5 className="text-[16px] text-text2222 font-normal text-center">
-                {product.name.length > 18
-                  ? `${product.name.slice(0, 18)}...`
-                  : product.name}{" "}
+                {product.product_name.length > 18
+                  ? `${product.product_name.slice(0, 18)}...`
+                  : product.product_name}{" "}
               </h5>
               <div className="w-full flex mb-2 gap-1 items-center justify-center">
                 <div className="flex gap-1 ">
@@ -133,14 +152,14 @@ export default function ProductItems({ selectedItem, history }) {
                     ></i>
                   ))}
                 </div>
-                <span className="text-[14px] text-gray-400 ml-1">
+                {/* <span className="text-[14px] text-gray-400 ml-1">
                   ({product.rating})
-                </span>
+                </span> */}
               </div>
               <div className="flex gap-2 text-center items-center justify-center">
                 <h5 className="">
                   <span className="text-[15px] text-primaryGreen font-[600]">
-                    {formatPrice(product.price)}
+                    {formatPrice(product.product_price)}
                   </span>
                   <del className="text-[14px] text-textGray font-[400] line-through">
                     {product.discount}
@@ -151,14 +170,14 @@ export default function ProductItems({ selectedItem, history }) {
               <div className="flex justify-center items-center gap-2 mb-1">
                 <h6
                   className={`text-[15px] text-center font-[600] ${
-                    product.status === "Còn hàng"
+                    product.product_status === "Còn hàng"
                       ? "text-primaryGreen"
                       : "text-red-500"
                   }`}
                   style={{ flex: 1 }} // Thêm style flex: 1 để mở rộng theo chiều ngang
                 >
-                  {product.status === "Còn hàng"
-                    ? `Còn hàng (${product.quantity} ${product.unit})`
+                  {product.product_status === "Còn hàng"
+                    ? `Còn hàng (${product.product_quantity} ${product.product_unit})`
                     : "Hết hàng"}
                 </h6>
               </div>
@@ -166,12 +185,12 @@ export default function ProductItems({ selectedItem, history }) {
               <div className="flex items-center">
                 <button
                   className={`relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
-                    product.status === "Hết hàng"
+                    product.product_status === "Hết hàng"
                       ? "opacity-50 cursor-not-allowed"
                       : ""
                   }`}
                   onClick={() => handleAddToCart(product.id)}
-                  disabled={product.status === "Hết hàng"}
+                  disabled={product.product_status === "Hết hàng"}
                 >
                   Thêm
                   <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">

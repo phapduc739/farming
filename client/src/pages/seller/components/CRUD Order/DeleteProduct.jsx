@@ -1,0 +1,76 @@
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import SellerDashboardLayout from "../../SellerDashboardLayout";
+
+const DeleteProduct = () => {
+  const { productId } = useParams();
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    productId: productId,
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Gửi yêu cầu xóa danh mục dựa trên ID từ form
+      await axios.delete(
+        `http://localhost:4000/delete/product/${formData.productId}`
+      );
+      navigate("/seller/manage-product");
+      // Chuyển hướng sau khi xóa thành công
+
+      console.log("xóa thành công");
+    } catch (error) {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+    }
+  };
+
+  const handleClose = () => {
+    navigate("/seller/manage-product");
+  };
+  return (
+    <>
+      <SellerDashboardLayout>
+        <div className="bg-white rounded-[10px] w-full h-[calc(100vh-40px)] p-6">
+          <h2 className="text-xl font-bold mb-4">Xóa sản phẩm</h2>
+          <form onSubmit={handleDelete}>
+            <input
+              type="hidden"
+              name="userId"
+              value={formData.productId}
+              onChange={handleInputChange}
+            />
+            <p>Bạn có chắc chắn muốn xóa sản phẩm này không?</p>
+            <div className="btn flex justify-start mt-5">
+              <button
+                className="bg-red-500 text-white rounded-lg py-2 px-5"
+                type="submit"
+              >
+                Xóa
+              </button>
+              <button
+                className="bg-gray-200 text-gray-500 rounded-lg py-2 px-5 ml-2"
+                onClick={handleClose}
+              >
+                Hủy
+              </button>
+            </div>
+          </form>
+        </div>
+      </SellerDashboardLayout>
+      {/* )} */}
+    </>
+  );
+};
+
+export default DeleteProduct;

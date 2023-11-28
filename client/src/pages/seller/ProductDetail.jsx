@@ -2,7 +2,7 @@ import TitleProduct from "./components/Title/TitleProduct";
 import Header from "../../pages/user/common/Header";
 import Seedling from "../../assets/images/seedling.png";
 import ProductInfo from "./components/ProductDetail/productInfo";
-import ProductItems from "./components/SellerDetail/Product-item";
+import ProductCategory from "./components/SellerDetail/Product-item";
 import ProductDetailPage from "./components/ProductDetail/ProductDetailPage";
 import { useParams } from "react-router-dom";
 
@@ -24,7 +24,7 @@ export default function ProductDetail() {
         <div>
           <div className="flex flex-col items-center">
             <h2 className="text-[24px] font-bold mb-[14px] text-theme-color text-center">
-              Những sản phẩm khác
+              Những sản phẩm tương tự
             </h2>
             <div className="flex justify-start items-center gap-1">
               <div className="w-[60px] h-[3px] bg-primaryGreen"></div>
@@ -32,7 +32,7 @@ export default function ProductDetail() {
               <div className="w-[60px] h-[3px] bg-primaryGreen"></div>
             </div>
           </div>
-          <ProductItems />
+          {/* <ProductCategory /> */}
         </div>
       </section>
     </>

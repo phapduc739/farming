@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+// import ProductItems from "./Product-item";
+import ProductCategory from "./ProductCategory";
 import ProductItems from "./Product-item";
-
+import { useParams } from "react-router-dom";
 export default function Product() {
   const [selectedItem, setSelectedItem] = useState("Tất cả sản phẩm");
   const [isClicked, setIsClicked] = useState(false);
-
+  const { id } = useParams();
   const handleClick = () => {
     setIsClicked(!isClicked);
   };
@@ -51,7 +53,8 @@ export default function Product() {
           </div>
         </div>
         <div>
-          <ProductItems selectedItem={selectedItem} />
+          {/* <ProductItems selectedItem={selectedItem} /> */}
+          <ProductCategory selectedItem={selectedItem} />
         </div>
       </div>
     </>
