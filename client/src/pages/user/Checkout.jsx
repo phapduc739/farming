@@ -16,6 +16,8 @@ import { clearCart } from "../../redux/actions/cartActions";
 
 import axios from "axios";
 
+import isEqual from "lodash/isEqual";
+
 const Checkout = () => {
   const items = useSelector((state) => state.cart.items);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
@@ -26,7 +28,42 @@ const Checkout = () => {
 
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState({});
+
+  const [sellerCoordinates, setSellerCoordinates] = useState([]);
+  const [sellerIds, setSellerIds] = useState([]);
+
+  const [shippingFee, setShippingFee] = useState(0);
+
+  // Tính tổng phí vận chuyển dựa trên mảng distances
+  const calculateTotalShippingFee = (distances) => {
+    try {
+      // Kiểm tra xem distances có hợp lệ không
+      if (distances && Array.isArray(distances)) {
+        // Tổng phí vận chuyển
+        let totalShippingFee = 0;
+
+        // Duyệt qua mảng distances và tính phí vận chuyển cho mỗi khoảng cách
+        distances.forEach((distance) => {
+          // Kiểm tra xem distance có phải là số không
+          if (typeof distance === "number" && !isNaN(distance)) {
+            // 12,000 VND cho mỗi kilometer
+            const feePerKm = 12000;
+            totalShippingFee += distance * feePerKm;
+          }
+          // Nếu distance không phải là số, bỏ qua
+        });
+
+        return totalShippingFee;
+      } else {
+        // Nếu distances không hợp lệ, trả về 0 hoặc giá trị mặc định của bạn
+        return 0; // Hoặc giá trị mặc định của bạn
+      }
+    } catch (error) {
+      console.error("Error calculating total shipping fee:", error);
+      return 0; // Trả về 0 nếu có lỗi
+    }
+  };
 
   useEffect(() => {
     // Tính tổng giá từ danh sách sản phẩm trong giỏ hàng
@@ -39,12 +76,14 @@ const Checkout = () => {
     };
 
     setTotalPrice(calculateTotalPrice());
-  }, [items]);
+
+    setShippingFee(calculateTotalShippingFee());
+  }, [items, userInfo.distances]);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        if (!isAuthenticated) {
+        if (isAuthenticated === false) {
           navigate("/login/user");
           return;
         }
@@ -56,7 +95,7 @@ const Checkout = () => {
 
         // Set state với dữ liệu người dùng
         setUserInfo(data);
-        console.log(data);
+        console.log("Data user:", data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -64,7 +103,124 @@ const Checkout = () => {
 
     // Gọi hàm fetchUserData khi component được render
     fetchUserInfo();
-  }, [userId]);
+  }, [userId, isAuthenticated]);
+
+  useEffect(() => {
+    const fetchSellerCoordinates = async () => {
+      try {
+        const ids = items.map((item) => item.user?.id).filter(Boolean);
+        setSellerIds(ids);
+
+        // Gọi API hoặc thực hiện bất kỳ logic nào để lấy thông tin coordinates từ user_id
+        const coordinatesPromises = ids.map((sellerId) => {
+          return axios
+            .get(`http://localhost:4000/user/${sellerId}`)
+            .then((response) => response.data.coordinates)
+            .catch((error) => {
+              console.error(
+                `Error fetching coordinates for seller with id ${sellerId}:`,
+                error
+              );
+              return null;
+            });
+        });
+
+        // Chờ tất cả các promises hoàn thành và xử lý chuỗi coordinates
+        const resolvedCoordinates = await Promise.all(coordinatesPromises);
+
+        // Chuyển đổi chuỗi JSON thành đối tượng JSON
+        const jsonCoordinates = resolvedCoordinates.map((coordinate) => {
+          try {
+            const parsedCoordinate = JSON.parse(coordinate);
+            return parsedCoordinate;
+          } catch (error) {
+            console.error("Error parsing JSON:", error);
+            return null;
+          }
+        });
+
+        setSellerCoordinates(jsonCoordinates);
+
+        console.log("JSON coordinates array:", jsonCoordinates);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin coordinates:", error);
+      }
+    };
+
+    fetchSellerCoordinates();
+  }, [items]);
+
+  const calculateDistance = (fromLocation, toLocation) => {
+    try {
+      if (fromLocation && toLocation) {
+        const { google } = window;
+
+        if (google) {
+          const point1 = new google.maps.LatLng(
+            fromLocation.latitude,
+            fromLocation.longitude
+          );
+          const point2 = new google.maps.LatLng(
+            toLocation.latitude,
+            toLocation.longitude
+          );
+
+          const distance =
+            google.maps.geometry.spherical.computeDistanceBetween(
+              point1,
+              point2
+            );
+
+          // Convert distance to kilometers and round to one decimal place
+          const distanceInKm = (distance / 1000).toFixed(2);
+          return parseFloat(distanceInKm);
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    } catch (e) {
+      console.error("Error calculating distance: ", e);
+      return null;
+    }
+  };
+
+  // Tính toán khoảng cách từ userId đến từng người bán
+  useEffect(() => {
+    let userCoordinates;
+
+    try {
+      const cleanedCoordinates = userInfo.coordinates.replace(/\\/g, "");
+      userCoordinates = JSON.parse(cleanedCoordinates);
+    } catch (error) {
+      console.error("Lỗi khi phân tích JSON: ", error);
+      return;
+    }
+
+    // Đảm bảo rằng sellerCoordinates không rỗng
+    if (sellerCoordinates.length === 0) {
+      console.warn("Tọa độ của người bán đang trống.");
+      return;
+    }
+
+    // Tính toán khoảng cách từ userId đến từng người bán
+    const distances = sellerCoordinates.map((sellerLocation) => {
+      const distance = calculateDistance(userCoordinates, sellerLocation);
+      // console.log(`Khoảng cách đến người bán: ${distance} km`);
+      return distance;
+    });
+
+    // Chỉ cập nhật trạng thái nếu khoảng cách đã thay đổi
+    if (!isEqual(userInfo.distances, distances)) {
+      setUserInfo((prevUserInfo) => ({
+        ...prevUserInfo,
+        distances: distances,
+      }));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo, sellerCoordinates]);
 
   const formatPrice = (price) => {
     const formattedPrice = Number(price).toLocaleString("vi-VN", {
@@ -75,6 +231,19 @@ const Checkout = () => {
     return formattedPrice;
   };
 
+  const generateRandomOrderId = () => {
+    const orderIdLength = 6;
+    const characters = "0123456789";
+    let orderId = "";
+
+    for (let i = 0; i < orderIdLength; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      orderId += characters.charAt(randomIndex);
+    }
+
+    return orderId;
+  };
+
   const handleProceedToCheckout = async () => {
     try {
       // Gửi thông tin đặt hàng lên server
@@ -83,8 +252,9 @@ const Checkout = () => {
         customerName: userInfo.name,
         shippingAddress: userInfo.shipping_address,
         paymentMethod: "Thanh toán khi nhận hàng", // Có thể thay đổi theo cách bạn xử lý phương thức thanh toán
-        totalPrice: totalPrice,
+        totalPrice: totalPrice + calculateTotalShippingFee(userInfo.distances),
         status: "Đang xử lý",
+        orderCode: generateRandomOrderId(),
         items: items.map((item) => ({
           productId: item.id,
           nameItem: item.name,
@@ -109,17 +279,6 @@ const Checkout = () => {
       console.error("Error placing order:", error);
     }
   };
-
-  // if (
-  //   !userInfo ||
-  //   !userInfo.shipping_address ||
-  //   !userInfo.shipping_address.includes("Số điện thoại:")
-  // ) {
-  //   return null;
-  // }
-
-  // const [addressPart, phonePart] =
-  //   userInfo.shipping_address.split("Số điện thoại:");
 
   return (
     <>
@@ -155,15 +314,15 @@ const Checkout = () => {
                         <input checked type="checkbox" name="" id="" />
                       </div>
                       <div className="">
-                        {/* <h1 className="text-[16px] text-textBlack font-semibold">
+                        <h1 className="text-[16px] text-textBlack font-semibold">
                           {userInfo.name}
                         </h1>
                         <p className="text-[16px] text-textGray font-normal">
-                          {addressPart.trim()}
+                          {userInfo.shipping_address}
                         </p>
                         <p className="text-[16px] text-textGray font-normal">
-                          Số điện thoại: {phonePart.trim()}
-                        </p> */}
+                          {userInfo.phone}
+                        </p>
                       </div>
                       <span className="absolute top-4 right-4 bg-primaryGreen text-white text-[12px] font-semibold px-[6px] py-[3px] rounded">
                         Mặc định
@@ -245,7 +404,7 @@ const Checkout = () => {
               </div>
 
               <div className="All-product flex flex-col gap-3">
-                {items.map((item) => (
+                {items.map((item, index) => (
                   <div
                     key={item.id}
                     className="flex justify-between items-center"
@@ -262,13 +421,25 @@ const Checkout = () => {
                           alt={item.name}
                         />
                       </div>
-                      <div className="flex justify-center items-center gap-2">
-                        <p className="text-[15px] text-textGray font-[500]">
-                          {item.name}
-                        </p>
-                        <p className="text-[15px] text-textGray font-normal">
-                          X {item.quantityInCart} {item.unit}
-                        </p>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-2">
+                          <p className="text-[15px] text-textGray font-[500]">
+                            {item.name}
+                          </p>
+                          <p className="text-[15px] text-textGray font-normal">
+                            X {item.quantityInCart} {item.unit}
+                          </p>
+                        </div>
+                        {userInfo.distances &&
+                        userInfo.distances[index] !== undefined ? (
+                          <p className="text-[15px] text-textGray font-normal">
+                            Khoảng cách: {userInfo.distances[index]} Km
+                          </p>
+                        ) : (
+                          <p className="text-[15px] text-textGray font-normal">
+                            Khoảng cách không xác định
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="">
@@ -302,7 +473,9 @@ const Checkout = () => {
                 <h4 className="text-[17px] text-textGray font-medium">
                   Phí vận chuyển
                 </h4>
-                <h4 className="text-[17px] text-textGray font-medium">0đ</h4>
+                <h4 className="text-[17px] text-textGray font-medium">
+                  {formatPrice(calculateTotalShippingFee(userInfo.distances))}
+                </h4>
               </div>
 
               <div className="total flex justify-between items-center">
@@ -310,7 +483,9 @@ const Checkout = () => {
                   Tổng thanh toán
                 </h4>
                 <h4 className="text-[16px] text-primaryGreen font-semibold">
-                  {formatPrice(totalPrice)}
+                  {formatPrice(
+                    totalPrice + calculateTotalShippingFee(userInfo.distances)
+                  )}{" "}
                 </h4>
               </div>
 

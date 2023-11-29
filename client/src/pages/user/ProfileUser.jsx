@@ -36,7 +36,7 @@ const ProfileUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        if (!isAuthenticated) {
+        if (isAuthenticated === false) {
           navigate("/login/user");
           return;
         }
@@ -55,7 +55,7 @@ const ProfileUser = () => {
     };
 
     fetchUser();
-  }, [userId]);
+  }, [userId, isAuthenticated]);
 
   //   const handleClose = async () => {
   //     window.history.back();

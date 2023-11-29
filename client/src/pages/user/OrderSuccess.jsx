@@ -29,7 +29,7 @@ const OrderSuccess = () => {
       const data = response.data;
       console.log(data);
       setOrderInfo(data);
-      console.log(orderInfo);
+      console.log("Order Info:" + orderInfo);
     } catch (error) {
       console.error("Error fetching order data:", error);
     }
@@ -69,8 +69,17 @@ const OrderSuccess = () => {
                     Thanh toán thành công và đơn hàng của bạn đang được xử lý
                   </h5>
                   <p className="text-[14px] text-textGray font-normal">
-                    Mã giao dịch: 1708031724431131
+                    Mã giao dịch: #{orderInfo && orderInfo.order.order_code}{" "}
                   </p>
+                </div>
+                <div className="mt-6 return-to-shopping bg-lineGray hover:bg-[#c5c5c5] transition px-[18px] py-[11px] rounded-[5px]">
+                  <Link
+                    to="/"
+                    className="w-full h-full text-[14px] text-textBlack font-normal flex justify-center items-center gap-2"
+                  >
+                    <ArrowLeft size={18} />
+                    Trở về trang chủ
+                  </Link>
                 </div>
               </div>
             </div>
@@ -79,7 +88,7 @@ const OrderSuccess = () => {
 
         <div className="cart-info w-full h-auto border border-red-500">
           <div className="cart-info-container w-[1280px] h-auto m-auto py-[48px] grid grid-cols-4 gap-x-6">
-            <div className="cart-item col-span-3 bg-backgroundLightGray h-auto rounded-[5px]">
+            <div className="cart-item col-span-4 bg-backgroundLightGray h-auto rounded-[5px]">
               <div className="items h-auto p-3">
                 {orderInfo && (
                   <h1 className="my-2 ml-2 text-[18px] text-textBalck font-medium">
@@ -163,7 +172,7 @@ const OrderSuccess = () => {
                 </table>
               </div>
             </div>
-            <div className="cart-total col-span-1 flex flex-col gap-6 bg-backgroundLightGray h-auto px-[20px] py-[15px] rounded-[5px]">
+            {/* <div className="cart-total col-span-1 flex flex-col gap-6 bg-backgroundLightGray h-auto px-[20px] py-[15px] rounded-[5px]">
               <div className="">
                 <h3 className="text-[19px] text-textBlack font-medium">
                   Thông tin giỏ hàng
@@ -241,7 +250,7 @@ const OrderSuccess = () => {
                   </Link>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

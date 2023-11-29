@@ -9,6 +9,7 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.items);
+  const role = useSelector((state) => state.user.role);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -90,15 +91,18 @@ const ProductList = () => {
           </div>
           <button
             className={`relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
-              product.status === "Hết hàng"
+              product.status === "Hết hàng" || role === "Seller"
                 ? "opacity-50 cursor-not-allowed"
                 : ""
             }`}
             onClick={(e) => {
-              e.preventDefault(e);
-              handleAddToCart(product.id);
+              e.preventDefault();
+              // Kiểm tra nếu role là Seller thì không thực hiện hành động
+              if (role !== "Seller") {
+                handleAddToCart(product.id);
+              }
             }}
-            disabled={product.status === "Hết hàng"}
+            disabled={product.status === "Hết hàng" || role === "Seller"}
           >
             Thêm
             <div className="absolute right-1 rounded-[50px] p-[7px] bg-white">

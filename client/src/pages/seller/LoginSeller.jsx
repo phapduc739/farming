@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { login } from "../../redux/actions/userActions";
 import useRefreshToken from "../../hooks/useRefreshToken";
+import { clearCart } from "../../redux/actions/cartActions";
 
 const schema = yup
   .object({
@@ -58,7 +59,8 @@ export default function LoginSeller() {
           dispatch(login(user, userId, email, role, accessToken, refreshToken));
 
           reset();
-          navigate("/seller-dashboard");
+          dispatch(clearCart());
+          navigate("/seller/profile");
         } else if (role === "User") {
           // Hiển thị thông báo không có quyền đăng nhập
           setError(

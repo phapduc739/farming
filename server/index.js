@@ -620,11 +620,12 @@ app.get("/list/products", async (req, res) => {
         c.name AS category_name,
         u.name AS name,
         u.role AS role,
-        u.id AS id
+        u.id AS user_id
       FROM products p
       LEFT JOIN product_images pi ON p.id = pi.product_id
       LEFT JOIN categories c ON p.categoryID = c.id
       LEFT JOIN users u ON p.user_id = u.id
+      WHERE p.status = "Còn hàng"
     `);
 
     // Chuyển dữ liệu kết quả thành một danh sách sản phẩm với các hình ảnh tương ứng
@@ -646,6 +647,7 @@ app.get("/list/products", async (req, res) => {
           categoryID: row.categoryID,
           category_name: row.category_name,
           user: {
+            id: row.user_id,
             name: row.name,
             role: row.role,
           },
@@ -1311,13 +1313,22 @@ app.post("/orders", async (req, res) => {
       paymentMethod,
       totalPrice,
       status,
+      orderCode,
       items,
     } = req.body;
 
     // Thêm dữ liệu vào bảng orders
     const [orderResult] = await db.execute(
-      "INSERT INTO orders (user_id, customer_name, shipping_address, payment_method, total_price, status) VALUES (?, ?, ?, ?, ?, ?)",
-      [userId, customerName, shippingAddress, paymentMethod, totalPrice, status]
+      "INSERT INTO orders (user_id, customer_name, shipping_address, payment_method, total_price, status, order_code) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [
+        userId,
+        customerName,
+        shippingAddress,
+        paymentMethod,
+        totalPrice,
+        status,
+        orderCode,
+      ]
     );
 
     const orderId = orderResult.insertId;
@@ -1391,6 +1402,7 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
         shipping_address: orderDetails[0].shipping_address,
         total_price: orderDetails[0].total_price,
         unit: orderDetails[0].unit,
+        order_code: orderDetails[0].order_code,
       },
       orderItems: orderDetails.map((item) => ({
         id: item.id,
