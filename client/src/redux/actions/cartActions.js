@@ -31,6 +31,15 @@ export const clearCart = () => {
   };
 };
 
+export const addMultipleToCart = (products) => {
+  return {
+    type: "ADD_MULTIPLE_TO_CART",
+    payload: {
+      products,
+    },
+  };
+};
+
 export const socketUpdateQuantity = (data) => ({
   type: "SOCKET_UPDATE_QUANTITY",
   payload: data,

@@ -166,7 +166,7 @@ export default function Header() {
                         <img
                           src={`http://localhost:4000/${
                             item.images && item.images.length > 0
-                              ? item.images[0]
+                              ? item.images[0].image_url || item.images[0]
                               : ""
                           }`}
                           alt={item.name}

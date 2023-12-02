@@ -329,14 +329,14 @@ app.get("/protected", authenticateToken, (req, res) => {
   res.json({ message: "Protected endpoint", user: req.user });
 });
 
-// Api danh sách danh mục
+// Api danh sách người dùng
 app.get("/list/users", async (req, res) => {
   try {
     const [rows] = await db.execute(`SELECT * FROM users`);
     res.json(rows);
   } catch (error) {
     res.status(500).json({
-      error: "Lấy danh sách danh mục thất bại!",
+      error: "Lấy danh sách người dùng thất bại!",
     });
   }
 });
@@ -493,7 +493,7 @@ app.put(
   }
 );
 
-// Xóa người dùng dựa trên ID
+// Xóa danh mục dựa trên ID
 app.delete("/delete/category/:categoryId", async (req, res) => {
   const categoryId = req.params.categoryId;
 
@@ -738,6 +738,7 @@ app.get("/list/products/:userId", async (req, res) => {
   }
 });
 
+// API tạo mới sản phẩm
 app.post("/create/product", upload.array("images", 12), async (req, res) => {
   try {
     const { name, description, price, unit, quantity, categoryID, userId } =
@@ -786,6 +787,7 @@ app.post("/create/product", upload.array("images", 12), async (req, res) => {
   }
 });
 
+// API lấy thông tin chi tiết sản phẩm theo productId
 app.get("/product/:productId", async (req, res) => {
   const productId = req.params.productId;
   try {
@@ -827,37 +829,38 @@ app.get("/product/:productId", async (req, res) => {
 });
 
 // API xóa hình ảnh theo imageId của sản phẩm
-app.delete("/delete/image/:productId/:imageId", async (req, res) => {
-  const productId = req.params.productId;
-  const imageId = req.params.imageId;
+// app.delete("/delete/image/:productId/:imageId", async (req, res) => {
+//   const productId = req.params.productId;
+//   const imageId = req.params.imageId;
 
-  try {
-    // Lấy danh sách hình ảnh của sản phẩm dựa trên productId
-    const [productImages] = await db.execute(
-      "SELECT * FROM product_images WHERE product_id = ?",
-      [productId]
-    );
+//   try {
+//     // Lấy danh sách hình ảnh của sản phẩm dựa trên productId
+//     const [productImages] = await db.execute(
+//       "SELECT * FROM product_images WHERE product_id = ?",
+//       [productId]
+//     );
 
-    // Kiểm tra xem imageId có tồn tại trong danh sách hình ảnh của sản phẩm không
-    const imageToDelete = productImages.find((image) => image.id == imageId);
+//     // Kiểm tra xem imageId có tồn tại trong danh sách hình ảnh của sản phẩm không
+//     const imageToDelete = productImages.find((image) => image.id == imageId);
 
-    if (imageToDelete) {
-      // Xóa hình ảnh từ cơ sở dữ liệu
-      await db.execute("DELETE FROM product_images WHERE id = ?", [imageId]);
+//     if (imageToDelete) {
+//       // Xóa hình ảnh từ cơ sở dữ liệu
+//       await db.execute("DELETE FROM product_images WHERE id = ?", [imageId]);
 
-      // Ở đây, bạn có thể viết logic để xóa tệp hình ảnh từ máy chủ thực tế
-      // Nếu bạn lưu đường dẫn tệp hình ảnh trong cơ sở dữ liệu
+//       // Ở đây, bạn có thể viết logic để xóa tệp hình ảnh từ máy chủ thực tế
+//       // Nếu bạn lưu đường dẫn tệp hình ảnh trong cơ sở dữ liệu
 
-      res.json({ message: "Hình ảnh đã được xóa thành công" });
-    } else {
-      res.status(404).send("Hình ảnh không tồn tại cho sản phẩm này.");
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Lỗi khi xóa hình ảnh");
-  }
-});
+//       res.json({ message: "Hình ảnh đã được xóa thành công" });
+//     } else {
+//       res.status(404).send("Hình ảnh không tồn tại cho sản phẩm này.");
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Lỗi khi xóa hình ảnh");
+//   }
+// });
 
+// API chỉnh sửa thông tin sản phẩm
 app.put(
   "/edit/product/:productId",
   upload.array("images", 4),
@@ -902,34 +905,35 @@ app.put(
 );
 
 // API để thêm ảnh mới cho sản phẩm
-app.post(
-  "/product/:productId/image",
-  upload.single("newImage"),
-  async (req, res) => {
-    const productId = req.params.productId;
-    const newImage = req.file.path;
+// app.post(
+//   "/product/:productId/image",
+//   upload.single("newImage"),
+//   async (req, res) => {
+//     const productId = req.params.productId;
+//     const newImage = req.file.path;
 
-    try {
-      // Thực hiện một số kiểm tra để đảm bảo rằng sản phẩm với productId tồn tại trong cơ sở dữ liệu
-      // Thêm đường dẫn của ảnh mới vào bảng product_images với productId tương ứng
-      const [result] = await db.execute(
-        "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)",
-        [productId, newImage]
-      );
+//     try {
+//       // Thực hiện một số kiểm tra để đảm bảo rằng sản phẩm với productId tồn tại trong cơ sở dữ liệu
+//       // Thêm đường dẫn của ảnh mới vào bảng product_images với productId tương ứng
+//       const [result] = await db.execute(
+//         "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)",
+//         [productId, newImage]
+//       );
 
-      if (result.affectedRows === 1) {
-        const newImageInfo = { id: result.insertId, url: newImage };
-        res.json(newImageInfo);
-      } else {
-        res.status(500).send("Lỗi khi thêm ảnh mới");
-      }
-    } catch (error) {
-      console.error(error);
-      res.status(500).send("Lỗi khi thêm ảnh mới");
-    }
-  }
-);
+//       if (result.affectedRows === 1) {
+//         const newImageInfo = { id: result.insertId, url: newImage };
+//         res.json(newImageInfo);
+//       } else {
+//         res.status(500).send("Lỗi khi thêm ảnh mới");
+//       }
+//     } catch (error) {
+//       console.error(error);
+//       res.status(500).send("Lỗi khi thêm ảnh mới");
+//     }
+//   }
+// );
 
+// API xóa sản phẩm theo productId
 app.delete("/delete/product/:productId", async (req, res) => {
   const productId = req.params.productId;
 
@@ -1003,7 +1007,7 @@ app.delete("/delete/product/:productId", async (req, res) => {
   }
 });
 
-// SEARCH PRODUCT
+// API tìm kiếm sản phẩm theo tên
 app.get("/api/search", async (req, res) => {
   const term = req.query.term;
 
@@ -1025,6 +1029,7 @@ app.get("/api/search", async (req, res) => {
   }
 });
 
+// API lấy danh sách người dùng
 app.get("/list/users", async (req, res) => {
   try {
     const [rows] = await db.execute("SELECT * FROM users");
@@ -1035,6 +1040,7 @@ app.get("/list/users", async (req, res) => {
   }
 });
 
+// API lấy thông tin chi tiết người dùng
 app.get("/user/:userId", async (req, res) => {
   const userId = req.params.userId;
 
@@ -1061,6 +1067,7 @@ app.get("/user/:userId", async (req, res) => {
   }
 });
 
+// API tạo mới người dùng
 app.post("/create/user", upload.single("image"), async (req, res) => {
   const { name, email, password, role } = req.body;
 
@@ -1104,6 +1111,7 @@ app.post("/create/user", upload.single("image"), async (req, res) => {
   }
 });
 
+// API chỉnh sửa người dùng theo userId
 app.put("/edit/user/:userId", upload.single("image"), async (req, res) => {
   const userId = req.params.userId;
   const { name, email, role, status } = req.body;
@@ -1158,7 +1166,7 @@ app.put("/edit/user/:userId", upload.single("image"), async (req, res) => {
   }
 });
 
-// api edit seller
+// API chỉnh sửa thông tin seller
 app.put("/edit/seller/:userId", upload.single("image"), async (req, res) => {
   const userId = req.params.userId;
   const { name, email, address, phone, coordinates } = req.body;
@@ -1254,7 +1262,7 @@ app.delete("/delete/user/:userId", async (req, res) => {
   }
 });
 
-// Thêm địa chỉ giao hàng
+// API thêm địa chỉ giao hàng
 app.post("/update-shipping-address", (req, res) => {
   const { userId, address } = req.body;
   const { province, district, ward, street, phoneNumber, coordinates } =
@@ -1284,26 +1292,26 @@ app.post("/update-shipping-address", (req, res) => {
 });
 
 // API endpoint để xóa dữ liệu cột shipping_address
-app.post("/api/users/delete-shipping-address", async (req, res) => {
-  const userId = req.body.userId;
+// app.post("/api/users/delete-shipping-address", async (req, res) => {
+//   const userId = req.body.userId;
 
-  try {
-    // Thực hiện câu lệnh SQL để đặt giá trị shipping_address thành NULL
-    const [rows, fields] = await db.execute(
-      "UPDATE users SET shipping_address = NULL WHERE id = ?",
-      [userId]
-    );
+//   try {
+//     // Thực hiện câu lệnh SQL để đặt giá trị shipping_address thành NULL
+//     const [rows, fields] = await db.execute(
+//       "UPDATE users SET shipping_address = NULL WHERE id = ?",
+//       [userId]
+//     );
 
-    // Gửi phản hồi về client
-    res.json({ success: true, message: "Đã xóa địa chỉ thành công" });
-  } catch (error) {
-    // Xử lý lỗi nếu có
-    console.error("Lỗi khi xóa địa chỉ:", error);
-    res.status(500).json({ success: false, message: "Lỗi khi xóa địa chỉ" });
-  }
-});
+//     // Gửi phản hồi về client
+//     res.json({ success: true, message: "Đã xóa địa chỉ thành công" });
+//   } catch (error) {
+//     // Xử lý lỗi nếu có
+//     console.error("Lỗi khi xóa địa chỉ:", error);
+//     res.status(500).json({ success: false, message: "Lỗi khi xóa địa chỉ" });
+//   }
+// });
 
-// Api đặt hàng
+// API đặt hàng
 app.post("/orders", async (req, res) => {
   try {
     const {
@@ -1372,7 +1380,7 @@ app.post("/orders", async (req, res) => {
   }
 });
 
-// Lấy đơn hàng
+// API lấy thông tin chi tiết đơn hàng
 app.get("/order/:orderId/user/:userId", async (req, res) => {
   const { userId, orderId } = req.params;
 
@@ -1423,7 +1431,7 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
   }
 });
 
-// API endpoint để lấy tất cả sản phẩm trong một danh mục và ảnh đầu tiên của mỗi sản phẩm
+// API để lấy tất cả sản phẩm trong danh mục theo categoryId
 app.get("/all/product/category/:categoryId", async (req, res) => {
   const categoryId = req.params.categoryId;
 

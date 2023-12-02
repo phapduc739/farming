@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 29, 2023 lúc 05:04 AM
+-- Thời gian đã tạo: Th12 02, 2023 lúc 10:39 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -245,7 +245,10 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `image`, `dateJo
 (43, 'Fran', 'fran@gmail.com', '$2a$10$hmfP77tKg2.iEfsD1StJPOeJMhjSxsxBDIJZKxEPC9WHcyBZdCIOO', 'Seller', 'uploads\\image-1700471850811.png', '2023-11-20', 'Disable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
 (44, 'Dan', 'dan@gmail.com', '$2a$10$uAY/8DSd7rXghEDYmiSrO.tURsKmtmWH8QNRTZzergAxsO5X1re0i', 'User', 'uploads\\image-1700471909759.png', '2023-11-20', 'Enable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
 (45, 'Admin (John)', 'admin@gmail.com', '$2b$10$hIp9FTF6dyyokXOEL9PFPuWVW4w3toqWCNptuUPGc52FrA/9CcTSG', 'Admin', 'uploads\\image-1700736430197.png', '2023-11-23', 'Enable', '', NULL, NULL, '', '2023-11-25 12:00:17'),
-(55, 'Seller1', 'seller1@gmail.com', '$2a$10$xRzh4zq9a6WK8cO/KdWGcOb9MmPGlXLafnfqOxBE1PgYj55OEL09C', 'Seller', 'uploads\\image-1701192807273.png', '2023-11-28', 'Enable', NULL, '123, Xã Đôn Phong, Huyện Bạch Thông, Tỉnh Bắc Kạn', '123', '{\"latitude\":22.25758,\"longitude\":105.83295}', '2023-11-28 14:33:16');
+(55, 'Seller1', 'seller1@gmail.com', '$2a$10$xRzh4zq9a6WK8cO/KdWGcOb9MmPGlXLafnfqOxBE1PgYj55OEL09C', 'Seller', 'uploads\\image-1701192807273.png', '2023-11-28', 'Enable', NULL, '123, Xã Đôn Phong, Huyện Bạch Thông, Tỉnh Bắc Kạn', '123', '{\"latitude\":22.25758,\"longitude\":105.83295}', '2023-11-28 14:33:16'),
+(56, 'Giang', 'giang@gmail.com', '$2a$10$kAtV6HGJRNB/79etDq/pNOD1otpsY2ZCnBwCv3iumlii/9bTR.ToK', 'User', 'uploads\\image-1700471773164.png', '2023-11-15', 'Disable', 'Thanh toán khi nhận hàng', '3 tháng 2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', '099999999', '{\\\"latitude\\\":10.0306164,\\\"longitude\\\":105.7673942}', '2023-11-29 06:01:57'),
+(57, 'Nguyễn Trường Giang', 'giang1@gmail.com', '$2a$10$SpCKZhijGf4vgnlKL4RwI.FQZlmkul0Q5BcSYTRAmAmcp.RLKVkPy', 'User', '', '2023-11-29', 'Enable', NULL, NULL, NULL, NULL, '2023-11-29 08:15:48'),
+(58, 'Nguyễn Trường Giang', 'giang2@gmail.com', '$2a$10$45IyearKZHryhx5alWO2JubwCriEy.rUaI6cc9YcRWIbtuhmrPi5S', 'User', '', '2023-11-29', 'Enable', NULL, NULL, NULL, NULL, '2023-11-29 08:45:49');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -331,7 +334,7 @@ ALTER TABLE `product_images`
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

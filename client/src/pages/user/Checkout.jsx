@@ -47,8 +47,8 @@ const Checkout = () => {
         distances.forEach((distance) => {
           // Kiểm tra xem distance có phải là số không
           if (typeof distance === "number" && !isNaN(distance)) {
-            // 12,000 VND cho mỗi kilometer
-            const feePerKm = 12000;
+            // 3,000 VND cho mỗi kilometer
+            const feePerKm = 3000;
             totalShippingFee += distance * feePerKm;
           }
           // Nếu distance không phải là số, bỏ qua
@@ -415,7 +415,7 @@ const Checkout = () => {
                           className="w-full h-full object-cover rounded"
                           src={`http://localhost:4000/${
                             item.images && item.images.length > 0
-                              ? item.images[0]
+                              ? item.images[0].image_url || item.images[0]
                               : ""
                           }`}
                           alt={item.name}
