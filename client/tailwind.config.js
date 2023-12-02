@@ -20,8 +20,11 @@ export default {
         lineGray: "#ececec",
         text2222: "#222222",
         text7777: "#777",
+        textddd: "#ddd",
         "theme-color": "#0da487",
         "them-gray": "#f8f8f8",
+        "theme-color2":
+          "linear-gradient(90.56deg, var(#0e947a) 8.46%, var(#0da487;) 62.97%)",
         "text-black": "#5e5a54",
         "theme-border": "#c1c1c1",
         "theme-mxh": "#4a5568",

@@ -16,6 +16,7 @@ import BgCh1 from "../../assets/images/Ch-1.png";
 import BgCh2 from "../../assets/images/Ch-2.png";
 import BgCh3 from "../../assets/images/Ch-3.png";
 import Footer from "../user/common/Footer";
+import { Link } from "react-router-dom";
 export default function Intro() {
   const [visibleImage, setVisibleImage] = useState(0); // visibleImage là vị trí của ảnh hiện tại
   const totalImages = 11; // Đã bao gồm 0->10, do vòng lặp từ 0
@@ -38,22 +39,24 @@ export default function Intro() {
   return (
     <>
       <Header />
-
-      <section>
-        <div className="w-[100%] h-[50px] bg-slate-200">
-          <div className="w-[1280px] h-full m-auto flex justify-between items-center  text-textDark">
-            <div className="z-10">
-              <h2>Giới Thiệu</h2>
+      <section className="mt-5">
+        <div className=" w-[100%] h-auto bg-them-gray z-10">
+          <div className="w-[1280px] h-full m-auto flex justify-between items-center py-[32px] text-textDark">
+            <div className="z-10 ">
+              <h2 className="font-bold text-[24px]">Giới thiệu</h2>
             </div>
-            <ol className="flex gap-x-[8px] font-medium text-[14px]">
+
+            <ol className="flex gap-x-[8px] font-medium text-[14px] text-text7777 ">
               <li>
-                <i className="fa-solid fa-house"></i>
+                <Link to="/">
+                  <i className="fa-solid fa-house text-[14px]"></i>
+                </Link>
               </li>
               <li>
-                <i className="fa-solid fa-chevron-right"></i>
+                <i className="fa-solid fa-chevron-right "></i>
               </li>
               <li>
-                <h4>Giới thiệu</h4>
+                <h4 className="">Giới thiệu</h4>
               </li>
             </ol>
           </div>
@@ -75,7 +78,7 @@ export default function Intro() {
                   <div className=" bg-white uppercase px-4 py-2 inline-block relative z-10">
                     <i className="fas fa-fan text-4xl hover:animate-spin"></i>
                   </div>
-                  <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-400 z-0"></div>
+                  <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-them-gray z-0"></div>
                 </div>
               </div>
             </div>
@@ -157,7 +160,7 @@ export default function Intro() {
                       })}
                     </div>
                     <div
-                      className="cursor-pointer absolute top-2/4 right-5 rounded-full -translate-y-2/4 transform bg-slate-200 py-3 px-4"
+                      className="cursor-pointer absolute top-2/4 right-5 rounded-full -translate-y-2/4 transform bg-them-gray py-3 px-4"
                       onClick={handleNextButton}
                     >
                       <i className="fa-solid fa-right-long"></i>
@@ -180,7 +183,7 @@ export default function Intro() {
                 <div className=" bg-theme-color uppercase px-4 py-2 inline-block relative z-10">
                   <i className="fas fa-fan text-4xl hover:animate-spin"></i>
                 </div>
-                <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-400"></div>
+                <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-them-gray"></div>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-4 mt-6">
@@ -312,7 +315,7 @@ export default function Intro() {
                   <div className=" bg-white uppercase px-4 py-2 inline-block relative z-10">
                     <i className="fas fa-fan text-4xl hover:animate-spin"></i>
                   </div>
-                  <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-400 z-0"></div>
+                  <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-them-gray z-0"></div>
                 </div>
               </div>
             </div>

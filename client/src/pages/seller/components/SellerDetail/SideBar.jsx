@@ -57,7 +57,7 @@ export default function SideBar() {
             <div className="profile-w px-[24px] py-[24px] shadow-md relative rounded-md mb-[29px] ">
               <img
                 src={BgStudio}
-                className="w-[93px] h-[93px] bg-gray-200 rounded-full"
+                className="w-[93px] h-[93px] bg-them-gray rounded-full"
                 alt="BgStudio"
               />
               <div className="profile   border-b border-gray-300  ">

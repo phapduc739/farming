@@ -1,59 +1,75 @@
 import React, { useState, useEffect } from "react";
 import { Plus } from "react-feather";
 import { NavLink } from "react-router-dom";
-import {
-  addToCart,
-  socketUpdateQuantity,
-} from "../../../../redux/actions/cartActions";
+import { addToCart } from "../../../../redux/actions/cartActions";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import io from "socket.io-client";
+import axios from "axios";
 
+// Định nghĩa component ProductCategory
 export default function ProductCategory({ selectedItem, history }) {
+  // State và Redux hooks
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.items);
   const { id } = useParams();
+
+  // Lấy danh sách sản phẩm dựa trên ID danh mục
   useEffect(() => {
-    async function fetchData() {
+    const fetchProducts = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `http://localhost:4000/all/product/category/${id}`
         );
-        const data = await response.json();
-
-        setProducts(data);
+        setProducts(response.data);
       } catch (error) {
-        console.error("Lỗi khi tải dữ liệu sản phẩm:", error);
+        console.error("Lỗi khi lấy danh sách sản phẩm:", error);
       }
-    }
-
-    fetchData();
-  }, [id]);
-  useEffect(() => {
-    const socket = io("http://localhost:4000");
-
-    socket.on("quantity-update", (data) => {
-      console.log("Received quantity update from server:", data);
-
-      // Gửi action để cập nhật thông tin số lượng trong Redux store
-      dispatch(socketUpdateQuantity(data));
-    });
-
-    return () => {
-      socket.disconnect();
     };
-  }, [dispatch]);
-  const handleAddToCart = (productId) => {
-    const selectedProduct = products.find(
-      (product) => product.id === productId
-    );
-    if (selectedProduct) {
-      // Dispatch action to add product to cart
-      dispatch(addToCart(selectedProduct));
+
+    fetchProducts();
+  }, [id]);
+
+  // Xử lý thêm sản phẩm vào giỏ hàng
+  const handleAddToCart = async (productId) => {
+    try {
+      // Lấy thông tin sản phẩm được chọn
+      const response = await axios.get(
+        `http://localhost:4000/product/${productId}`
+      );
+      const selectedProduct = response.data;
+
+      // Kiểm tra nếu sản phẩm được chọn có hình ảnh
+      if (
+        selectedProduct &&
+        selectedProduct.images &&
+        selectedProduct.images.length > 0
+      ) {
+        // Lấy URL của hình ảnh đầu tiên
+        const selectedImage = getImageUrl(selectedProduct.images[0]);
+
+        // Gửi action addToCart với thông tin sản phẩm và URL hình ảnh
+        dispatch(addToCart({ ...selectedProduct, image_url: selectedImage }));
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin sản phẩm:", error);
     }
+
+    // Log trạng thái hiện tại của danh sách sản phẩm
+    console.log(products);
   };
 
+  // Hàm lấy URL của hình ảnh
+  const getImageUrl = (image) => {
+    if (image && typeof image === "object" && image.image_url) {
+      return `http://localhost:4000/${image.image_url}`;
+    } else if (typeof image === "string") {
+      return `http://localhost:4000/${image}`;
+    }
+    return ""; // Trả về URL mặc định hoặc chuỗi trống tùy thuộc vào yêu cầu
+  };
+
+  // Hàm lọc và sắp xếp sản phẩm dựa trên mục đã chọn
   const filteredAndSortedProducts = () => {
     let sortedProducts = [...products];
 
@@ -67,20 +83,19 @@ export default function ProductCategory({ selectedItem, history }) {
       case "Thứ tự theo giá: cao thấp đến thấp":
         sortedProducts.sort((a, b) => b.product_price - a.product_price);
         break;
-      // Thêm các case khác nếu cần thiết
+      // Thêm các trường hợp khác nếu cần thiết
       default:
         // Mặc định, không cần sắp xếp
         break;
     }
 
-    console.log("selectedItem:", selectedItem);
-    console.log("sortedProducts:", sortedProducts);
+    console.log("Mục đã chọn:", selectedItem);
+    console.log("Sản phẩm đã sắp xếp:", sortedProducts);
 
     return sortedProducts;
   };
 
-  selectedItem;
-
+  // Hàm định dạng giá với đơn vị tiền tệ
   const formatPrice = (price) => {
     const formattedPrice = Number(price).toLocaleString("vi-VN", {
       style: "currency",
@@ -90,12 +105,14 @@ export default function ProductCategory({ selectedItem, history }) {
     return formattedPrice;
   };
 
+  // Xử lý khi nhấp vào một sản phẩm để xem chi tiết
   const handleProductClick = (productId) => {
-    console.log("productId:", productId);
-    // Các thao tác khác ở đây
+    console.log("ID sản phẩm:", productId);
+    // Các hành động bổ sung có thể được thêm vào đây
     window.scrollTo(0, 0);
   };
 
+  // Render component
   return (
     <>
       <div className="grid grid-cols-4 gap-4 w-full">
@@ -107,7 +124,7 @@ export default function ProductCategory({ selectedItem, history }) {
             <div className="relative flex justify-center items-center">
               <div className="w-[170px] h-[140px]">
                 <img
-                  className="w-full h-full  object-contain border "
+                  className="w-full h-full object-contain border"
                   src={`http://localhost:4000/${product.product_image_url}`}
                   alt={product.product_name}
                 />
@@ -184,12 +201,12 @@ export default function ProductCategory({ selectedItem, history }) {
 
               <div className="flex items-center">
                 <button
-                  className={`relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
+                  className={`relative w-full bg-lineGray hover:bg-them-gray rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
                     product.product_status === "Hết hàng"
                       ? "opacity-50 cursor-not-allowed"
                       : ""
                   }`}
-                  onClick={() => handleAddToCart(product.id)}
+                  onClick={() => handleAddToCart(product.product_id)}
                   disabled={product.product_status === "Hết hàng"}
                 >
                   Thêm

@@ -6,6 +6,18 @@ export const addToCart = (product) => {
     payload: product,
   };
 };
+// cartActions.js
+
+export const addMultipleToCart = (products) => {
+  return {
+    type: "ADD_MULTIPLE_TO_CART",
+    payload: {
+      products,
+    },
+  };
+};
+
+// Other action creators...
 
 export const removeFromCart = (productId) => {
   return {

@@ -1,18 +1,17 @@
 import { Link } from "react-router-dom";
-export default function TitleSignUp() {
+export default function TitleSignUpSeller() {
   return (
     <>
-      <section className="">
-        <div className=" w-[100%] h-auto bg-slate-200 z-10">
+      <section className="mt-5">
+        <div className=" w-[100%] h-auto bg-them-gray z-10">
           <div className="w-[1280px] h-full m-auto flex justify-between items-center py-[32px] text-textDark">
             <div className="z-10 ">
               <h2 className="font-bold text-[24px]">Đăng Ký Bán Hàng</h2>
             </div>
 
-            <ol className="flex gap-x-[8px] font-medium text-[14px] ">
+            <ol className="flex gap-x-[8px] font-medium text-[14px] text-text7777 ">
               <li>
-                <Link to="/home">
-                  {" "}
+                <Link to="/">
                   <i className="fa-solid fa-house text-[14px]"></i>
                 </Link>
               </li>
