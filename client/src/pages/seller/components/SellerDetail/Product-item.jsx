@@ -165,7 +165,7 @@ export default function ProductItems({ selectedItem, history }) {
 
               <div className="flex items-center">
                 <button
-                  className={`relative w-full bg-lineGray hover:bg-slate-200 rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
+                  className={`relative w-full bg-lineGray hover:bg-them-gray rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
                     product.status === "Hết hàng"
                       ? "opacity-50 cursor-not-allowed"
                       : ""

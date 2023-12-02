@@ -284,7 +284,7 @@ export default function Header() {
                   <ChevronDown size={20} color="#222222" />
                 </li>
                 <li className="text-[16px] text-[text2222] flex justify-center items-center font-medium">
-                  <Link to="/seller-dashboard">Cửa hàng</Link>
+                  <Link to="/seller/manage-product">Cửa hàng</Link>
                   <ChevronDown size={20} color="#222222" />
                 </li>
 

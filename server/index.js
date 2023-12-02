@@ -603,7 +603,8 @@ app.post("/update-quantity/:productId", (req, res) => {
 //   }
 // });
 
-app.get("/list/products", async (req, res) => {
+// Api danh sach san pham cho admin
+app.get("/list/manage-products", async (req, res) => {
   try {
     const [rows] = await db.execute(`
       SELECT
@@ -626,6 +627,72 @@ app.get("/list/products", async (req, res) => {
       LEFT JOIN categories c ON p.categoryID = c.id
       LEFT JOIN users u ON p.user_id = u.id
       WHERE p.status = "Còn hàng"
+    `);
+
+    // Chuyển dữ liệu kết quả thành một danh sách sản phẩm với các hình ảnh tương ứng
+    const products = {};
+
+    rows.forEach((row) => {
+      const productId = row.product_id;
+      if (!products[productId]) {
+        // Tạo một mục sản phẩm mới nếu chưa tồn tại
+        products[productId] = {
+          id: row.product_id,
+          name: row.product_name,
+          description: row.description,
+          price: row.price,
+          unit: row.unit,
+          status: row.status,
+          request: row.request,
+          quantity: row.quantity,
+          categoryID: row.categoryID,
+          category_name: row.category_name,
+          user: {
+            id: row.user_id,
+            name: row.name,
+            role: row.role,
+          },
+          images: [],
+        };
+      }
+
+      if (row.image_url) {
+        // Thêm hình ảnh vào mục sản phẩm tương ứng
+        products[productId].images.push(row.image_url);
+      }
+    });
+
+    res.json(Object.values(products)); // Chuyển đổi danh sách sản phẩm thành mảng
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Lỗi lấy danh sách sản phẩm");
+  }
+});
+
+// Api danh sach san pham cho trang chu
+app.get("/list/products", async (req, res) => {
+  try {
+    const [rows] = await db.execute(`
+      SELECT
+        p.id AS product_id,
+        p.name AS product_name,
+        p.description,
+        p.price,
+        p.unit,
+        p.quantity,
+        p.status,
+        p.request,
+        p.categoryID,
+        pi.image_url,
+        c.name AS category_name,
+        u.name AS name,
+        u.role AS role,
+        u.id AS user_id
+      FROM products p
+      LEFT JOIN product_images pi ON p.id = pi.product_id
+      LEFT JOIN categories c ON p.categoryID = c.id
+      LEFT JOIN users u ON p.user_id = u.id
+      WHERE p.status = "Còn hàng" AND p.request = "Đã duyệt"
     `);
 
     // Chuyển dữ liệu kết quả thành một danh sách sản phẩm với các hình ảnh tương ứng
@@ -1016,7 +1083,7 @@ app.get("/api/search", async (req, res) => {
       "SELECT p.id, p.name, p.description, p.price, p.quantity, p.status, p.unit, MIN(pi.id) as min_image_id, pi.image_url " +
         "FROM products p " +
         "LEFT JOIN product_images pi ON p.id = pi.product_id " +
-        "WHERE p.name LIKE ? " +
+        "WHERE p.name LIKE ? AND p.status = 'Còn hàng' AND p.request = 'Đã duyệt' " +
         "GROUP BY p.id " +
         "LIMIT 5",
       [`%${term}%`]

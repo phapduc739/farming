@@ -1,10 +1,7 @@
 import Header from "../../pages/user/common/Header";
 import Footer from "../user/common/Footer";
 import BgSignIn from "../../assets/images/sign-up.png";
-import BgFacebook from "../../assets/images/facebook.png";
-import BgGoogle from "../../assets/images/google.png";
 import TitleSignUpSeller from "../seller/components/Title/TitleSignUpSeller";
-import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -69,7 +66,7 @@ export default function RegisterSeller() {
                 </div>
               </div>
 
-              <div className="right  bg-gray-200 px-3  ml-[72px] mr-[72px] px-3">
+              <div className="right  bg-gray-200 px-3  ml-[72px] mr-[72px]">
                 <div className="log-in-box  px-10 py-10">
                   <div className="log-in-title mb-2">
                     <h3 className="font-medium leading-tight m-0 text-20">
@@ -169,7 +166,7 @@ export default function RegisterSeller() {
                     <h6></h6>
                   </div>
                   <div className="other-sign-up mt-10 text-center">
-                    <h4 className="text-gray-700 leading-6 m-0 font-normal font-light mb-2 text-sm">
+                    <h4 className="text-gray-700 leading-6 m-0 font-normal mb-2 text-sm">
                       Đã có tài khoản rồi?
                     </h4>
                     <a href=" " className="text-green-500 text-sm">

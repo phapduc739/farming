@@ -78,7 +78,7 @@ export default function SearchProduct() {
           <ul className="absolute top-[40px] left-0 z-40 mt-2 p-4 w-[400px] bg-white border border-gray-300 rounded-b-[5px] overflow-hidden">
             {suggestions.map((item) => (
               <Link
-                to={`/product/detail/${item.id}`}
+                to={`/product-detail/${item.id}`}
                 key={item.id}
                 className="p-2 hover:bg-gray-100 cursor-pointer flex items-center"
                 onClick={handleSuggestionClick}

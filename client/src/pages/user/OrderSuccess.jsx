@@ -133,14 +133,6 @@ const OrderSuccess = () => {
                               <h4 className="text-[14px] text-textGray font-medium">
                                 Giá
                               </h4>
-                              <div className="discount flex justify-start items-center gap-2">
-                                <h5 className="text-[16px] text-textBlack font-medium">
-                                  {formatPrice(orderItem.price)}
-                                </h5>
-                                <h5 className="text-[16px] text-textGray font-medium line-through">
-                                  {formatPrice(orderItem.price)}
-                                </h5>
-                              </div>
                               <h6 className="text-[16px] text-primaryGreen font-medium">
                                 {formatPrice(orderItem.price)}
                               </h6>

@@ -18,28 +18,19 @@ export default function Faq() {
     setIsClicked(false);
   };
   // click info//
-  const [isExpanded1, setIsExpanded1] = useState(false);
-  const [isExpanded2, setIsExpanded2] = useState(false);
-  const [inExpanded3, setIsExpanded3] = useState(false);
-  const toggleAccordion1 = () => {
-    setIsExpanded1(!isExpanded1);
-    if (isExpanded2) {
-      setIsExpanded2(false);
-    }
-  };
+  const [expandedItems, setExpandedItems] = useState(Array(7).fill(false));
 
-  const toggleAccordion2 = () => {
-    setIsExpanded2(!isExpanded2);
-    if (isExpanded1) {
-      setIsExpanded1(false);
-    }
+  const toggleAccordion = (index) => {
+    setExpandedItems((prevItems) =>
+      prevItems.map((item, i) => (i === index ? !item : false))
+    );
   };
 
   return (
     <>
       <Header />
       <section className="">
-        <div className="container-fluid-lg bg-slate-100 mt-5">
+        <div className="container-fluid-lg bg-them-gray mt-5">
           <div className="row w-full -mx-3 flex">
             <div className="flex flex-col wrapper mt-10 ">
               <h1 className="text-center font-mono leading-[1] text-4xl font-normal">
@@ -69,23 +60,23 @@ export default function Faq() {
                     {selectedItem ? selectedItem : ""}{" "}
                     <i className="fa-solid fa-angle-down ml-2"></i>
                     {isClicked && (
-                      <ul className="absolute z-50 min-w-[10rem] -top-[114px] right-[-50px] p-[0.5rem] text-left list-none bg-white border border-gray-200 rounded ">
-                        <li className="hover:bg-slate-200 leading-4">
+                      <ul className="absolute z-50 min-w-[10rem] -top-[114px] right-[-50px] p-[0.5rem] text-left list-none bg-white border border-them-gray rounded ">
+                        <li className="hover:bg-them-gray leading-4">
                           <a onClick={() => handleItemClick("Tìm hiểu thêm")}>
                             Tìm hiểu thêm
                           </a>
                         </li>
-                        <li className="hover:bg-slate-200">
+                        <li className="hover:bg-them-gray">
                           <a onClick={() => handleItemClick("Lựa chọn khác")}>
                             Lựa chọn khác
                           </a>
                         </li>
-                        <li className="hover:bg-slate-200">
+                        <li className="hover:bg-them-gray">
                           <a onClick={() => handleItemClick("Sản phẩm khác")}>
                             Sản phẩm khác
                           </a>
                         </li>
-                        <li className="hover:bg-slate-200">
+                        <li className="hover:bg-them-gray">
                           <a onClick={() => handleItemClick("Tất cả sản phẩm")}>
                             Tất cả sản phẩm
                           </a>
@@ -103,7 +94,7 @@ export default function Faq() {
         <div className="container-fluid-lg  mt-5">
           <div className="row w-full  ">
             <div className=" grid grid-cols-4 gap-4 mx-[10px]">
-              <div className="flex items-center flex-col px-[18px] py-[28px] bg-slate-200">
+              <div className="flex items-center flex-col px-[18px] py-[28px] bg-them-gray">
                 <div className="mb-4">
                   <img
                     className="w-[65px] h-[65px] bg-white rounded-[7px]"
@@ -118,7 +109,7 @@ export default function Faq() {
                   thế tích cực.
                 </p>
               </div>
-              <div className="flex items-center flex-col px-[18px] py-[28px] bg-slate-200">
+              <div className="flex items-center flex-col px-[18px] py-[28px] bg-them-gray">
                 <div className="mb-4">
                   <img
                     className="w-[65px] h-[65px] bg-white rounded-[7px]"
@@ -133,7 +124,7 @@ export default function Faq() {
                   hiểu.
                 </p>
               </div>
-              <div className="flex items-center flex-col px-[18px] py-[28px] bg-slate-200">
+              <div className="flex items-center flex-col px-[18px] py-[28px] bg-them-gray">
                 <div className="mb-4">
                   <img
                     className="w-[65px] h-[65px] bg-white rounded-[7px]"
@@ -148,7 +139,7 @@ export default function Faq() {
                   rõ ràng và dễ hiểu.
                 </p>
               </div>
-              <div className="flex items-center flex-col px-[18px] py-[28px] bg-slate-200">
+              <div className="flex items-center flex-col px-[18px] py-[28px] bg-them-gray">
                 <div className="mb-4">
                   <img
                     className="w-[65px] h-[65px] bg-white rounded-[7px]"
@@ -179,7 +170,7 @@ export default function Faq() {
                   nếu bạn không tìm thấy câu trả lời chính xác. Bạn có thể tìm
                   hiểu thêm bằng cách tìm kiếm hoặc tiếp tục nhấn vào nút bên
                   dưới hoặc trực tiếp{" "}
-                  <a href="contact" className=" text-green-500">
+                  <a href="contact" className=" text-theme-color">
                     liên hệ với bộ phận hỗ trợ của chúng tôi.
                   </a>
                 </p>
@@ -188,27 +179,26 @@ export default function Faq() {
                 <div className="bg-slate-200 px-[15px] py-[18px] my-3">
                   <div className="flex justify-between items-center">
                     <h2
-                      className={` text-[18px] font-[500] ${
-                        isExpanded1 ? "text-green-500" : ""
+                      className={`text-[18px] font-[500] ${
+                        expandedItems[0] ? "text-theme-color" : ""
                       }`}
-                      id="headingOne"
-                      onClick={toggleAccordion1}
+                      onClick={() => toggleAccordion(0)}
                     >
                       Phương thức thanh toán tại Farmers Market ?
                     </h2>
                     <button
                       className="accordion-button"
                       type="button"
-                      onClick={toggleAccordion1}
+                      onClick={() => toggleAccordion(0)}
                     >
-                      {isExpanded1 ? (
+                      {expandedItems[0] ? (
                         <i className="fa-solid fa-angle-up"></i>
                       ) : (
                         <i className="fa-solid fa-angle-down"></i>
                       )}
                     </button>
                   </div>
-                  {isExpanded1 && (
+                  {expandedItems[0] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2  ">
                       <p className="text-[16px] pb-0.5 text-gray-700 font-400">
                         Farmers Market.com áp dụng các phương thức thanh toán
@@ -226,30 +216,29 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px] mb-3">
+                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
                   <div className="flex justify-between items-center">
                     <h2
-                      className={` text-[18px] font-[500] ${
-                        isExpanded2 ? "text-green-500" : ""
+                      className={`text-[18px] font-[500] ${
+                        expandedItems[1] ? "text-theme-color" : ""
                       }`}
-                      id="headingOne"
-                      onClick={toggleAccordion1}
+                      onClick={() => toggleAccordion(1)}
                     >
                       Sản phẩm của Farmers Market có phải hữa cơ hay không ?
                     </h2>
                     <button
                       className="accordion-button"
                       type="button"
-                      onClick={toggleAccordion2}
+                      onClick={() => toggleAccordion(1)}
                     >
-                      {isExpanded2 ? (
+                      {expandedItems[0] ? (
                         <i className="fa-solid fa-angle-up"></i>
                       ) : (
                         <i className="fa-solid fa-angle-down"></i>
                       )}
                     </button>
                   </div>
-                  {isExpanded2 && (
+                  {expandedItems[1] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
                       <p className="text-[16px] pb-0.5 text-gray-700 font-400">
                         Không, nông trại chúng tôi sử dụng phân bón hòa tan như
@@ -263,30 +252,29 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px]  mb-3">
+                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
                   <div className="flex justify-between items-center">
                     <h2
-                      className={` text-[18px] font-[500] ${
-                        isExpanded2 ? "text-green-500" : ""
+                      className={`text-[18px] font-[500] ${
+                        expandedItems[2] ? "text-theme-color" : ""
                       }`}
-                      id="headingOne"
-                      onClick={toggleAccordion1}
+                      onClick={() => toggleAccordion(2)}
                     >
                       Sản phẩm của Farmers Market có theo mùa hay không ?
                     </h2>
                     <button
                       className="accordion-button"
                       type="button"
-                      onClick={toggleAccordion2}
+                      onClick={() => toggleAccordion(2)}
                     >
-                      {isExpanded2 ? (
+                      {expandedItems[2] ? (
                         <i className="fa-solid fa-angle-up"></i>
                       ) : (
                         <i className="fa-solid fa-angle-down"></i>
                       )}
                     </button>
                   </div>
-                  {isExpanded2 && (
+                  {expandedItems[2] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
                       <p className="text-[16px] pb-0.5 text-gray-700 font-400">
                         {" "}
@@ -298,30 +286,29 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px]  mb-3">
+                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
                   <div className="flex justify-between items-center">
                     <h2
-                      className={` text-[18px] font-[500] ${
-                        isExpanded2 ? "text-green-500" : ""
+                      className={`text-[18px] font-[500] ${
+                        expandedItems[3] ? "text-theme-color" : ""
                       }`}
-                      id="headingOne"
-                      onClick={toggleAccordion1}
+                      onClick={() => toggleAccordion(3)}
                     >
                       Khách hàng có thể mua sản phẩm Farmers Market ở đâu ?
                     </h2>
                     <button
                       className="accordion-button"
                       type="button"
-                      onClick={toggleAccordion2}
+                      onClick={() => toggleAccordion(3)}
                     >
-                      {isExpanded2 ? (
+                      {expandedItems[3] ? (
                         <i className="fa-solid fa-angle-up"></i>
                       ) : (
                         <i className="fa-solid fa-angle-down"></i>
                       )}
                     </button>
                   </div>
-                  {isExpanded2 && (
+                  {expandedItems[3] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
                       <p className="text-[16px] pb-0.5 text-gray-700 font-400">
                         Bạn có thể mua trực tiếp tại cữa hàng hoặc trang web của
@@ -330,30 +317,29 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px]  mb-3">
+                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
                   <div className="flex justify-between items-center">
                     <h2
-                      className={` text-[18px] font-[500] ${
-                        isExpanded2 ? "text-green-500" : ""
+                      className={`text-[18px] font-[500] ${
+                        expandedItems[4] ? "text-theme-color" : ""
                       }`}
-                      id="headingOne"
-                      onClick={toggleAccordion1}
+                      onClick={() => toggleAccordion(4)}
                     >
-                      Thời gian nhận hàng ?
+                      Khách hàng có thể mua sản phẩm Farmers Market ở đâu ?
                     </h2>
                     <button
                       className="accordion-button"
                       type="button"
-                      onClick={toggleAccordion2}
+                      onClick={() => toggleAccordion(4)}
                     >
-                      {isExpanded2 ? (
+                      {expandedItems[4] ? (
                         <i className="fa-solid fa-angle-up"></i>
                       ) : (
                         <i className="fa-solid fa-angle-down"></i>
                       )}
                     </button>
                   </div>
-                  {isExpanded2 && (
+                  {expandedItems[4] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
                       <p className="text-[16px] pb-0.5 text-gray-700 font-400">
                         Đối với các đơn hàng tại Hà Nội, Hồ Chí Minh, Cần Thơ,
@@ -364,30 +350,29 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px]  mb-3">
+                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
                   <div className="flex justify-between items-center">
                     <h2
-                      className={` text-[18px] font-[500] ${
-                        isExpanded2 ? "text-green-500" : ""
+                      className={`text-[18px] font-[500] ${
+                        expandedItems[5] ? "text-theme-color" : ""
                       }`}
-                      id="headingOne"
-                      onClick={toggleAccordion1}
+                      onClick={() => toggleAccordion(5)}
                     >
                       Chính sách bảo mật thông tin người mua ?
                     </h2>
                     <button
                       className="accordion-button"
                       type="button"
-                      onClick={toggleAccordion2}
+                      onClick={() => toggleAccordion(5)}
                     >
-                      {isExpanded2 ? (
+                      {expandedItems[5] ? (
                         <i className="fa-solid fa-angle-up"></i>
                       ) : (
                         <i className="fa-solid fa-angle-down"></i>
                       )}
                     </button>
                   </div>
-                  {isExpanded2 && (
+                  {expandedItems[5] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
                       <p className="text-[16px] pb-0.5 text-gray-700 font-400">
                         Chúng tôi cam kết bảo vệ thông tin cá nhân của khách
@@ -396,30 +381,29 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px]">
+                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
                   <div className="flex justify-between items-center">
                     <h2
-                      className={` text-[18px] font-[500] ${
-                        isExpanded2 ? "text-green-500" : ""
+                      className={`text-[18px] font-[500] ${
+                        expandedItems[6] ? "text-theme-color" : ""
                       }`}
-                      id="headingOne"
-                      onClick={toggleAccordion1}
+                      onClick={() => toggleAccordion(6)}
                     >
                       Phí giao hàng tại FarmersMarket.com ?
                     </h2>
                     <button
                       className="accordion-button"
                       type="button"
-                      onClick={toggleAccordion2}
+                      onClick={() => toggleAccordion(6)}
                     >
-                      {isExpanded2 ? (
+                      {expandedItems[6] ? (
                         <i className="fa-solid fa-angle-up"></i>
                       ) : (
                         <i className="fa-solid fa-angle-down"></i>
                       )}
                     </button>
                   </div>
-                  {isExpanded2 && (
+                  {expandedItems[6] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
                       <p className="text-[16px] pb-0.5 text-gray-700 font-400">
                         {" "}

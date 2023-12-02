@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AddressForm = () => {
   const [provinces, setProvinces] = useState([]);
@@ -12,6 +13,8 @@ const AddressForm = () => {
   const [street, setStreet] = useState("");
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  const navigate = useNavigate();
 
   // State cho các lỗi
   const [errors, setErrors] = useState({
@@ -108,14 +111,41 @@ const AddressForm = () => {
     return valid;
   };
 
+  // const geocodeAddress = async (address) => {
+  //   try {
+  //     const response = await axios.get(
+  //       "https://maps.googleapis.com/maps/api/geocode/json",
+  //       {
+  //         params: {
+  //           address: address,
+  //           key: "AIzaSyBnFedHyyQAA6CvyELBvra9XzQy0p3KkFA",
+  //         },
+  //       }
+  //     );
+
+  //     console.log(response.data); // Log dữ liệu trả về từ API
+
+  //     if (response.data.results.length > 0) {
+  //       const location = response.data.results[0].geometry.location;
+  //       return { latitude: location.lat, longitude: location.lng };
+  //     } else {
+  //       console.error("Không tìm thấy tọa độ cho địa chỉ:", address);
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi khi thực hiện Geocoding:", error);
+  //     return null;
+  //   }
+  // };
+
   const geocodeAddress = async (address) => {
     try {
       const response = await axios.get(
-        "https://maps.googleapis.com/maps/api/geocode/json",
+        "https://api.opencagedata.com/geocode/v1/json",
         {
           params: {
-            address: address,
-            key: "AIzaSyBnFedHyyQAA6CvyELBvra9XzQy0p3KkFA",
+            q: address,
+            key: "e98ef6664a9b4406bb301446e593a1a4", // Replace with your OpenCage API key
           },
         }
       );
@@ -123,7 +153,7 @@ const AddressForm = () => {
       console.log(response.data); // Log dữ liệu trả về từ API
 
       if (response.data.results.length > 0) {
-        const location = response.data.results[0].geometry.location;
+        const location = response.data.results[0].geometry;
         return { latitude: location.lat, longitude: location.lng };
       } else {
         console.error("Không tìm thấy tọa độ cho địa chỉ:", address);
@@ -174,7 +204,9 @@ const AddressForm = () => {
 
     console.log(newAddress);
 
-    // window.location.reload();
+    window.location.reload();
+
+    // navigate(`/profile/user/${userId}`);
   };
 
   const saveAddressToServer = (address) => {

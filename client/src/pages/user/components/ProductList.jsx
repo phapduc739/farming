@@ -72,9 +72,6 @@ const ProductList = () => {
             <h6 className="text-[15px] text-primaryGreen font-[600]">
               {formatPrice(product.price)}
             </h6>
-            <p className="text-[14px] text-textGray font-[400] line-through">
-              10.000đ
-            </p>
           </div>
           <div className="flex justify-between items-center gap-2">
             <h6

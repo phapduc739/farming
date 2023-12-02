@@ -132,14 +132,7 @@ const ShoppingCart = () => {
                             <h4 className="text-[14px] text-textGray font-medium">
                               Giá
                             </h4>
-                            <div className="discount flex justify-start items-center gap-2">
-                              <h5 className="text-[16px] text-textBlack font-medium">
-                                {formatPrice(item.price)}
-                              </h5>
-                              <h5 className="text-[16px] text-textGray font-medium line-through">
-                                {formatPrice(item.price)}
-                              </h5>
-                            </div>
+
                             <h6 className="text-[16px] text-primaryGreen font-medium">
                               {formatPrice(item.price)}
                             </h6>
@@ -226,16 +219,16 @@ const ShoppingCart = () => {
                 </form>
               </div>
 
-              <div className="subtotal flex justify-between items-center">
+              {/* <div className="subtotal flex justify-between items-center">
                 <h4 className="text-[14px] text-textGray font-medium">
                   Tổng thanh toán
                 </h4>
                 <h4 className="text-[14px] text-textGray font-medium">
                   {formatPrice(totalPrice)}
                 </h4>
-              </div>
+              </div> */}
 
-              <div className="discount flex justify-between items-center">
+              {/* <div className="discount flex justify-between items-center">
                 <h4 className="text-[14px] text-textGray font-medium">
                   Giảm giá
                 </h4>
@@ -249,7 +242,7 @@ const ShoppingCart = () => {
                   Phí vận chuyển
                 </h4>
                 <h4 className="text-[14px] text-textGray font-medium">0đ</h4>
-              </div>
+              </div> */}
 
               <div className="total flex justify-between items-center">
                 <h4 className="text-[16px] text-textGray font-semibold">

@@ -460,14 +460,14 @@ const Checkout = () => {
                 </h4>
               </div>
 
-              <div className="discount flex justify-between items-center">
+              {/* <div className="discount flex justify-between items-center">
                 <h4 className="text-[17px] text-textGray font-medium">
                   Giảm giá
                 </h4>
                 <h4 className="text-[17px] text-textGray font-medium">
                   (-) 0đ
                 </h4>
-              </div>
+              </div> */}
 
               <div className="shipping flex justify-between items-center">
                 <h4 className="text-[17px] text-textGray font-medium">

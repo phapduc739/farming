@@ -324,9 +324,9 @@ export default function ProductInfo({ history }) {
           {/* Phần thêm vào giỏ hàng và mua ngay */}
           <div className="mb-5 py-5 border-b">
             <div className="flex gap-3 items-center">
-              <div className="w-[250px] text-center px-4 hover:bg-slate-200 py-3 text-[18px] rounded-xl border-2 border-theme-color">
+              <div className="w-[250px] text-center px-4 hover:bg-theme-color py-3 text-[18px] rounded-xl border-2 border-theme-color">
                 <button
-                  className={`relative w-full   rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
+                  className={`relative w-full   rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[18px] font-[500] hover:text-white transition ${
                     products.status === "Hết hàng"
                       ? "opacity-50 cursor-not-allowed"
                       : ""
@@ -338,9 +338,9 @@ export default function ProductInfo({ history }) {
                 </button>
               </div>
 
-              <div className="w-[250px] text-center px-4 hover:bg-slate-200 py-3 text-[18px] rounded-xl border-2 border-theme-color">
+              <div className="w-[250px] text-center px-4 hover:bg-them-gray py-3   bg-theme-color rounded-xl border-2 border-theme-color">
                 <button
-                  className={`relative w-full rounded-[50px] p-[8px] flex justify-center items-center gap-2 text-[16px] font-[400] hover:text-text2222 transition ${
+                  className={`relative w-full rounded-[50px] p-[8px] text-white flex justify-center items-center gap-2 text-[18px] font-[500] hover:text-text2222 transition ${
                     products.status === "Hết hàng"
                       ? "opacity-50 cursor-not-allowed"
                       : ""

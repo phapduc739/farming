@@ -29,7 +29,7 @@ function ManageProduct() {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:4000/list/products")
+      .get("http://localhost:4000/list/manage-products")
       .then((response) => {
         setProducts(response.data);
         setDatabaseChange(!databaseChange);
