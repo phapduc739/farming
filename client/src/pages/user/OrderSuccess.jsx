@@ -86,7 +86,7 @@ const OrderSuccess = () => {
           </div>
         </div>
 
-        <div className="cart-info w-full h-auto border border-red-500">
+        <div className="cart-info w-full h-auto">
           <div className="cart-info-container w-[1280px] h-auto m-auto py-[48px] grid grid-cols-4 gap-x-6">
             <div className="cart-item col-span-4 bg-backgroundLightGray h-auto rounded-[5px]">
               <div className="items h-auto p-3">

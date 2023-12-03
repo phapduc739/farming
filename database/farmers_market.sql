@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 02, 2023 lúc 08:37 PM
+-- Thời gian đã tạo: Th12 03, 2023 lúc 07:54 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -42,7 +42,7 @@ CREATE TABLE `categories` (
 
 INSERT INTO `categories` (`id`, `name`, `description`, `image`, `quantity`, `create_at`) VALUES
 (96, 'Lúa gạo và ngũ cốc', 'Lúa gạo và ngũ cốc Đồng bằng sông Cửu Long', 'uploads\\image-1700471264611.png', '0', '2023-11-20 03:00:00'),
-(97, 'Rau củ quả', 'Rau củ quả Đồng bằng sông Cửu Long', 'uploads\\image-1700471292329.png', '0', '2023-11-20 02:33:11'),
+(97, 'Rau củ quả', 'Rau củ quả Đồng bằng sông Cửu Long', 'uploads\\image-1700471292329.png', '2', '2023-11-20 02:33:11'),
 (98, 'Sản phẩm chế biến', 'Sản phẩm chế biến Đồng bằng sông Cửu Long', 'uploads\\image-1700471322458.png', '0', '2023-11-20 04:40:55'),
 (99, 'Sản phẩm khác', 'Sản phẩm khác Đồng bằng sông Cửu Long', 'uploads\\image-1700471352075.png', '0', '2023-11-19 23:33:05'),
 (100, 'Trái cây', 'Trái cây Đồng bằng sông Cửu Long', 'uploads\\image-1700736484555.png', '2', '2023-11-23 02:17:00');
@@ -123,7 +123,9 @@ CREATE TABLE `products` (
 
 INSERT INTO `products` (`id`, `name`, `description`, `price`, `categoryID`, `quantity`, `status`, `request`, `unit`, `discount`, `user_id`, `created_at`) VALUES
 (52, 'Dưa hấu An Giang', 'Dưa hấu An Giang là một biểu tượng của vị ngọt mát và tươi mới, được chọn lựa từ vùng đất màu mỡ An Giang, nơi có nguồn nước trong lành và khí hậu ấm áp. Những quả dưa hấu này không chỉ mang lại trải nghiệm ngon miệng mà còn là một nguồn nước tinh khiết đ', 10000.00, 100, '98', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 18:56:44'),
-(53, 'Thơm An Giang', 'Thơm là một trạng thái nguyên vật liệu hoặc không khí phát ra mùi hương dễ chịu và dễ nhận biết. Nó là trải nghiệm giác quan mà nhiều người liên kết với sự sảng khoái và kích thích. Mỗi loại mùi hương thơm mang lại một cảm giác độc đáo, từ những hương hoa', 25000.00, 100, '49', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 19:08:24');
+(53, 'Thơm An Giang', 'Thơm là một trạng thái nguyên vật liệu hoặc không khí phát ra mùi hương dễ chịu và dễ nhận biết. Nó là trải nghiệm giác quan mà nhiều người liên kết với sự sảng khoái và kích thích. Mỗi loại mùi hương thơm mang lại một cảm giác độc đáo, từ những hương hoa', 25000.00, 100, '49', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 19:08:24'),
+(54, 'Chuối xanh', 'Chuối xanh, hay còn được gọi là chuối chín non, là một loại trái cây phổ biến và giàu chất dinh dưỡng. Với vỏ màu xanh, thịt chuối xanh có cấu trúc mềm mại và hương vị ngọt ngào. Trái chuối xanh thường được sử dụng trong nhiều món ăn tráng miệng, salad ho', 40000.00, 97, '45', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 40, '2023-12-03 05:30:55'),
+(55, 'Cải thìa', 'Cải thìa, tên khoa học là Brassica rapa subsp. chinensis, là một loại rau xanh phổ biến và giàu dinh dưỡng. Rau cải thìa có những lá mềm mại, hình dáng mảnh mai và có thể nhận biết dễ dàng qua những bông hoa màu vàng nhỏ. Thường được trồng và sử dụng rộng', 7000.00, 97, '70', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 40, '2023-12-03 05:36:09');
 
 -- --------------------------------------------------------
 
@@ -149,7 +151,15 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_url`) VALUES
 (130, 52, 'uploads/images-1701544798770.png'),
 (131, 52, 'uploads/images-1701544798773.png'),
 (132, 52, 'uploads/images-1701544798774.png'),
-(133, 52, 'uploads/images-1701544798775.png');
+(133, 52, 'uploads/images-1701544798775.png'),
+(150, 54, 'uploads/images-1701581816263.png'),
+(151, 54, 'uploads/images-1701581816264.png'),
+(152, 54, 'uploads/images-1701581816265.png'),
+(153, 54, 'uploads/images-1701581816266.png'),
+(158, 55, 'uploads/images-1701584709294.png'),
+(159, 55, 'uploads/images-1701584709296.png'),
+(160, 55, 'uploads/images-1701584709298.png'),
+(161, 55, 'uploads/images-1701584709299.png');
 
 -- --------------------------------------------------------
 
@@ -257,13 +267,13 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT cho bảng `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
 
 --
 -- AUTO_INCREMENT cho bảng `users`

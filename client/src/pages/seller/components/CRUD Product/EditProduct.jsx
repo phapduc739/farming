@@ -73,6 +73,27 @@ const AddProduct = () => {
     navigate("/seller/manage-product");
   };
 
+  // const handleImageChange = (e) => {
+  //   const files = e.target.files;
+  //   const imageArray = [];
+  //   const previewImageArray = [];
+
+  //   for (let i = 0; i < files.length; i++) {
+  //     const file = files[i];
+  //     imageArray.push(file);
+
+  //     // Xem trước hình ảnh
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       previewImageArray[i] = reader.result;
+  //       setPreviewImages([...previewImageArray]);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+
+  //   setImages(imageArray);
+  // };
+
   const handleImageChange = (e) => {
     const files = e.target.files;
     const imageArray = [];
@@ -92,6 +113,7 @@ const AddProduct = () => {
     }
 
     setImages(imageArray);
+    setSelectedImage(previewImageArray[0]); // Hiển thị ảnh đầu tiên trong preview
   };
 
   const handleSubmit = async (e) => {
@@ -169,11 +191,13 @@ const AddProduct = () => {
                             className="w-full h-full object-cover rounded-[4px]"
                           />
                         ) : (
-                          <img
-                            src={DefaultAvatar}
-                            alt="Hình ảnh mặc định"
-                            className="w-full h-full object-cover rounded-[4px]"
-                          />
+                          images[index] && (
+                            <img
+                              src={`http://localhost:4000/${images[index].image_url}`}
+                              alt="Hình ảnh lấy từ server"
+                              className="w-full h-full object-cover rounded-[4px]"
+                            />
+                          )
                         )}
 
                         <div className="rounded-[4px] absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity">

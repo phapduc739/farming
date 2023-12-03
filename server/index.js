@@ -1454,12 +1454,13 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
   try {
     // Lấy thông tin chi tiết của đơn hàng từ bảng orders và order_items
     const [orderDetails] = await db.execute(
-      "SELECT o.*, oi.*, pi.image_url AS product_image_url " +
+      "SELECT o.*, MIN(oi.id) as order_item_id, oi.product_id, p.name, oi.quantity, oi.price, oi.unit, pi.image_url AS product_image_url " +
         "FROM orders o " +
         "JOIN order_items oi ON o.id = oi.order_id " +
         "JOIN products p ON oi.product_id = p.id " +
         "JOIN product_images pi ON p.id = pi.product_id " +
-        "WHERE o.id = ? AND o.user_id = ?",
+        "WHERE o.id = ? AND o.user_id = ? " +
+        "GROUP BY oi.product_id",
       [orderId, userId]
     );
 
@@ -1495,6 +1496,112 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
   } catch (error) {
     console.error("Error fetching order details:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// API lấy lịch sử đơn hàng
+// app.get("/user/:userId/orders", async (req, res) => {
+//   const { userId } = req.params;
+
+//   try {
+//     // Lấy thông tin chi tiết của đơn hàng từ bảng orders và order_items
+//     const [orderDetails] = await db.execute(
+//       "SELECT o.*, MIN(oi.id) as order_item_id, oi.product_id, p.name, oi.quantity, oi.price, oi.unit, pi.image_url AS product_image_url " +
+//         "FROM orders o " +
+//         "JOIN order_items oi ON o.id = oi.order_id " +
+//         "JOIN products p ON oi.product_id = p.id " +
+//         "JOIN product_images pi ON p.id = pi.product_id " +
+//         "WHERE o.id = ? AND o.user_id = ? " +
+//         "GROUP BY oi.product_id",
+//       [userId]
+//     );
+
+//     // Nếu không có dữ liệu trả về, đơn hàng không tồn tại hoặc không thuộc về người dùng
+//     if (!orderDetails.length) {
+//       return res.status(404).json({ error: "Order not found" });
+//     }
+
+//     // Tạo đối tượng chứa thông tin đơn hàng, order_items, và image_url của products
+//     const orderInfo = {
+//       order: {
+//         id: orderDetails[0].id,
+//         user_id: orderDetails[0].user_id,
+//         customer_name: orderDetails[0].customer_name,
+//         shipping_address: orderDetails[0].shipping_address,
+//         total_price: orderDetails[0].total_price,
+//         unit: orderDetails[0].unit,
+//         order_code: orderDetails[0].order_code,
+//       },
+//       orderItems: orderDetails.map((item) => ({
+//         id: item.id,
+//         order_id: item.order_id,
+//         product_id: item.product_id,
+//         name: item.name,
+//         quantity: item.quantity,
+//         price: item.price,
+//         unit: item.unit,
+//         product_image_url: item.product_image_url, // Thêm thông tin hình ảnh vào mỗi order item
+//       })),
+//     };
+
+//     res.status(200).json(orderInfo);
+//   } catch (error) {
+//     console.error("Error fetching order details:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+
+app.get("/user/:userId/orders", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Lấy thông tin chi tiết của đơn hàng từ bảng orders và order_items
+    const [userOrders] = await db.execute(
+      "SELECT o.*, MIN(oi.id) as order_item_id, oi.product_id, p.name, oi.quantity, oi.price, oi.unit, pi.image_url AS product_image_url " +
+        "FROM orders o " +
+        "JOIN order_items oi ON o.id = oi.order_id " +
+        "JOIN products p ON oi.product_id = p.id " +
+        "JOIN product_images pi ON p.id = pi.product_id " +
+        "WHERE o.user_id = ? " +
+        "GROUP BY o.id, oi.product_id " + // Group by order ID and product ID to get distinct products in each order
+        "ORDER BY o.id DESC",
+      [userId]
+    );
+
+    // Nếu không có dữ liệu trả về, không có lịch sử đơn hàng
+    if (!userOrders.length) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy lịch sử đơn hàng cho người dùng" });
+    }
+
+    // Tạo một mảng chứa thông tin các đơn hàng
+    const ordersInfo = userOrders.map((order) => ({
+      id: order.id,
+      user_id: order.user_id,
+      customer_name: order.customer_name,
+      shipping_address: order.shipping_address,
+      total_price: order.total_price,
+      unit: order.unit,
+      order_code: order.order_code,
+      orderItems: userOrders
+        .filter((item) => item.id === order.id)
+        .map((item) => ({
+          id: item.order_item_id,
+          order_id: item.id,
+          product_id: item.product_id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          unit: item.unit,
+          product_image_url: item.product_image_url,
+        })),
+    }));
+
+    res.status(200).json(ordersInfo);
+  } catch (error) {
+    console.error("Lỗi khi lấy lịch sử đơn hàng:", error);
+    res.status(500).json({ error: "Lỗi Nội bộ của Server" });
   }
 });
 
