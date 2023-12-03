@@ -13,7 +13,17 @@ export default function ProductCategory({ selectedItem, history }) {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.items);
   const { id } = useParams();
-
+  const removeDuplicates = (arr) => {
+    const uniqueProducts = arr.reduce((acc, current) => {
+      const x = acc.find((item) => item.product_id === current.product_id);
+      if (!x) {
+        return acc.concat([current]);
+      } else {
+        return acc;
+      }
+    }, []);
+    return uniqueProducts;
+  };
   // Lấy danh sách sản phẩm dựa trên ID danh mục
   useEffect(() => {
     const fetchProducts = async () => {
@@ -91,7 +101,8 @@ export default function ProductCategory({ selectedItem, history }) {
 
     console.log("Mục đã chọn:", selectedItem);
     console.log("Sản phẩm đã sắp xếp:", sortedProducts);
-
+    // Loại bỏ sản phẩm trùng lặp dựa trên product_id
+    sortedProducts = removeDuplicates(sortedProducts);
     return sortedProducts;
   };
 

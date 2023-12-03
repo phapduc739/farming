@@ -48,7 +48,7 @@ export default function Faq() {
                     <i className="fa-solid fa-magnifying-glass text-gray-400"></i>
                   </div>
                   <input
-                    className="pr-[14px] py-[12px] w-full"
+                    className="pr-[14px] py-[12px] w-full outline-none"
                     type="search"
                     placeholder="name@gamil.com"
                   />
@@ -104,7 +104,7 @@ export default function Faq() {
                 <h3 className=" font-[700] text-[18px] leading-[1.2] text-center">
                   Bắt Đầu
                 </h3>
-                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-gray-700">
+                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-text222">
                   Mang đến các chiến lược tồn tại đôi bên để đảm bảo sự chiếm ưu
                   thế tích cực.
                 </p>
@@ -119,7 +119,7 @@ export default function Faq() {
                 <h3 className=" font-[700] text-[18px] leading-[1.2] text-center">
                   Câu hỏi về bán hàng
                 </h3>
-                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-gray-700">
+                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-text222">
                   Thông tin về sản phẩm được trình bày một cách rõ ràng và dễ
                   hiểu.
                 </p>
@@ -134,7 +134,7 @@ export default function Faq() {
                 <h3 className=" font-[700] text-[18px] leading-[1.2] text-center">
                   Giá cả & Gói dịch vụ
                 </h3>
-                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-gray-700">
+                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-text222">
                   Thông tin về giá cả và các gói dịch vụ được trình bày một cách
                   rõ ràng và dễ hiểu.
                 </p>
@@ -149,7 +149,7 @@ export default function Faq() {
                 <h3 className=" font-[700] text-[18px] leading-[1.2] text-center">
                   Hỗ trợ liên hệ
                 </h3>
-                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-gray-700">
+                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-text222">
                   Hãy xem điều này, rất đơn giản và dễ hiểu.
                 </p>
               </div>
@@ -165,7 +165,7 @@ export default function Faq() {
                 <h2 className="font-[700] text-[22px] leading-[1.2] text-center">
                   Câu Hỏi Thường Gặp
                 </h2>
-                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-gray-700">
+                <p className="mt-[17px] -mb-1  text-center leading-[1.6] text-text222">
                   Chúng tôi sẽ trả lời các câu hỏi phổ biến nhất. Đừng lo lắng
                   nếu bạn không tìm thấy câu trả lời chính xác. Bạn có thể tìm
                   hiểu thêm bằng cách tìm kiếm hoặc tiếp tục nhấn vào nút bên
@@ -176,7 +176,7 @@ export default function Faq() {
                 </p>
               </div>
               <div>
-                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
+                <div className="bg-them-gray px-[15px] py-[18px] my-3">
                   <div className="flex justify-between items-center">
                     <h2
                       className={`text-[18px] font-[500] ${
@@ -200,23 +200,23 @@ export default function Faq() {
                   </div>
                   {expandedItems[0] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2  ">
-                      <p className="text-[16px] pb-0.5 text-gray-700 font-400">
+                      <p className="text-[16px] pb-0.5 text-text222 font-400">
                         Farmers Market.com áp dụng các phương thức thanh toán
                         sau
                       </p>
                       <ol>
-                        <li className="text-[16px] pb-0.5 text-gray-700 font-400">
+                        <li className="text-[16px] pb-0.5 text-text222 font-400">
                           Thanh toán trực tiếp: thanh toán tại quầy lúc mua hàng
                           hoặc thanh toán tiền mặt ngay khi nhận hàng
                         </li>
-                        <li className="text-[16px] pb-0.5 text-gray-700 font-400">
+                        <li className="text-[16px] pb-0.5 text-text222 font-400">
                           Thanh toán qua thẻ ngân hàng
                         </li>
                       </ol>
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
+                <div className="bg-slate-200 px-[15px] py-[18px] mb-3">
                   <div className="flex justify-between items-center">
                     <h2
                       className={`text-[18px] font-[500] ${
@@ -240,7 +240,7 @@ export default function Faq() {
                   </div>
                   {expandedItems[1] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
-                      <p className="text-[16px] pb-0.5 text-gray-700 font-400">
+                      <p className="text-[16px] pb-0.5 text-text222 font-400">
                         Không, nông trại chúng tôi sử dụng phân bón hòa tan như
                         trong hệ thống thủy canh nên sản phẩm của chúng tôi
                         không được coi là sản phẩm hữu cơ. Tuy nhiên, rau quả
@@ -252,7 +252,7 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
+                <div className="bg-slate-200 px-[15px] py-[18px]  mb-3">
                   <div className="flex justify-between items-center">
                     <h2
                       className={`text-[18px] font-[500] ${
@@ -276,7 +276,7 @@ export default function Faq() {
                   </div>
                   {expandedItems[2] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
-                      <p className="text-[16px] pb-0.5 text-gray-700 font-400">
+                      <p className="text-[16px] pb-0.5 text-text222 font-400">
                         {" "}
                         Có và không. Một số sản phẩm của chúng tôi theo mùa, một
                         số ra quanh năm. Bắp cải tí hon và tầm bóp Nam Mỹ có vào
@@ -286,7 +286,7 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
+                <div className="bg-slate-200 px-[15px] py-[18px]  mb-3">
                   <div className="flex justify-between items-center">
                     <h2
                       className={`text-[18px] font-[500] ${
@@ -310,14 +310,14 @@ export default function Faq() {
                   </div>
                   {expandedItems[3] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
-                      <p className="text-[16px] pb-0.5 text-gray-700 font-400">
+                      <p className="text-[16px] pb-0.5 text-text222 font-400">
                         Bạn có thể mua trực tiếp tại cữa hàng hoặc trang web của
                         chúng tôi
                       </p>
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
+                <div className="bg-slate-200 px-[15px] py-[18px]  mb-3">
                   <div className="flex justify-between items-center">
                     <h2
                       className={`text-[18px] font-[500] ${
@@ -341,7 +341,7 @@ export default function Faq() {
                   </div>
                   {expandedItems[4] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
-                      <p className="text-[16px] pb-0.5 text-gray-700 font-400">
+                      <p className="text-[16px] pb-0.5 text-text222 font-400">
                         Đối với các đơn hàng tại Hà Nội, Hồ Chí Minh, Cần Thơ,
                         thời gian giao hàng trong ngày. Đối với các đơn hàng
                         ngoài Hà Nội, Hồ Chí Minh, Cần Thơ, thời gian giao hàng
@@ -350,7 +350,7 @@ export default function Faq() {
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
+                <div className="bg-slate-200 px-[15px] py-[18px]  mb-3">
                   <div className="flex justify-between items-center">
                     <h2
                       className={`text-[18px] font-[500] ${
@@ -374,14 +374,14 @@ export default function Faq() {
                   </div>
                   {expandedItems[5] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
-                      <p className="text-[16px] pb-0.5 text-gray-700 font-400">
+                      <p className="text-[16px] pb-0.5 text-text222 font-400">
                         Chúng tôi cam kết bảo vệ thông tin cá nhân của khách
                         hàng để đảm bảo tính riêng tư và an ninh cho quý khách.
                       </p>{" "}
                     </div>
                   )}
                 </div>
-                <div className="bg-slate-200 px-[15px] py-[18px] my-3">
+                <div className="bg-slate-200 px-[15px] py-[18px]">
                   <div className="flex justify-between items-center">
                     <h2
                       className={`text-[18px] font-[500] ${
@@ -405,7 +405,7 @@ export default function Faq() {
                   </div>
                   {expandedItems[6] && (
                     <div className="px-[15px] pb-[18px] mt-2 -mb-2 ">
-                      <p className="text-[16px] pb-0.5 text-gray-700 font-400">
+                      <p className="text-[16px] pb-0.5 text-text222 font-400">
                         {" "}
                         Khách hàng ở khu vực nội thành: Chúng tôi cung cấp dịch
                         vụ giao hàng miễn phí trong phạm vi 15km tính từ cửa

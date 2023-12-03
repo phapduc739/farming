@@ -26,7 +26,6 @@ import { Home } from "react-feather";
 export default function Header() {
   const cartItemCount = useSelector(getCartItemCount);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-  const role = useSelector((state) => state.user.role);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -71,16 +70,12 @@ export default function Header() {
     // Dispatch action đăng xuất
     dispatch(logout());
 
-    // Chuyển hướng đến trang đăng nhập tùy thuộc vào vai trò
-    if (role === "Seller") {
-      navigate("/login/seller");
-    } else {
-      navigate("/login/user");
-    }
+    // Chuyển hướng đến trang đăng nhập
+    navigate("/");
   };
 
   const handleProceedToCheckout = () => {
-    if (isAuthenticated === true && role === "User") {
+    if (isAuthenticated === true) {
       // Nếu đã đăng nhập, chuyển hướng đến trang thanh toán
       navigate("/checkout");
     } else {
@@ -159,7 +154,7 @@ export default function Header() {
                   <div className="absolute z-50 top-[26px] right-0 w-[300px] p-4 bg-white border rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
                     {cartItems.map((item) => (
                       <Link
-                        to={`/product/detail/${item.id}`}
+                        to={`/product-detail/${item.id}`}
                         key={item.id}
                         className="flex items-center mb-2"
                       >
@@ -220,13 +215,7 @@ export default function Header() {
                     <div className="flex flex-col gap-3 w-[120px]">
                       <Link
                         className="text-[14px] text-textGray hover:text-primaryGreen"
-                        to={
-                          role === "User"
-                            ? `/profile/user/${userId}`
-                            : role === "Seller"
-                            ? "/seller/profile"
-                            : ""
-                        }
+                        to={`/profile/user/${userId}`}
                       >
                         Hồ sơ cá nhân
                       </Link>
@@ -294,7 +283,7 @@ export default function Header() {
                 </li>
 
                 <li className="text-[16px] text-[text2222] flex justify-center items-center font-medium">
-                  Khuyến mãi
+                  <Link to="/filter-product/100">Bộ lọc</Link>
                   <ChevronDown size={20} color="#222222" />
                 </li>
 

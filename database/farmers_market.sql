@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 03, 2023 lúc 07:54 AM
+-- Thời gian đã tạo: Th12 03, 2023 lúc 11:21 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -41,8 +41,8 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `description`, `image`, `quantity`, `create_at`) VALUES
-(96, 'Lúa gạo và ngũ cốc', 'Lúa gạo và ngũ cốc Đồng bằng sông Cửu Long', 'uploads\\image-1700471264611.png', '0', '2023-11-20 03:00:00'),
-(97, 'Rau củ quả', 'Rau củ quả Đồng bằng sông Cửu Long', 'uploads\\image-1700471292329.png', '2', '2023-11-20 02:33:11'),
+(96, 'Lúa gạo và ngũ cốc', 'Lúa gạo và ngũ cốc Đồng bằng sông Cửu Long', 'uploads\\image-1700471264611.png', '1', '2023-11-20 03:00:00'),
+(97, 'Rau củ quả', 'Rau củ quả Đồng bằng sông Cửu Long', 'uploads\\image-1700471292329.png', '3', '2023-11-20 02:33:11'),
 (98, 'Sản phẩm chế biến', 'Sản phẩm chế biến Đồng bằng sông Cửu Long', 'uploads\\image-1700471322458.png', '0', '2023-11-20 04:40:55'),
 (99, 'Sản phẩm khác', 'Sản phẩm khác Đồng bằng sông Cửu Long', 'uploads\\image-1700471352075.png', '0', '2023-11-19 23:33:05'),
 (100, 'Trái cây', 'Trái cây Đồng bằng sông Cửu Long', 'uploads\\image-1700736484555.png', '2', '2023-11-23 02:17:00');
@@ -70,7 +70,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `customer_name`, `shipping_address`, `payment_method`, `total_price`, `status`, `order_code`, `created_at`) VALUES
-(70, 39, 'Ngô Văn Đông', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 370560.00, 'Đang xử lý', '143876', '2023-12-02 19:30:52');
+(70, 39, 'Ngô Văn Đông', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 370560.00, 'Đang xử lý', '143876', '2023-12-02 19:30:52'),
+(71, 39, 'Ngô Văn Đông', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 190580.00, 'Đang xử lý', '377913', '2023-12-03 07:46:15');
 
 -- --------------------------------------------------------
 
@@ -94,7 +95,9 @@ CREATE TABLE `order_items` (
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `name`, `quantity`, `price`, `unit`) VALUES
 (76, 70, 52, 'Dưa hấu An Giang', 2, 20000.00, 'Kg'),
-(77, 70, 53, 'Thơm An Giang', 1, 25000.00, 'Kg');
+(77, 70, 53, 'Thơm An Giang', 1, 25000.00, 'Kg'),
+(78, 71, 52, 'Dưa hấu An Giang', 1, 10000.00, 'Kg'),
+(79, 71, 55, 'Cải thìa', 1, 7000.00, 'Kg');
 
 -- --------------------------------------------------------
 
@@ -122,10 +125,12 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `price`, `categoryID`, `quantity`, `status`, `request`, `unit`, `discount`, `user_id`, `created_at`) VALUES
-(52, 'Dưa hấu An Giang', 'Dưa hấu An Giang là một biểu tượng của vị ngọt mát và tươi mới, được chọn lựa từ vùng đất màu mỡ An Giang, nơi có nguồn nước trong lành và khí hậu ấm áp. Những quả dưa hấu này không chỉ mang lại trải nghiệm ngon miệng mà còn là một nguồn nước tinh khiết đ', 10000.00, 100, '98', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 18:56:44'),
+(52, 'Dưa hấu An Giang', 'Dưa hấu An Giang là một biểu tượng của vị ngọt mát và tươi mới, được chọn lựa từ vùng đất màu mỡ An Giang, nơi có nguồn nước trong lành và khí hậu ấm áp. Những quả dưa hấu này không chỉ mang lại trải nghiệm ngon miệng mà còn là một nguồn nước tinh khiết đ', 10000.00, 100, '97', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 18:56:44'),
 (53, 'Thơm An Giang', 'Thơm là một trạng thái nguyên vật liệu hoặc không khí phát ra mùi hương dễ chịu và dễ nhận biết. Nó là trải nghiệm giác quan mà nhiều người liên kết với sự sảng khoái và kích thích. Mỗi loại mùi hương thơm mang lại một cảm giác độc đáo, từ những hương hoa', 25000.00, 100, '49', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 19:08:24'),
 (54, 'Chuối xanh', 'Chuối xanh, hay còn được gọi là chuối chín non, là một loại trái cây phổ biến và giàu chất dinh dưỡng. Với vỏ màu xanh, thịt chuối xanh có cấu trúc mềm mại và hương vị ngọt ngào. Trái chuối xanh thường được sử dụng trong nhiều món ăn tráng miệng, salad ho', 40000.00, 97, '45', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 40, '2023-12-03 05:30:55'),
-(55, 'Cải thìa', 'Cải thìa, tên khoa học là Brassica rapa subsp. chinensis, là một loại rau xanh phổ biến và giàu dinh dưỡng. Rau cải thìa có những lá mềm mại, hình dáng mảnh mai và có thể nhận biết dễ dàng qua những bông hoa màu vàng nhỏ. Thường được trồng và sử dụng rộng', 7000.00, 97, '70', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 40, '2023-12-03 05:36:09');
+(55, 'Cải thìa', 'Cải thìa, tên khoa học là Brassica rapa subsp. chinensis, là một loại rau xanh phổ biến và giàu dinh dưỡng. Rau cải thìa có những lá mềm mại, hình dáng mảnh mai và có thể nhận biết dễ dàng qua những bông hoa màu vàng nhỏ. Thường được trồng và sử dụng rộng', 7000.00, 97, '69', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 40, '2023-12-03 05:36:09'),
+(56, 'Gạo ST25 bao 5kg Ông Cua', 'Gạo được chế biến từ những giống lúa thơm phẩm chất thượng hạng ở Sóc Trăng. Vỏ lúa màu nâu hoặc vàng nâu, hạt gạo dài 9mm. Gạo ST25 Lúa Tôm chính hãng Ông Cua Sóc Trăng túi 5kg có hạt dài, trắng trong, không bạc bụng, khi nấu cơm dẻo thơm, khi để nguội c', 205000.00, 96, '100', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 43, '2023-12-03 09:36:02'),
+(57, 'Cà chua', 'Cà chua, thuộc họ Cà, là một loại rau quả làm thực phẩm. Quả ban đầu có màu xanh, chín ngả màu từ vàng đến đỏ. Cà chua có vị hơi chua và là một loại thực phẩm bổ dưỡng, tốt cho cơ thể, giàu vitamin C và A, đặc biệt là giàu lycopene tốt cho sức khỏe.', 15000.00, 97, '60', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-03 09:43:47');
 
 -- --------------------------------------------------------
 
@@ -159,7 +164,15 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_url`) VALUES
 (158, 55, 'uploads/images-1701584709294.png'),
 (159, 55, 'uploads/images-1701584709296.png'),
 (160, 55, 'uploads/images-1701584709298.png'),
-(161, 55, 'uploads/images-1701584709299.png');
+(161, 55, 'uploads/images-1701584709299.png'),
+(170, 56, 'uploads/images-1701596364531.png'),
+(171, 56, 'uploads/images-1701596364534.png'),
+(172, 56, 'uploads/images-1701596364536.png'),
+(173, 56, 'uploads/images-1701596364540.png'),
+(214, 57, 'uploads/images-1701598164450.png'),
+(215, 57, 'uploads/images-1701598164460.png'),
+(216, 57, 'uploads/images-1701598164462.png'),
+(217, 57, 'uploads/images-1701598164462.png');
 
 -- --------------------------------------------------------
 
@@ -255,25 +268,25 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT cho bảng `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 
 --
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT cho bảng `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
 
 --
 -- AUTO_INCREMENT cho bảng `users`

@@ -951,16 +951,21 @@ app.put(
         ]
       );
 
-      await db.execute("DELETE FROM product_images WHERE product_id = ?", [
-        productId,
-      ]);
+      // Check if there are new images, if not, do not delete and reinsert
+      if (images.length > 0) {
+        // Delete existing product images
+        await db.execute("DELETE FROM product_images WHERE product_id = ?", [
+          productId,
+        ]);
 
-      for (let i = 0; i < images.length; i++) {
-        const imageUrl = `uploads/${images[i].filename}`;
-        await db.execute(
-          "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)",
-          [productId, imageUrl]
-        );
+        // Insert new product images
+        for (let i = 0; i < images.length; i++) {
+          const imageUrl = `uploads/${images[i].filename}`;
+          await db.execute(
+            "INSERT INTO product_images (product_id, image_url) VALUES (?, ?)",
+            [productId, imageUrl]
+          );
+        }
       }
 
       res.json({ message: "Thông tin sản phẩm đã được cập nhật thành công" });

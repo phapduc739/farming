@@ -69,7 +69,7 @@ const EditProduct = () => {
   });
 
   const handleClose = async () => {
-    window.history.back();
+    navigate("/manage/products");
   };
 
   // const handleImageChange = (e) => {
@@ -129,7 +129,11 @@ const EditProduct = () => {
     formData.append("categoryID", product.categoryID);
     if (images.length > 0) {
       for (let i = 0; i < images.length; i++) {
-        formData.append("images", images[i]);
+        if (images[i] instanceof File) {
+          formData.append("images", images[i]);
+        } else if (typeof images[i] === "object" && images[i].image_url) {
+          formData.append("images", images[i].image_url);
+        }
       }
     }
     try {
@@ -144,6 +148,8 @@ const EditProduct = () => {
       );
       console.log(response.data.message);
       navigate("/manage/products");
+
+      console.log(images);
     } catch (error) {
       console.error("Lỗi khi thêm danh mục:", error);
     }

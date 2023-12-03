@@ -47,7 +47,7 @@ export default function ButtonAllCategory() {
         <div className="absolute z-50 top-[54px] left-0 flex flex-col gap-3 w-[300px] py-4 px-7 bg-white border rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
           {categories.map((category) => (
             <Link
-              to={`/category/detail/${category.id}`}
+              to={`/filter-product/${category.id}`}
               key={category.id}
               className="flex items-center mb-2 transition-transform duration-300 ease-in-out transform hover:scale-105"
             >

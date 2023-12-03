@@ -54,7 +54,7 @@ export default function SideBar() {
       <div>
         <div className="profile-content w-[300px]   z-20  px-3  ">
           <div className="pr-[24px] border-r">
-            <div className="profile-w px-[24px] py-[24px] shadow-md relative rounded-md mb-[29px] ">
+            {/* <div className="profile-w px-[24px] py-[24px] shadow-md relative rounded-md mb-[29px] ">
               <img
                 src={BgStudio}
                 className="w-[93px] h-[93px] bg-them-gray rounded-full"
@@ -132,7 +132,7 @@ export default function SideBar() {
                   </ul>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="mb-2">
               <div className="flex justify-between">
                 <h4 className="text-[18px] mb-2">Danh mục</h4>
@@ -153,7 +153,7 @@ export default function SideBar() {
                 <ul className="grid grid-cols-1 gap-2 overflow-hidden">
                   {categories.map((category) => (
                     <li key={category.id} className="flex items-center">
-                      <NavLink to={`/seller-detail/${category.id}`}>
+                      <NavLink to={`/filter-product/${category.id}`}>
                         <input
                           className="mr-4 w-[21px] h-[21px]  cursor-pointer"
                           type="checkbox"
