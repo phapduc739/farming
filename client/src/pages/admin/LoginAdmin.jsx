@@ -57,7 +57,7 @@ export default function LoginAdmin() {
 
         reset();
 
-        navigate("/admin/dashboard");
+        navigate("/manage/users");
       }
     } catch (err) {
       if (err.response.status === 400) {

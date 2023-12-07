@@ -22,6 +22,10 @@ const Checkout = () => {
   const items = useSelector((state) => state.cart.items);
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const userId = useSelector((state) => state.user.userId);
+  const userIdSellers = items.map((item) => item.user?.id);
+
+  // userIdSellers sẽ là một mảng chứa các user.id
+  console.log(userIdSellers);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -48,7 +52,7 @@ const Checkout = () => {
           // Kiểm tra xem distance có phải là số không
           if (typeof distance === "number" && !isNaN(distance)) {
             // 3,000 VND cho mỗi kilometer
-            const feePerKm = 3000;
+            const feePerKm = 2000;
             totalShippingFee += distance * feePerKm;
           }
           // Nếu distance không phải là số, bỏ qua
@@ -257,12 +261,17 @@ const Checkout = () => {
         orderCode: generateRandomOrderId(),
         items: items.map((item) => ({
           productId: item.id,
+          userIdSellers: String(item.user?.id),
           nameItem: item.name,
           quantity: item.quantityInCart,
           price: item.price * item.quantityInCart,
           unit: item.unit,
         })),
       });
+
+      console.log(userIdSellers);
+
+      console.log(items.map((item) => String(item.user?.id)));
 
       console.log(items);
       console.log(response);

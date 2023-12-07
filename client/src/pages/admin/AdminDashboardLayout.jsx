@@ -147,7 +147,7 @@ function AdminDashboardLayout({ children }) {
                 Đơn hàng
               </NavLink>
             </li>
-            <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
+            {/* <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
               <NavLink
                 className={({ isActive }) => {
                   const activeClass = isActive
@@ -160,7 +160,7 @@ function AdminDashboardLayout({ children }) {
                 <i className="fa-solid fa-chart-line"></i>
                 Thống kê
               </NavLink>
-            </li>
+            </li> */}
             <li className="item w-full rounded-r-[50px] text-[14px] font-medium bg-white text-textGray">
               <NavLink className="py-3 flex justify-start items-center gap-3 px-3">
                 <i className="fa-solid fa-arrow-right-from-bracket"></i>

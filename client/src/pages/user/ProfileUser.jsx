@@ -8,6 +8,8 @@ import AddressForm from "./components/AddressForm";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { useNavigate } from "react-router-dom";
 
+import logoUser from "../../assets/images/icon-user-logo.png";
+
 const ProfileUser = () => {
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
@@ -123,8 +125,11 @@ const ProfileUser = () => {
                       <div className="relative w-[125px] h-[125px] border mb-4 rounded-[4px]">
                         <img
                           src={
-                            previewImage ||
-                            `http://localhost:4000/${selectedImage}`
+                            previewImage
+                              ? `http://localhost:4000/${selectedImage}`
+                              : selectedImage
+                              ? `http://localhost:4000/${selectedImage}`
+                              : logoUser
                           }
                           alt="Hình ảnh đã được thêm"
                           className="w-full h-full object-cover rounded-[4px]"

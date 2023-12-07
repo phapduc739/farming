@@ -202,7 +202,7 @@ export default function LoginSeller() {
                       Bạn chưa có tài khoản?
                     </h4>
                     <Link
-                      href="sign-up.html "
+                      to="/register/seller"
                       className="text-green-500 text-sm"
                     >
                       Đăng ký

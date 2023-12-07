@@ -35,7 +35,10 @@ export default function RegisterSeller() {
   const onSubmit = async (data) => {
     try {
       // Thực hiện các thao tác xử lý dữ liệu ở đây
-      const response = await axios.post("http://localhost:4000/register", data);
+      const response = await axios.post(
+        "http://localhost:4000/register/seller",
+        data
+      );
       navigate("/login/seller");
     } catch (error) {
       if (error.response) {
@@ -149,6 +152,7 @@ export default function RegisterSeller() {
                       </div>
                       <div className="forgot-box mt-4 flex items-center justify-between"></div>
                       <div className=" mt-4 log-in flex justify-center items-center w-100 h-[50px] overflow-hidden transition-all duration-300 ease-in-out text-white rounded-lg font-semibold bg-red-600">
+                        {" "}
                         <button className="btn-sign " type="submit">
                           Đăng ký
                         </button>

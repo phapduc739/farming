@@ -18,6 +18,8 @@ import IconSetting from "../../assets/images/icon-setting.svg";
 import IconLogout from "../../assets/images/icon-logout.svg";
 import axios from "axios";
 
+import logoSeller from "../../assets/images/icon-user-logo.png";
+
 export default function SellerDashboardLayout({ children }) {
   const { user, userId, email, role, accessToken } = useSelector(
     (state) => state.user
@@ -88,7 +90,11 @@ export default function SellerDashboardLayout({ children }) {
                 {" "}
                 <img
                   className="w-full h-full object-cover rounded-[50%]"
-                  src={`http://localhost:4000/${selectedImage}`}
+                  src={
+                    selectedImage
+                      ? `http://localhost:4000/${selectedImage}`
+                      : logoSeller
+                  }
                   alt=""
                 />
               </div>

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
+import logoUser from "../../assets/images/icon-user-logo.png";
 
 import { format } from "date-fns";
 
@@ -136,7 +137,11 @@ function ManageUser() {
                         <div className="w-[50px] h-[50px]">
                           <img
                             className="object-cover rounded-[50%]"
-                            src={`http://localhost:4000/${row.image}`}
+                            src={
+                              row.image
+                                ? `http://localhost:4000/${row.image}`
+                                : logoUser
+                            }
                             alt=""
                           />
                         </div>

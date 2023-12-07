@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th12 03, 2023 lúc 11:21 AM
+-- Thời gian đã tạo: Th12 07, 2023 lúc 03:57 AM
 -- Phiên bản máy phục vụ: 10.4.28-MariaDB
 -- Phiên bản PHP: 8.2.4
 
@@ -70,8 +70,12 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `customer_name`, `shipping_address`, `payment_method`, `total_price`, `status`, `order_code`, `created_at`) VALUES
-(70, 39, 'Ngô Văn Đông', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 370560.00, 'Đang xử lý', '143876', '2023-12-02 19:30:52'),
-(71, 39, 'Ngô Văn Đông', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 190580.00, 'Đang xử lý', '377913', '2023-12-03 07:46:15');
+(97, 41, 'Trần Văn Bằng', '3 tháng 2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 44240.00, 'Đã hủy', '179070', '2023-12-06 17:19:04'),
+(98, 41, 'Trần Văn Bằng', '3 tháng 2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 11240.00, 'Đã giao cho shipper', '691998', '2023-12-06 17:19:59'),
+(99, 41, 'Trần Văn Bằng', '3 tháng 2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 102480.00, 'Đang xử lý', '094666', '2023-12-06 17:57:34'),
+(100, 39, 'Ngô Văn Đông', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 252040.00, 'Đã hủy', '507621', '2023-12-07 02:14:14'),
+(101, 39, 'Ngô Văn Đông', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 178520.00, 'Đang xử lý', '220716', '2023-12-07 02:20:20'),
+(102, 39, 'Ngô Văn Đông', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 542040.00, 'Đã giao cho shipper', '348517', '2023-12-07 02:20:57');
 
 -- --------------------------------------------------------
 
@@ -83,6 +87,7 @@ CREATE TABLE `order_items` (
   `id` int(11) NOT NULL,
   `order_id` int(11) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
+  `user_id_seller` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `quantity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL,
@@ -93,11 +98,16 @@ CREATE TABLE `order_items` (
 -- Đang đổ dữ liệu cho bảng `order_items`
 --
 
-INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `name`, `quantity`, `price`, `unit`) VALUES
-(76, 70, 52, 'Dưa hấu An Giang', 2, 20000.00, 'Kg'),
-(77, 70, 53, 'Thơm An Giang', 1, 25000.00, 'Kg'),
-(78, 71, 52, 'Dưa hấu An Giang', 1, 10000.00, 'Kg'),
-(79, 71, 55, 'Cải thìa', 1, 7000.00, 'Kg');
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `user_id_seller`, `name`, `quantity`, `price`, `unit`) VALUES
+(100, 97, 54, '40', 'Chuối xanh', 1, 40000.00, 'Kg'),
+(101, 98, 55, '40', 'Cải thìa', 1, 7000.00, 'Kg'),
+(102, 99, 54, '40', 'Chuối xanh', 2, 80000.00, 'Kg'),
+(103, 99, 55, '40', 'Cải thìa', 2, 14000.00, 'Kg'),
+(104, 100, 52, '43', 'Dưa hấu An Giang', 1, 10000.00, 'Kg'),
+(105, 100, 53, '43', 'Thơm An Giang', 1, 25000.00, 'Kg'),
+(106, 101, 52, '43', 'Dưa hấu An Giang', 7, 70000.00, 'Kg'),
+(107, 102, 53, '43', 'Thơm An Giang', 9, 225000.00, 'Kg'),
+(108, 102, 52, '43', 'Dưa hấu An Giang', 10, 100000.00, 'Kg');
 
 -- --------------------------------------------------------
 
@@ -125,9 +135,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `price`, `categoryID`, `quantity`, `status`, `request`, `unit`, `discount`, `user_id`, `created_at`) VALUES
-(52, 'Dưa hấu An Giang', 'Dưa hấu An Giang là một biểu tượng của vị ngọt mát và tươi mới, được chọn lựa từ vùng đất màu mỡ An Giang, nơi có nguồn nước trong lành và khí hậu ấm áp. Những quả dưa hấu này không chỉ mang lại trải nghiệm ngon miệng mà còn là một nguồn nước tinh khiết đ', 10000.00, 100, '97', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 18:56:44'),
-(53, 'Thơm An Giang', 'Thơm là một trạng thái nguyên vật liệu hoặc không khí phát ra mùi hương dễ chịu và dễ nhận biết. Nó là trải nghiệm giác quan mà nhiều người liên kết với sự sảng khoái và kích thích. Mỗi loại mùi hương thơm mang lại một cảm giác độc đáo, từ những hương hoa', 25000.00, 100, '49', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 19:08:24'),
-(54, 'Chuối xanh', 'Chuối xanh, hay còn được gọi là chuối chín non, là một loại trái cây phổ biến và giàu chất dinh dưỡng. Với vỏ màu xanh, thịt chuối xanh có cấu trúc mềm mại và hương vị ngọt ngào. Trái chuối xanh thường được sử dụng trong nhiều món ăn tráng miệng, salad ho', 40000.00, 97, '45', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 40, '2023-12-03 05:30:55'),
+(52, 'Dưa hấu An Giang', 'Dưa hấu An Giang là một biểu tượng của vị ngọt mát và tươi mới, được chọn lựa từ vùng đất màu mỡ An Giang, nơi có nguồn nước trong lành và khí hậu ấm áp. Những quả dưa hấu này không chỉ mang lại trải nghiệm ngon miệng mà còn là một nguồn nước tinh khiết đ', 10000.00, 100, '80', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 18:56:44'),
+(53, 'Thơm An Giang', 'Thơm là một trạng thái nguyên vật liệu hoặc không khí phát ra mùi hương dễ chịu và dễ nhận biết. Nó là trải nghiệm giác quan mà nhiều người liên kết với sự sảng khoái và kích thích. Mỗi loại mùi hương thơm mang lại một cảm giác độc đáo, từ những hương hoa', 25000.00, 100, '40', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-02 19:08:24'),
+(54, 'Chuối xanh', 'Chuối xanh, hay còn được gọi là chuối chín non, là một loại trái cây phổ biến và giàu chất dinh dưỡng. Với vỏ màu xanh, thịt chuối xanh có cấu trúc mềm mại và hương vị ngọt ngào. Trái chuối xanh thường được sử dụng trong nhiều món ăn tráng miệng, salad ho', 40000.00, 97, '3', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 40, '2023-12-03 05:30:55'),
 (55, 'Cải thìa', 'Cải thìa, tên khoa học là Brassica rapa subsp. chinensis, là một loại rau xanh phổ biến và giàu dinh dưỡng. Rau cải thìa có những lá mềm mại, hình dáng mảnh mai và có thể nhận biết dễ dàng qua những bông hoa màu vàng nhỏ. Thường được trồng và sử dụng rộng', 7000.00, 97, '69', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 40, '2023-12-03 05:36:09'),
 (56, 'Gạo ST25 bao 5kg Ông Cua', 'Gạo được chế biến từ những giống lúa thơm phẩm chất thượng hạng ở Sóc Trăng. Vỏ lúa màu nâu hoặc vàng nâu, hạt gạo dài 9mm. Gạo ST25 Lúa Tôm chính hãng Ông Cua Sóc Trăng túi 5kg có hạt dài, trắng trong, không bạc bụng, khi nấu cơm dẻo thơm, khi để nguội c', 205000.00, 96, '100', 'Còn hàng', 'Đã duyệt', 'Túi', NULL, 43, '2023-12-03 09:36:02'),
 (57, 'Cà chua', 'Cà chua, thuộc họ Cà, là một loại rau quả làm thực phẩm. Quả ban đầu có màu xanh, chín ngả màu từ vàng đến đỏ. Cà chua có vị hơi chua và là một loại thực phẩm bổ dưỡng, tốt cho cơ thể, giàu vitamin C và A, đặc biệt là giàu lycopene tốt cho sức khỏe.', 15000.00, 97, '60', 'Còn hàng', 'Đã duyệt', 'Kg', NULL, 43, '2023-12-03 09:43:47');
@@ -202,11 +212,13 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `image`, `dateJoin`, `status`, `payment_method`, `shipping_address`, `phone`, `coordinates`, `created_at`) VALUES
 (39, 'Ngô Văn Đông', 'nvdong@gmail.com', '$2a$10$9zCwNw2Af6n5Tk3VWZ9kseEZZUxE5bHJfPWfpuYnGt9xfnap9cQfS', 'User', 'uploads\\image-1701192138852.png', '2023-11-20', 'Enable', 'Thanh toán khi nhận hàng', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', '0375627889', '{\"latitude\":10.0271854,\"longitude\":105.7769533}', '2023-11-24 07:35:17'),
-(40, 'Nguyễn Thị Hân', 'nthan@gmail.com', '$2a$10$kAtV6HGJRNB/79etDq/pNOD1otpsY2ZCnBwCv3iumlii/9bTR.ToK', 'Seller', 'uploads\\image-1701542533490.png', '2023-11-20', 'Enable', 'Thanh toán khi nhận hàng', 'Trần Chiên, Phường Lê Bình, Quận Cái Răng, Thành phố Cần Thơ', '0376839667', '{\"latitude\":10.0046793,\"longitude\":105.7534159}', '2023-11-24 07:35:17'),
-(41, 'Trần Văn Bằng', 'tvbang@gmail.com', '$2a$10$FXkE3OMjFCWPwxODgZXn8OUGoM.iTnXIynFzSMawkeoCpIKaaklyK', 'User', 'uploads\\image-1700471795782.png', '2023-11-20', 'Enable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
+(40, 'Nguyễn Thị Hân', 'nthan@gmail.com', '$2a$10$kAtV6HGJRNB/79etDq/pNOD1otpsY2ZCnBwCv3iumlii/9bTR.ToK', 'Seller', 'uploads\\image-1701542533490.png', '2023-11-20', 'Enable', 'Thanh toán khi nhận hàng', 'Trần Vĩnh Kiết, Phường An Bình, Quận Ninh Kiều, Thành phố Cần Thơ', '012345679', '{\"latitude\":10.0138717,\"longitude\":105.7509112}', '2023-11-24 07:35:17'),
+(41, 'Trần Văn Bằng', 'tvbang@gmail.com', '$2a$10$FXkE3OMjFCWPwxODgZXn8OUGoM.iTnXIynFzSMawkeoCpIKaaklyK', 'User', 'uploads\\image-1700471795782.png', '2023-11-20', 'Enable', 'Thanh toán khi nhận hàng', '3 tháng 2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', '0123456789', '{\"latitude\":10.02905,\"longitude\":105.76253}', '2023-11-24 07:35:17'),
 (43, 'Lê Văn Dũng', 'lvdung@gmail.com', '$2a$10$hmfP77tKg2.iEfsD1StJPOeJMhjSxsxBDIJZKxEPC9WHcyBZdCIOO', 'Seller', 'uploads\\image-1700471850811.png', '2023-11-20', 'Enable', '', 'Phạm Văn Đồng, Phường Mỹ Phước, Thành phố Long Xuyên, Tỉnh An Giang', '0374777625', '{\"latitude\":10.36857,\"longitude\":105.4234}', '2023-11-24 07:35:17'),
 (44, 'Admin Trần Khánh Huy', 'admintkhuy@gmail.com', '$2a$10$uAY/8DSd7rXghEDYmiSrO.tURsKmtmWH8QNRTZzergAxsO5X1re0i', 'Admin', 'uploads\\image-1700471909759.png', '2023-11-20', 'Enable', '', NULL, NULL, '', '2023-11-24 07:35:17'),
-(45, 'Admin Nguyễn Trường Giang', 'adminntgiang@gmail.com', '$2b$10$hIp9FTF6dyyokXOEL9PFPuWVW4w3toqWCNptuUPGc52FrA/9CcTSG', 'Admin', 'uploads\\image-1701542155692.png', '2023-11-23', 'Enable', '', NULL, NULL, '', '2023-11-25 12:00:17');
+(45, 'Admin Nguyễn Trường Giang', 'adminntgiang@gmail.com', '$2b$10$hIp9FTF6dyyokXOEL9PFPuWVW4w3toqWCNptuUPGc52FrA/9CcTSG', 'Admin', 'uploads\\image-1701542155692.png', '2023-11-23', 'Enable', '', NULL, NULL, '', '2023-11-25 12:00:17'),
+(60, 'Giang', 'giang@gmail.com', '$2a$10$xQKy9Gp0OXc1DAj.P0WHJeowcc0To8YoMBbpPwuaDpGgjw8Lg.2mC', 'User', '', '2023-12-06', 'Enable', NULL, NULL, NULL, NULL, '2023-12-06 15:32:24'),
+(61, 'Giang', 'giangseller@gmail.com', '$2a$10$sWFaOAXn00yQvId0NmSweu99bYJLbMh8Ovu/s3v29IwOHz0akiNdq', 'Seller', '', '2023-12-06', 'Enable', NULL, NULL, NULL, NULL, '2023-12-06 15:46:05');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -262,37 +274,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 
 --
 -- AUTO_INCREMENT cho bảng `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT cho bảng `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=218;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=226;
 
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- Các ràng buộc cho các bảng đã đổ

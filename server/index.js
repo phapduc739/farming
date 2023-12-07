@@ -205,9 +205,9 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// Api đăng ký
-app.post("/register", async (req, res) => {
-  const { name, email, password, role } = req.body;
+// Api đăng ký User
+app.post("/register/user", async (req, res) => {
+  const { name, email, password } = req.body;
 
   try {
     // Kiểm tra email đã tồn tại chưa
@@ -227,13 +227,59 @@ app.post("/register", async (req, res) => {
 
     // Thêm user mới vào cơ sở dữ liệu
     const [user] = await db.execute(
-      "INSERT INTO users (name, email, password, role, image, dateJoin, status) VALUES (?, ?, ?, ?, ?, ? ,?)",
+      "INSERT INTO users (name, email, password, role, dateJoin, status) VALUES (?, ?, ?, ?, ?, ?)",
       [
         name,
         email,
         hashedPassword,
-        role,
-        "",
+        "User",
+        new Date().toISOString().split("T")[0],
+        "Enable",
+      ]
+    );
+
+    // Tạo token
+    const token = jwt.sign({ id: user.insertId }, process.env.JWT_SECRET);
+
+    res.json({
+      message: "Đăng ký thành công!",
+      token,
+      email,
+    });
+  } catch (error) {
+    console.error("Registration error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Api đăng ký Seller
+app.post("/register/seller", async (req, res) => {
+  const { name, email, password } = req.body;
+
+  try {
+    // Kiểm tra email đã tồn tại chưa
+    const [existingUser] = await db.execute(
+      "SELECT * FROM users WHERE email = ?",
+      [email]
+    );
+
+    if (existingUser.length > 0) {
+      return res.status(400).json({
+        message: "Email đã được sử dụng!",
+      });
+    }
+
+    // Tạo mật khẩu băm
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Thêm user mới vào cơ sở dữ liệu
+    const [user] = await db.execute(
+      "INSERT INTO users (name, email, password, role, dateJoin, status) VALUES (?, ?, ?, ?, ?, ?)",
+      [
+        name,
+        email,
+        hashedPassword,
+        "Seller",
         new Date().toISOString().split("T")[0],
         "Enable",
       ]
@@ -1417,6 +1463,7 @@ app.post("/orders", async (req, res) => {
     const orderItemsValues = items.map((item) => [
       orderId,
       item.productId,
+      item.userIdSellers,
       item.nameItem,
       item.quantity,
       item.price,
@@ -1428,14 +1475,14 @@ app.post("/orders", async (req, res) => {
     // Sử dụng phương thức execute nhiều lần để thêm nhiều hàng
     for (const orderItem of orderItemsValues) {
       await db.execute(
-        "INSERT INTO order_items (order_id, product_id, name, quantity, price, unit) VALUES (?, ?, ?, ?, ?, ?)",
+        "INSERT INTO order_items (order_id, product_id, user_id_seller, name, quantity, price, unit) VALUES (?, ?, ?, ?, ?, ?, ?)",
         orderItem
       );
 
       // Giảm số lượng sản phẩm trong bảng products
       await db.execute(
         "UPDATE products SET quantity = quantity - ? WHERE id = ?",
-        [orderItem[3], orderItem[1]]
+        [orderItem[4], orderItem[1]]
       );
 
       // Kiểm tra nếu quantity của sản phẩm xuống 0, đặt status là 'Hết hàng'
@@ -1556,6 +1603,81 @@ app.get("/order/:orderId/user/:userId", async (req, res) => {
 //   }
 // });
 
+// API lấy tất cả đơn hàng trong hệ thống
+app.get("/list/orders", async (req, res) => {
+  try {
+    // Lấy thông tin chi tiết của đơn hàng từ bảng orders, order_items và users (để lấy tên seller)
+    const [allOrders] = await db.execute(
+      "SELECT o.*, u.name as seller_name, oi.product_id, p.name, oi.quantity, oi.price, oi.unit, pi.image_url AS product_image_url " +
+        "FROM orders o " +
+        "JOIN order_items oi ON o.id = oi.order_id " +
+        "JOIN products p ON oi.product_id = p.id " +
+        "JOIN product_images pi ON p.id = pi.product_id " +
+        "JOIN users u ON oi.user_id_seller = u.id " +
+        "GROUP BY o.id, oi.product_id " +
+        "ORDER BY o.id DESC, oi.product_id ASC"
+    );
+
+    // Nếu không có dữ liệu trả về, không có đơn hàng
+    if (!allOrders.length) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy đơn hàng nào trong hệ thống" });
+    }
+
+    // Tạo một mảng chứa thông tin các đơn hàng
+    const allOrdersInfo = [];
+
+    for (const item of allOrders) {
+      // Tìm xem đơn hàng đã được thêm vào mảng chưa
+      const existingOrder = allOrdersInfo.find((order) => order.id === item.id);
+
+      if (!existingOrder) {
+        // Nếu đơn hàng chưa được thêm vào mảng, thêm vào
+        allOrdersInfo.push({
+          id: item.id,
+          user_id: item.user_id,
+          customer_name: item.customer_name,
+          shipping_address: item.shipping_address,
+          total_price: item.total_price,
+          status: item.status,
+          unit: item.unit,
+          order_code: item.order_code,
+          seller_name: item.seller_name, // Tên của người bán
+          orderItems: [
+            {
+              id: item.order_item_id,
+              product_id: item.product_id,
+              name: item.name,
+              quantity: item.quantity, // Sử dụng tổng số lượng
+              price: item.price,
+              unit: item.unit,
+              product_image_url: item.product_image_url,
+            },
+          ],
+        });
+      } else {
+        // Nếu đơn hàng đã được thêm vào mảng, thêm thông tin sản phẩm vào đơn hàng đó
+        existingOrder.orderItems.push({
+          id: item.order_item_id,
+          product_id: item.product_id,
+          name: item.name,
+          quantity: item.quantity, // Sử dụng tổng số lượng
+          price: item.price,
+          unit: item.unit,
+          product_image_url: item.product_image_url,
+        });
+      }
+    }
+
+    res.status(200).json(allOrdersInfo);
+  } catch (error) {
+    console.error("Lỗi khi lấy tất cả đơn hàng:", error);
+    res.status(500).json({ error: "Lỗi Nội bộ của Server" });
+  }
+});
+
+// API lấy danh sách đơn hàng User
 app.get("/user/:userId/orders", async (req, res) => {
   const { userId } = req.params;
 
@@ -1607,6 +1729,158 @@ app.get("/user/:userId/orders", async (req, res) => {
   } catch (error) {
     console.error("Lỗi khi lấy lịch sử đơn hàng:", error);
     res.status(500).json({ error: "Lỗi Nội bộ của Server" });
+  }
+});
+
+// API lấy danh sách đơn hàng Seller
+app.get("/seller/:userId/orders", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Lấy thông tin chi tiết của đơn hàng từ bảng orders, order_items và users (để lấy tên seller)
+    const [userOrders] = await db.execute(
+      "SELECT o.*, u.name as seller_name, oi.product_id, p.name, oi.quantity, oi.price, oi.unit, pi.image_url AS product_image_url " +
+        "FROM orders o " +
+        "JOIN order_items oi ON o.id = oi.order_id " +
+        "JOIN products p ON oi.product_id = p.id " +
+        "JOIN product_images pi ON p.id = pi.product_id " +
+        "JOIN users u ON oi.user_id_seller = u.id " +
+        "WHERE oi.user_id_seller = ? " +
+        "GROUP BY o.id, oi.product_id " +
+        "ORDER BY o.id DESC, oi.product_id ASC",
+      [userId]
+    );
+
+    // Nếu không có dữ liệu trả về, không có lịch sử đơn hàng
+    if (!userOrders.length) {
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy lịch sử đơn hàng cho người bán" });
+    }
+
+    // Tạo một mảng chứa thông tin các đơn hàng
+    const ordersInfo = [];
+
+    for (const item of userOrders) {
+      // Tìm xem đơn hàng đã được thêm vào mảng chưa
+      const existingOrder = ordersInfo.find((order) => order.id === item.id);
+
+      if (!existingOrder) {
+        // Nếu đơn hàng chưa được thêm vào mảng, thêm vào
+        ordersInfo.push({
+          id: item.id,
+          user_id: item.user_id,
+          customer_name: item.customer_name,
+          shipping_address: item.shipping_address,
+          total_price: item.total_price,
+          status: item.status,
+          unit: item.unit,
+          order_code: item.order_code,
+          seller_name: item.seller_name, // Tên của người bán
+          orderItems: [
+            {
+              id: item.order_item_id,
+              product_id: item.product_id,
+              name: item.name,
+              quantity: item.quantity, // Sử dụng tổng số lượng
+              price: item.price,
+              unit: item.unit,
+              product_image_url: item.product_image_url,
+            },
+          ],
+        });
+      } else {
+        // Nếu đơn hàng đã được thêm vào mảng, thêm thông tin sản phẩm vào đơn hàng đó
+        existingOrder.orderItems.push({
+          id: item.order_item_id,
+          product_id: item.product_id,
+          name: item.name,
+          quantity: item.quantity, // Sử dụng tổng số lượng
+          price: item.price,
+          unit: item.unit,
+          product_image_url: item.product_image_url,
+        });
+      }
+    }
+
+    res.status(200).json(ordersInfo);
+  } catch (error) {
+    console.error("Lỗi khi lấy lịch sử đơn hàng:", error);
+    res.status(500).json({ error: "Lỗi Nội bộ của Server" });
+  }
+});
+
+// API lấy chi tiết đơn hàng Seller
+app.get("/seller/order/:orderId", async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    // Lấy thông tin chi tiết của đơn hàng từ bảng orders, order_items và users
+    const [orderDetails] = await db.execute(
+      "SELECT o.*, u.name as seller_name, oi.product_id, p.name, MIN(oi.quantity) as quantity, MIN(oi.price) as price, oi.unit, pi.image_url AS product_image_url " +
+        "FROM orders o " +
+        "JOIN order_items oi ON o.id = oi.order_id " +
+        "JOIN products p ON oi.product_id = p.id " +
+        "JOIN product_images pi ON p.id = pi.product_id " +
+        "JOIN users u ON oi.user_id_seller = u.id " +
+        "WHERE o.id = ? " +
+        "GROUP BY oi.product_id " + // Use GROUP BY to get unique product_id entries
+        "ORDER BY oi.product_id ASC",
+      [orderId]
+    );
+
+    // Nếu không có dữ liệu trả về, không có đơn hàng
+    if (!orderDetails.length) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+
+    // Tạo một đối tượng chứa thông tin của đơn hàng
+    const orderInfo = {
+      id: orderDetails[0].id,
+      user_id: orderDetails[0].user_id,
+      customer_name: orderDetails[0].customer_name,
+      shipping_address: orderDetails[0].shipping_address,
+      total_price: orderDetails[0].total_price,
+      status: orderDetails[0].status,
+      unit: orderDetails[0].unit,
+      order_code: orderDetails[0].order_code,
+      seller_name: orderDetails[0].seller_name, // Tên của người bán
+      orderItems: orderDetails.map((item) => ({
+        id: item.order_item_id,
+        product_id: item.product_id,
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        unit: item.unit,
+        product_image_url: item.product_image_url,
+      })),
+    };
+
+    res.status(200).json(orderInfo);
+  } catch (error) {
+    console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
+    res.status(500).json({ error: "Lỗi Nội bộ của Server" });
+  }
+});
+
+// API chỉnh sửa trạng thái đơn hàng
+app.put("/edit/order/:orderId", async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  try {
+    // Update the status in the orders table
+    const [result] = await db.execute(
+      "UPDATE orders SET status = ? WHERE id = ?",
+      [status, orderId]
+    );
+
+    res
+      .status(200)
+      .json({ message: "Cập nhật trạng thái đơn hàng thành công!" });
+  } catch (error) {
+    console.error("Lỗi khi cập nhật trạng thái!:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

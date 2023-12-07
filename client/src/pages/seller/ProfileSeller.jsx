@@ -6,6 +6,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 
+import logoSeller from "../../assets/images/icon-user-logo.png";
+
 export default function ProfileSeller() {
   const userId = useSelector((state) => state.user.userId);
 
@@ -63,8 +65,6 @@ export default function ProfileSeller() {
     }
   };
 
-  const DefaultAvatar = "../../src/assets/images/blank-image.svg";
-
   const navigateToEditProfileSeller = () => {
     navigate(`/seller/edit-profile/${userId}`);
   };
@@ -110,7 +110,7 @@ export default function ProfileSeller() {
                         />
                       ) : (
                         <img
-                          src={DefaultAvatar}
+                          src={logoSeller}
                           alt="Hình ảnh mặc định"
                           className="w-full h-full object-cover rounded-[4px]"
                         />

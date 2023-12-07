@@ -6,7 +6,7 @@ import BgGoogle from "../../assets/images/google.png";
 import TitleSignUp from "../seller/components/Title/TitleSignUp";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -38,7 +38,10 @@ export default function Register() {
   const onSubmit = async (data) => {
     try {
       // Thực hiện các thao tác xử lý dữ liệu ở đây
-      const response = await axios.post("http://localhost:4000/register", data);
+      const response = await axios.post(
+        "http://localhost:4000/register/user",
+        data
+      );
       navigate("/login/user");
     } catch (error) {
       if (error.response) {

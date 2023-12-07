@@ -40,6 +40,7 @@ import SellerDeleteProduct from "./pages/seller/components/CRUD Product/DeletePr
 import SellerProfile from "./pages/seller/ProfileSeller";
 import SellerEditProfile from "./pages/seller/EditProfileSeller";
 import SellerManageOrder from "./pages/seller/components/CRUD Order/ManageOrder";
+import SellerEditOrder from "./pages/seller/components/CRUD Order/EditOrder";
 
 function App() {
   return (
@@ -86,8 +87,6 @@ function App() {
       <Route path="/register/seller" element={<RegisterSeller />} />
       <Route path="/login/seller" element={<LoginSeller />} />
       <Route path="/seller-dashboard" element={<SellerDashboardLayout />} />
-      <Route path="/register/seller" element={<RegisterSeller />} />
-      <Route path="/login/seller" element={<LoginSeller />} />
       <Route path="/seller/profile" element={<SellerProfile />} />
       <Route
         path="/seller/edit-profile/:userId"
@@ -107,6 +106,10 @@ function App() {
         element={<SellerDeleteProduct />}
       />
       <Route path="/seller/manage-order" element={<SellerManageOrder />} />
+      <Route
+        path="/seller/manage-order/edit-order/:orderId"
+        element={<SellerEditOrder />}
+      />
 
       <Route path="/product/:id" element={<Product />} />
       {/* <Route path="/seller-dashboard" element={<SellerDashboard />} /> */}

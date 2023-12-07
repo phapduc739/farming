@@ -5,146 +5,95 @@ import { useNavigate } from "react-router-dom";
 import SellerDashboardLayout from "../../SellerDashboardLayout";
 import { useParams } from "react-router-dom";
 
-const AddProduct = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
+const EditOrder = () => {
   const [errors, setErrors] = useState({});
-  const [previewImages, setPreviewImages] = useState([]);
   const navigate = useNavigate();
-  const { productId } = useParams();
+  const { orderId } = useParams();
 
-  const [categories, setCategories] = useState([]);
-
-  const [images, setImages] = useState([]);
-
-  const imageInputRef = useRef();
+  const [order, setOrder] = useState({
+    customer_name: "",
+    shipping_address: "",
+    total_price: "",
+    status: "",
+    request: "",
+    order_code: "",
+    seller_name: "",
+    orderItems: [],
+  });
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchOrder = async () => {
       try {
-        console.log("productId:", productId);
         const response = await axios.get(
-          `http://localhost:4000/product/${productId}`
+          `http://localhost:4000/seller/order/${orderId}`
         );
-        const {
-          name,
-          description,
-          price,
-          unit,
-          quantity,
-          status,
-          request,
-          categoryID,
-          images,
-        } = response.data;
-        console.log(response.data);
-        setProduct({
-          name,
-          description,
-          price,
-          unit,
-          quantity,
-          status,
-          request,
-          categoryID,
+        const orderData = response.data;
+
+        setOrder({
+          customer_name: orderData.customer_name,
+          shipping_address: orderData.shipping_address,
+          total_price: orderData.total_price,
+          status: orderData.status,
+          request: orderData.request,
+          order_code: orderData.order_code,
+          seller_name: orderData.seller_name,
+          orderItems: orderData.orderItems,
         });
-        setImages(images);
-        console.log(images);
-        setSelectedImage(images[0]?.image_url);
       } catch (error) {
-        console.error("Lỗi khi lấy thông tin danh mục:", error);
+        console.error("Lỗi khi lấy thông tin đơn hàng:", error);
       }
     };
 
-    fetchProduct();
-  }, [productId]);
-
-  const [product, setProduct] = useState({
-    name: "",
-    description: "",
-    price: "",
-    unit: "", // Kiểm tra và set giá trị mặc định nếu undefined
-    quantity: "", // Kiểm tra và set giá trị mặc định nếu undefined    rating: "",
-    status: "",
-    request: "",
-    categoryID: "",
-  });
+    fetchOrder();
+  }, [orderId]);
 
   const handleClose = async () => {
-    navigate("/seller/manage-product");
-  };
-
-  const handleImageChange = (e) => {
-    const files = e.target.files;
-    const imageArray = [];
-    const previewImageArray = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      imageArray.push(file);
-
-      // Xem trước hình ảnh
-      const reader = new FileReader();
-      reader.onload = () => {
-        previewImageArray[i] = reader.result;
-        setPreviewImages([...previewImageArray]);
-      };
-      reader.readAsDataURL(file);
-    }
-
-    setImages(imageArray);
+    // navigate("/seller/manage-product");
+    console.log(order);
+    console.log(order.status);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", product.name);
-    formData.append("description", product.description);
-    formData.append("price", product.price);
-    formData.append("unit", product.unit);
-    formData.append("status", product.status);
-    formData.append("request", product.request);
-    formData.append("quantity", product.quantity);
-    formData.append("categoryID", product.categoryID);
-    if (images.length > 0) {
-      for (let i = 0; i < images.length; i++) {
-        formData.append("images", images[i]);
-      }
-    }
+    const status = order.status;
+
     try {
       const response = await axios.put(
-        `http://localhost:4000/edit/product/${productId}`,
-        formData,
+        `http://localhost:4000/edit/order/${orderId}`,
+        { status },
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
       console.log(response.data.message);
-      navigate("/seller/manage-product");
+      console.log(order);
+      console.log(order.status);
+      navigate("/seller/manage-order");
     } catch (error) {
-      console.error("Lỗi khi thêm danh mục:", error);
+      console.error("Lỗi khi cập nhật trạng thái:", error);
     }
   };
 
-  const DefaultAvatar = "../../src/assets/images/blank-image.svg";
-
-  useEffect(() => {
-    // Truy vấn danh sách danh mục từ cơ sở dữ liệu
-    axios.get("http://localhost:4000/list/categories").then((response) => {
-      setCategories(response.data);
+  const formatPrice = (price) => {
+    const formattedPrice = Number(price).toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
     });
-  }, []);
+
+    return formattedPrice;
+  };
 
   return (
     <>
       <SellerDashboardLayout>
         <div className="bg-white rounded-[10px] w-full h-auto p-6">
-          <h2 className="text-xl font-bold mb-4">Chỉnh sửa sản phẩm</h2>
+          <h2 className="text-xl font-bold mb-4">Chỉnh sửa đơn hàng</h2>
           <form onSubmit={handleSubmit}>
-            <div className="image-text h-auto pb-5 grid grid-cols-2">
-              <div className="image w-[300px] h-auto ">
+            <div className="image-text h-auto pb-5">
+              {/* <div className="image w-[300px] h-auto ">
                 <h2 className="text-[18px] font-bold text-left">Hình ảnh</h2>
 
                 <label
@@ -204,24 +153,21 @@ const AddProduct = () => {
                   Đặt hình ảnh thu nhỏ danh mục. Chỉ chấp nhận các tệp hình ảnh
                   *.png, *.jpg và *.jpeg
                 </p>
-              </div>
+              </div> */}
 
               <div className="text  w-full flex flex-col">
                 <h2 className="text-[18px] font-bold text-left">Thông tin</h2>
 
                 <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
                   <div className="flex gap-1">
-                    <h3 className=""> Tên sản phẩm</h3>
+                    <h3 className="">Tên người bán</h3>
                     <span className="text-red-500">*</span>
                   </div>
                   <input
                     type="text"
                     name="name"
                     placeholder="Nhập tên sản phẩm..."
-                    value={product.name}
-                    onChange={(e) =>
-                      setProduct({ ...product, name: e.target.value })
-                    }
+                    value={order.seller_name}
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
                   />
                   {errors.name && (
@@ -233,17 +179,33 @@ const AddProduct = () => {
 
                 <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
                   <div className="flex gap-1">
-                    <h3 className="">Mô tả sản phẩm</h3>
+                    <h3 className="">Tên khách hàng</h3>
+                    <span className="text-red-500">*</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Nhập tên sản phẩm..."
+                    value={order.customer_name}
+                    className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
+                  />
+                  {errors.name && (
+                    <div className="text-red-500 text-[12px]">
+                      {errors.name}
+                    </div>
+                  )}
+                </label>
+
+                <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
+                  <div className="flex gap-1">
+                    <h3 className="">Địa chỉ giao hàng</h3>
                     <span className="text-red-500">*</span>
                   </div>
                   <input
                     type="text"
                     name="description"
                     placeholder="Nhập mô tả sản phẩm..."
-                    value={product.description}
-                    onChange={(e) =>
-                      setProduct({ ...product, description: e.target.value })
-                    }
+                    value={order.shipping_address}
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
                   />
                   {errors.description && (
@@ -255,17 +217,14 @@ const AddProduct = () => {
 
                 <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
                   <div className="flex gap-1">
-                    <h3 className="">Số lượng</h3>
+                    <h3 className="">Tổng tiền</h3>
                     <span className="text-red-500">*</span>
                   </div>
                   <input
                     type="number"
                     name="quantity"
                     placeholder="Nhập số lượng sản phẩm..."
-                    value={product.quantity}
-                    onChange={(e) =>
-                      setProduct({ ...product, quantity: e.target.value })
-                    }
+                    value={order.total_price}
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
                   />
                   {errors.quantity && (
@@ -277,45 +236,14 @@ const AddProduct = () => {
 
                 <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
                   <div className="flex gap-1">
-                    <h3 className="">Danh mục</h3>
-                    <span className="text-red-500">*</span>
-                  </div>
-                  <select
-                    id="categoryID"
-                    name="categoryID"
-                    value={product.categoryID}
-                    onChange={(e) =>
-                      setProduct({ ...product, categoryID: e.target.value })
-                    }
-                    className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
-                  >
-                    <option value="">Chọn danh mục</option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.categoryID && (
-                    <div className="text-red-500 text-[12px]">
-                      {errors.categoryID}
-                    </div>
-                  )}
-                </label>
-
-                <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
-                  <div className="flex gap-1">
-                    <h3 className="">Giá</h3>
+                    <h3 className="">Mã đơn hàng</h3>
                     <span className="text-red-500">*</span>
                   </div>
                   <input
                     type="text"
                     name="price"
                     placeholder="Nhập giá sản phẩm..."
-                    value={product.price}
-                    onChange={(e) =>
-                      setProduct({ ...product, price: e.target.value })
-                    }
+                    value={order.order_code}
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
                   />
                   {errors.price && (
@@ -327,53 +255,27 @@ const AddProduct = () => {
 
                 <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
                   <div className="flex gap-1">
-                    <h3 className="">Đơn vị tính</h3>
-                    <span className="text-red-500">*</span>
-                  </div>
-                  <select
-                    name="unit"
-                    value={product.unit}
-                    onChange={(e) =>
-                      setProduct({ ...product, unit: e.target.value })
-                    }
-                    className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
-                  >
-                    {" "}
-                    <option value="">Chọn đơn vị</option>
-                    <option value="Kg">Kilogram</option>
-                    <option value="Gram">Gram</option>
-                    <option value="Hộp">Hộp</option>
-                    <option value="Quả">Quả</option>{" "}
-                    <option value="Túi">Túi</option>
-                  </select>
-                  {errors.unit && (
-                    <div className="text-red-500 text-[12px]">
-                      {errors.unit}
-                    </div>
-                  )}
-                </label>
-
-                <label htmlFor="" className="flex flex-col gap-2 text-[14px]">
-                  <div className="flex gap-1">
                     <h3 className="">Trạng thái</h3>
                     <span className="text-red-500">*</span>
                   </div>
                   <select
                     name="status"
-                    value={product.status}
+                    value={order.status}
                     onChange={(e) =>
-                      setProduct({ ...product, status: e.target.value })
+                      setOrder({ ...order, status: e.target.value })
                     }
                     className="w-full border border-gray-300 rounded-lg py-2 px-3 mb-4"
                   >
-                    {" "}
                     <option value="">Chọn trạng thái</option>
-                    <option value="Còn hàng">Còn hàng</option>
-                    <option value="Hết hàng">Hết hàng</option>
+                    <option value="Đang xử lý">Đang xử lý</option>
+                    <option value="Đã giao cho shipper">
+                      Đã giao cho shipper
+                    </option>
+                    <option value="Đã hủy">Đã hủy</option>
                   </select>
-                  {errors.status && (
+                  {errors.unit && (
                     <div className="text-red-500 text-[12px]">
-                      {errors.status}
+                      {errors.unit}
                     </div>
                   )}
                 </label>
@@ -402,4 +304,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditOrder;
