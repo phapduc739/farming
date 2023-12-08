@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Upload } from "react-feather";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import logoUser from "../../assets/images/icon-user-logo.png";
 
 export default function ProfileSeller() {
   const { userId } = useParams();

@@ -150,7 +150,7 @@ export default function LoginSeller() {
                       <div className="from-floating relative mt-4">
                         <input
                           type="password"
-                          className="w-full h-[50px] px-3 border required:"
+                          className="w-full h-[50px] px-3 border"
                           placeholder="Nhập mật khẩu của bạn..."
                           {...register("password")}
                         />

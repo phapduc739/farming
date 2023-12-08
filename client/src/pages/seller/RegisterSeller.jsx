@@ -3,7 +3,7 @@ import Footer from "../user/common/Footer";
 import BgSignIn from "../../assets/images/sign-up.png";
 import TitleSignUpSeller from "../seller/components/Title/TitleSignUpSeller";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -173,9 +173,9 @@ export default function RegisterSeller() {
                     <h4 className="text-gray-700 leading-6 m-0 font-normal mb-2 text-sm">
                       Đã có tài khoản rồi?
                     </h4>
-                    <a href=" " className="text-green-500 text-sm">
+                    <Link to="/login/seller" className="text-green-500 text-sm">
                       Đăng nhập
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

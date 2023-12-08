@@ -672,7 +672,6 @@ app.get("/list/manage-products", async (req, res) => {
       LEFT JOIN product_images pi ON p.id = pi.product_id
       LEFT JOIN categories c ON p.categoryID = c.id
       LEFT JOIN users u ON p.user_id = u.id
-      WHERE p.status = "Còn hàng"
     `);
 
     // Chuyển dữ liệu kết quả thành một danh sách sản phẩm với các hình ảnh tương ứng

@@ -176,7 +176,7 @@ export default function MainContent() {
             </div>
 
             {/* Sản phẩm nổi bật */}
-            <div className="products w-full p-6 h-auto bg-backgroundLightGray rounded-[5px]">
+            {/* <div className="products w-full p-6 h-auto bg-backgroundLightGray rounded-[5px]">
               <div className="title">
                 {" "}
                 <h3 className="text-[19px] text-text2222 font-semibold">
@@ -212,7 +212,7 @@ export default function MainContent() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
           </div>
           <div className="main-content-right flex-1 h-full">
             {/* Giá tốt hôm nay */}

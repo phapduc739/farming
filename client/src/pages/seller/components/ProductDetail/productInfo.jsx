@@ -21,6 +21,7 @@ export default function ProductInfo({ history }) {
   const [quantity, setQuantity] = useState(
     products?.status === "Hết hàng" ? 0 : products?.quantity || 1
   );
+  const role = useSelector((state) => state.user.role);
 
   const navigate = useNavigate();
   const [maxQuantity, setMaxQuantity] = useState(); // Giả sử giá trị ban đầu là 1, có thể thay đổi tùy thuộc vào API.

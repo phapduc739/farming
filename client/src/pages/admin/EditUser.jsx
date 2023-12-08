@@ -3,6 +3,7 @@ import { Upload } from "react-feather";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminDashboardLayout from "./AdminDashboardLayout";
+import logoUser from "../../assets/images/icon-user-logo.png";
 
 const EditUser = () => {
   const [selectedImage, setSelectedImage] = useState(null);
