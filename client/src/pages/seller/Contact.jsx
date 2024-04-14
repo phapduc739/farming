@@ -58,7 +58,7 @@ export default function Contact() {
                             Số điện thoại
                           </h4>
                           <p className="w-full text-[14px] text-text7777 leading-[1.5]">
-                            1900.555.437
+                            034.856.8954
                           </p>
                         </div>
                       </div>
@@ -74,7 +74,7 @@ export default function Contact() {
                             Email
                           </h4>
                           <p className="w-full text-[14px] text-text7777 leading-[1.5]">
-                            farmer2418@gmail.com
+                            phapduc739@gmail.com
                           </p>
                         </div>
                       </div>
@@ -88,8 +88,7 @@ export default function Contact() {
                           Địa chỉ
                         </h4>
                         <p className="w-full text-[14px] text-text7777 leading-[1.5]">
-                          137,Đường 3/2,Phường An Khánh,Quận Xuân Khánh,TP.Cần
-                          Thơ
+                          30,Quang Trung,Thị Trấn Vân Đình,Huyện Ứng Hòa,TP. Hà Nội
                         </p>
                       </div>
                     </div>
@@ -211,7 +210,8 @@ export default function Contact() {
             </div>
             <div className="mt-4">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.931036000762!2d105.76355697459503!3d10.0225498726472!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a088309ec7d6bd%3A0xb6e319fd6f819200!2zSGXMiW0gMjI5IMSQLiAzIFRow6FuZyAyLCBIxrBuZyBM4bujaSwgTmluaCBLaeG7gXUsIEPhuqduIFRoxqEsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1699115473551"
+                // src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3928.931036000762!2d105.76355697459503!3d10.0225498726472!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31a088309ec7d6bd%3A0xb6e319fd6f819200!2zSGXMiW0gMjI5IMSQLiAzIFRow6FuZyAyLCBIxrBuZyBM4bujaSwgTmluaCBLaeG7gXUsIEPhuqduIFRoxqEsIFZp4buHdCBOYW0!5e0!3m2!1svi!2s!4v1699115473551"
+                src="https://www.google.com/maps/embed?pb=!4m15!1m8!3m7!1s0x31344af57fddf3a9:0x3cfbdfb3ebc13bf2!2zQ2FvIFRow6BuaCwg4buobmcgSMOyYSwgSMOgIE7hu5lp!3b1!8m2!3d20.7665002!4d105.7321831!16s%2Fg%2F1hb_f4_8t!3m5!1s0x31344b349a911e9d:0x34053f381bccfb79!8m2!3d20.7575241!4d105.7384169!16s%2Fg%2F11j2hvwxrn"
                 width="1280"
                 height="450"
                 style={{ border: "0" }}

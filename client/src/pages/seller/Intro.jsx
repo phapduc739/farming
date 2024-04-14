@@ -390,7 +390,7 @@ export default function Intro() {
                 </div>
                 <div className="ml-4">
                   <h6 className="text-center py-4 text-[18px]  font-semibold">
-                    Cần Thơ
+                    Hà Nội
                   </h6>
 
                   <ul className="flex">

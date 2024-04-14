@@ -249,6 +249,16 @@ const Checkout = () => {
   };
 
   const handleProceedToCheckout = async () => {
+    if (!document.getElementById("bankTransfer").checked && !document.getElementById("cod").checked) {
+      alert("Xin hãy chọn phương thức thanh toán trước.");
+      return;
+    }
+
+    if (document.getElementById("bankTransfer").checked) {
+      navigate(`/bankTransfer`);
+      return;
+    }
+
     try {
       // Gửi thông tin đặt hàng lên server
       const response = await axios.post("http://localhost:4000/orders", {
@@ -351,7 +361,7 @@ const Checkout = () => {
                     </h3>
                     <div className="relative w-[520px] flex justify-start items-start gap-4 shadow bg-white rounded-lg p-4">
                       <div className="">
-                        <input checked type="checkbox" name="" id="" />
+                        <input type="checkbox" name="" id="cod" />
                       </div>
                       <div className="">
                         <h1 className="text-[16px] text-textBlack font-semibold">
@@ -363,9 +373,9 @@ const Checkout = () => {
                           với sản phẩm.
                         </p>
                       </div>
-                      <span className="absolute top-4 right-4 bg-primaryGreen text-white text-[12px] font-semibold px-[6px] py-[3px] rounded">
+                      {/* <span className="absolute top-4 right-4 bg-primaryGreen text-white text-[12px] font-semibold px-[6px] py-[3px] rounded">
                         Mặc định
-                      </span>
+                      </span> */}
                     </div>
 
                     <div className="relative w-[520px] flex justify-start items-start gap-4 shadow bg-white rounded-lg p-4">
@@ -386,7 +396,7 @@ const Checkout = () => {
 
                     <div className="relative w-[520px] flex justify-start items-start gap-4 shadow bg-white rounded-lg p-4">
                       <div className="">
-                        <input disabled type="checkbox" name="" id="" />
+                        <input type="checkbox" name="" id="bankTransfer" />
                       </div>
                       <div className="">
                         <h1 className="text-[16px] text-textBlack font-semibold">

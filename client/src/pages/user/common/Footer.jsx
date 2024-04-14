@@ -56,7 +56,7 @@ export default function Footer() {
                 <div className="flex justify-start items-center gap-2 text-[14px] text-textBlack">
                   <i className="fa-solid fa-house"></i>
                   <p className="text-textBlack font-normal">
-                    Xuân Khánh, Ninh Kiều, Cần Thơ
+                    Cao Thành, Ứng Hòa, Hà Nội
                   </p>
                 </div>
                 <div className="flex justify-start items-center gap-2 text-[14px] text-textBlack">

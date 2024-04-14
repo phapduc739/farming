@@ -70,17 +70,17 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `customer_name`, `shipping_address`, `payment_method`, `total_price`, `status`, `order_code`, `created_at`) VALUES
-(97, 41, 'Nguyễn Thanh Hương', '3 tháng 3, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 44240.00, 'Đã hủy', '179070', '2024-03-16 17:19:04'),
-(98, 41, 'Nguyễn Thanh Hương', '3 tháng 3, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 11240.00, 'Đã giao cho shipper', '691998', '2024-03-16 17:19:59'),
-(99, 41, 'Nguyễn Thanh Hương', '3 tháng 3, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 102480.00, 'Đã giao cho shipper', '094666', '2024-03-18 17:57:34'),
-(100, 39, 'Nguyễn Huy Đức', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 252040.00, 'Đã hủy', '507621', '2024-03-18 02:14:14'),
-(101, 39, 'Nguyễn Huy Đức', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 178520.00, 'Đang xử lý', '220716', '2024-03-18 02:20:20'),
-(102, 39, 'Nguyễn Huy Đức', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 542040.00, 'Đã giao cho shipper', '348517', '2024-03-17 02:20:57'),
-(103, 41, 'Nguyễn Thanh Hương', '3 tháng 3, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 906000.00, 'Đang xử lý', '286958', '2024-03-17 08:55:06'),
-(104, 39, 'Nguyễn Huy Đức', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 534960.00, 'Đang xử lý', '168789', '2024-03-28 02:40:19'),
-(105, 39, 'Nguyễn Huy Đức', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 111960.00, 'Đã giao cho shipper', '322798', '2024-03-18 02:59:56'),
-(106, 39, 'Nguyễn Huy Đức', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 118520.00, 'Đã giao cho shipper', '468573', '2024-03-15 07:22:01'),
-(107, 39, 'Nguyễn Huy Đức', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', 'Thanh toán khi nhận hàng', 312040.00, 'Đã hủy', '613246', '2024-03-22 13:14:37');
+(97, 39, 'Nguyễn Thanh Hương', '123 Nguyễn Văn Cừ , Phường Ngọc Thụy, Quận Long Biên, Thành phố Hà Nội.', 'Thanh toán khi nhận hàng', 44240.00, 'Đã hủy', '179070', '2024-03-16 17:19:04'),
+(98, 88, 'Đặng Bảy ', '108 Lý Sơn , Phường Ngọc Thụy, Quận Long Biên , Thành phố Hà Nội .', 'Thanh toán khi nhận hàng', 11240.00, 'Đã giao cho shipper', '691998', '2024-03-16 17:19:59'),
+(99, 86, 'Nguyễn Huy Cảnh ', '366 Chung Cư Hotel, Phường Ngọc Thụy , Quận Long Biên , Thành phố Hà Nội.', 'Thanh toán khi nhận hàng', 102480.00, 'Đã giao cho shipper', '094666', '2024-03-18 17:57:34'),
+(100, 18, 'Phạm Quyết Tâm ', '486 Giải Phóng , Phường Nguyễn Lân  , Quận Hai Bà Trưng, Thành phố Hà Nội.', 'Thanh toán khi nhận hàng', 252040.00, 'Đã hủy', '507621', '2024-03-18 02:14:14'),
+(101, 19, 'Đinh Thị Khoa Khuyên ', '128 Nguyễn Chí Thanh , Phường Trung Hòa, Quận Long Biên , Thành phố Hà Nội.', 'Thanh toán khi nhận hàng', 178520.00, 'Đang xử lý', '220716', '2024-03-18 02:20:20'),
+(102, 08, 'Lưu Thị Thu Trang ', '136 Quang Trung , Phường Hà Cầu , Quận Hà Đông , Thành phố Hà Nội.', 'Thanh toán khi nhận hàng', 542040.00, 'Đã giao cho shipper', '348517', '2024-03-17 02:20:57'),
+(103, 99, 'Nguyễn Huy Đức', '30 Quang Trung, Thị Trấn Vân Đình, Huyện Ứng Hòa, Thành phố Hà Nội .', 'Thanh toán khi nhận hàng', 906000.00, 'Đang xử lý', '286958', '2024-03-17 08:55:06'),
+(104, 06, 'Phí Thương', '28 Hoàng Văn Thụ , Phường Bà Triệu, Quận Hà Đông , Thành phố Hà Nội .', 'Thanh toán khi nhận hàng', 534960.00, 'Đang xử lý', '168789', '2024-03-28 02:40:19'),
+(105, 28, 'Nguyễn Xuân Mạnh ', '66 Phố Vọng , Phường Lê Thanh Nghị, Quận Hai Bà Trưng , Thành phố Hà Nội .', 'Thanh toán khi nhận hàng', 111960.00, 'Đã giao cho shipper', '322798', '2024-03-18 02:59:56'),
+(106, 69, 'Phương Nga', '99 Phùng Hưng , Phường Phúc La , Quận Hà Đông , Thành phố Hà Nội .', 'Thanh toán khi nhận hàng', 118520.00, 'Đã giao cho shipper', '468573', '2024-03-15 07:22:01'),
+(107, 79, 'Nguyễn Đức', '68 Quang Trung , Phường Lê Hồng Phong, Quận Hà Đông , Thành phố Hà Nội .', 'Thanh toán khi nhận hàng', 312040.00, 'Đã hủy', '613246', '2024-03-22 13:14:37');
 
 -- --------------------------------------------------------
 
@@ -243,13 +243,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `image`, `dateJoin`, `status`, `payment_method`, `shipping_address`, `phone`, `coordinates`, `created_at`) VALUES
-(39, 'Nguyễn Huy Đức', 'phapduc739@gmail.com', '$2a$10$9zCwNw2Af6n5Tk3VWZ9kseEZZUxE5bHJfPWfpuYnGt9xfnap9cQfS', 'User', 'uploads\\image-1701192138852.png', '2024-03-20', 'Enable', 'Thanh toán khi nhận hàng', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', '0396518355', '{\"latitude\":10.0271854,\"longitude\":105.7769533}', '2024-03-26 07:35:17'),
-(40, 'Đinh Thị Hoa Khuyên', 'dthkhuyen@gmail.com', '$2a$10$kAtV6HGJRNB/79etDq/pNOD1otpsY2ZCnBwCv3iumlii/9bTR.ToK', 'Seller', 'uploads\\image-1701542533490.png', '2024-03-20', 'Enable', 'Thanh toán khi nhận hàng', 'Trần Vĩnh Kiết, Phường An Bình, Quận Ninh Kiều, Thành phố Cần Thơ', '012345679', '{\"latitude\":10.0138717,\"longitude\":105.7509112}', '2024-03-26 07:35:17'),
-(41, 'Nguyễn Thanh Hương', 'thanhhuong@gmail.com', '$2a$10$FXkE3OMjFCWPwxODgZXn8OUGoM.iTnXIynFzSMawkeoCpIKaaklyK', 'User', 'uploads\\image-1700471795782.png', '2024-03-20', 'Enable', 'Thanh toán khi nhận hàng', '3 tháng 2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', '0123456789', '{\"latitude\":10.02905,\"longitude\":105.76253}', '2024-03-26 07:35:17'),
-(43, 'Nguyễn Huy Cảnh', 'huycanh@gmail.com', '$2a$10$hmfP77tKg2.iEfsD1StJPOeJMhjSxsxBDIJZKxEPC9WHcyBZdCIOO', 'Seller', 'uploads\\image-1700471850811.png', '2024-03-20', 'Enable', '', 'Phạm Văn Đồng, Phường Mỹ Phước, Thành phố Long Xuyên, Tỉnh An Giang', '0333944570', '{\"latitude\":10.36857,\"longitude\":105.4234}', '2024-03-26 07:35:17'),
-(44, 'Admin Đặng Bảy', 'admindangbay@gmail.com', '$2a$10$uAY/8DSd7rXghEDYmiSrO.tURsKmtmWH8QNRTZzergAxsO5X1re0i', 'Admin', 'uploads\\image-1700471909759.png', '2024-04-20', 'Enable', '', NULL, NULL, '', '2024-04-28 07:35:17'),
-(45, 'Admin Nguyễn Huy Đức', 'adminnhuyduc@gmail.com', '$2b$10$hIp9FTF6dyyokXOEL9PFPuWVW4w3toqWCNptuUPGc52FrA/9CcTSG', 'Admin', 'uploads\\image-1701542155692.png', '2024-04-23', 'Enable', '', NULL, NULL, '', '2024-05-09 12:00:17'),
-(62, 'Nguyễn Huy Đức', 'phapduc739@gmail.com', '$2a$10$w796cID46b7aFcLf.ChXnejeyz2BYVbQxPv7LA/mHdLQc4pH04qEm', 'Seller', 'uploads\\image-1702004017339.png', '2024-04-08', 'Enable', NULL, '123, Phường An Bình, Quận Ninh Kiều, Thành phố Cần Thơ', '0348568954', '{\"latitude\":10.0122565,\"longitude\":105.7490323}', '2024-04-08 02:45:29');
+(99, 'Nguyễn Huy Đức', 'phapduc739@gmail.com', '$2a$10$9zCwNw2Af6n5Tk3VWZ9kseEZZUxE5bHJfPWfpuYnGt9xfnap9cQfS', 'User', 'uploads\\image-1701192138852.png', '2024-03-20', 'Enable', 'Thanh toán khi nhận hàng', 'Mậu Thân, Phường An Phú, Quận Ninh Kiều, Thành phố Cần Thơ.', '0396518355', '{\"latitude\":10.0271854,\"longitude\":105.7769533}', '2024-03-26 07:35:17'),
+(19, 'Đinh Thị Hoa Khuyên', 'dthkhuyen@gmail.com', '$2a$10$kAtV6HGJRNB/79etDq/pNOD1otpsY2ZCnBwCv3iumlii/9bTR.ToK', 'Seller', 'uploads\\image-1701542533490.png', '2024-03-20', 'Enable', 'Thanh toán khi nhận hàng', 'Trần Vĩnh Kiết, Phường An Bình, Quận Ninh Kiều, Thành phố Cần Thơ', '012345679', '{\"latitude\":10.0138717,\"longitude\":105.7509112}', '2024-03-26 07:35:17'),
+(39, 'Nguyễn Thanh Hương', 'thanhhuong@gmail.com', '$2a$10$FXkE3OMjFCWPwxODgZXn8OUGoM.iTnXIynFzSMawkeoCpIKaaklyK', 'User', 'uploads\\image-1700471795782.png', '2024-03-20', 'Enable', 'Thanh toán khi nhận hàng', '3 tháng 2, Phường Xuân Khánh, Quận Ninh Kiều, Thành phố Cần Thơ.', '0123456789', '{\"latitude\":10.02905,\"longitude\":105.76253}', '2024-03-26 07:35:17'),
+(86, 'Nguyễn Huy Cảnh', 'huycanh@gmail.com', '$2a$10$hmfP77tKg2.iEfsD1StJPOeJMhjSxsxBDIJZKxEPC9WHcyBZdCIOO', 'Seller', 'uploads\\image-1700471850811.png', '2024-03-20', 'Enable', '', 'Phạm Văn Đồng, Phường Mỹ Phước, Thành phố Long Xuyên, Tỉnh An Giang', '0333944570', '{\"latitude\":10.36857,\"longitude\":105.4234}', '2024-03-26 07:35:17'),
+(88, 'Admin Đặng Bảy', 'admindangbay@gmail.com', '$2a$10$uAY/8DSd7rXghEDYmiSrO.tURsKmtmWH8QNRTZzergAxsO5X1re0i', 'Admin', 'uploads\\image-1700471909759.png', '2024-04-20', 'Enable', '', NULL, NULL, '', '2024-04-28 07:35:17'),
+(79, 'Admin Nguyễn Đức', 'adminnguyenduc@gmail.com', '$2b$10$hIp9FTF6dyyokXOEL9PFPuWVW4w3toqWCNptuUPGc52FrA/9CcTSG', 'Admin', 'uploads\\image-1701542155692.png', '2024-04-23', 'Enable', '', NULL, NULL, '', '2024-05-09 12:00:17'),
+(18, 'Phạm Quyết Tâm ', 'quyettam@gmail.com', '$2a$10$w796cID46b7aFcLf.ChXnejeyz2BYVbQxPv7LA/mHdLQc4pH04qEm', 'Seller', 'uploads\\image-1702004017339.png', '2024-04-08', 'Enable', NULL, '123, Phường An Bình, Quận Ninh Kiều, Thành phố Cần Thơ', '0348568954', '{\"latitude\":10.0122565,\"longitude\":105.7490323}', '2024-04-08 02:45:29');
 
 --
 -- Chỉ mục cho các bảng đã đổ

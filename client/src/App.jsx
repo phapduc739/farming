@@ -20,7 +20,7 @@ import AddProduct from "./pages/admin/AddProduct";
 import Home from "./pages/user/Home";
 // import CartItem from "./pages/user/components/CartItem";
 import ShoppingCart from "./pages/user/ShoppingCart";
-// import Page404 from "./pages/user/Page404";
+import Page404 from "./pages/user/Page404";
 import Checkout from "./pages/user/Checkout";
 import OrderSuccess from "./pages/user/OrderSuccess";
 import SellerDashboard from "./pages/seller/SellerDashboard";
@@ -41,6 +41,7 @@ import SellerProfile from "./pages/seller/ProfileSeller";
 import SellerEditProfile from "./pages/seller/EditProfileSeller";
 import SellerManageOrder from "./pages/seller/components/CRUD Order/ManageOrder";
 import SellerEditOrder from "./pages/seller/components/CRUD Order/EditOrder";
+import BankTransfer from "./pages/user/BankTransfer";
 
 function App() {
   return (
@@ -127,8 +128,9 @@ function App() {
       <Route path="/faq" element={<Faq />} />
       <Route path="/intro" element={<Intro />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/bankTransfer" element={<BankTransfer />} />
       {/* Tuyến đường mặc định cho trang không tìm thấy */}
-      {/* <Route path="/404" element={<Page404 />} /> */}
+      <Route path="/404" element={<Page404 />} />
 
       {/* Tuyến đường mặc định khi không tìm thấy */}
       {/* <Route path="*" element={<Navigate to="/404" />} /> */}

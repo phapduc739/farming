@@ -94,7 +94,7 @@ export default function Header() {
               <div className="map-pin flex justify-center items-center gap-1">
                 <Home size={16} color="white" />
                 <span className="text-[14px] text-white font-medium">
-                  3/2, Ninh Kiều, Cần Thơ
+                  Cao Thành, Ứng Hòa, Hà Nội 
                 </span>
               </div>
             </div>
@@ -269,7 +269,7 @@ export default function Header() {
             <div className="header-bottom-main">
               <ul className="flex justify-center items-center gap-5">
                 <li className="text-[16px] text-[text2222] flex justify-center items-center font-medium">
-                  Trang chủ
+                <Link to="/">Trang chủ</Link>
                   <ChevronDown size={20} color="#222222" />
                 </li>
                 <li className="text-[16px] text-[text2222] flex justify-center items-center font-medium">
